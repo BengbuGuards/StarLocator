@@ -1,0 +1,107 @@
+﻿
+body {
+	background-color: #1c355d;
+	color: white;
+}
+td {
+	text-align: center;
+}
+h1 {
+	text-align: center;
+}
+input {
+	text-align: center;
+}
+#canvas {
+	margin: 0 auto;
+	background: #000;
+	cursor: move;
+}
+.column2{
+	margin-top: 15px;
+	margin-bottom: 15px;
+	float: left;
+	width: 25%;
+}
+.column6{
+	margin-top: 15px;
+	margin-bottom: 15px;
+	float: left;
+	width: 50%;
+}
+.inputColumn{
+	margin-top: 15px;
+	margin-bottom: 15px;
+	float: left;
+}
+.outputColumn{
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+.row{
+	width: 52%;
+	margin-left: 24%;
+	margin-right: 24%;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+.actionButton{
+	color: white;
+	border: 2px solid #189c65;
+	border-radius: 5px;
+	width: 64px;
+	height: 64px;
+	margin-left: 5px;
+	margin-right: 5px;
+	cursor: pointer;
+	background-color: #187C54;
+	transition-duration: 0.1s;
+	float: left;
+}
+.actionButton:hover{
+	background-color: #189c65;
+	color: black;
+}
+.Button1{
+}
+.Button2{
+}
+.Button3{
+}
+.Button4{
+}
+.zenith{
+	color: #e44f0d;
+}
+.result{
+	color: #189c65;
+}
+.celesName{
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 90%;
+}
+.hourAngle{
+	margin-left: 4%;
+	margin-right:4%;
+	width: 92%;
+}
+.declination{
+	margin-left: 5%;
+	margin-right: 5%;
+	width: 90%;
+}
+.coordsInput{
+	margin-left: 7.5%;
+	margin-right: 7.5%;
+	width: 85%;
+}
+.input-helper {
+	display: none; /* 默认隐藏 */
+	position: absolute; /* 使用绝对定位 */
+	background-color: #7f7f7f; /* 背景颜色 */
+	border: 1px solid #ccc; /* 边框 */
+	padding: 10px; /* 内边距 */
+	z-index: 1000; /* 确保浮动 div 在上层 */
+}

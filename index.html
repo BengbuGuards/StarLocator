@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<link rel="stylesheet" href="css/site.css" />
+	<link rel="stylesheet" href="leaflet/dist/leaflet.css" />
+	<script src="leaflet/dist/leaflet.js"></script>
+	<script src="fabric/dist/index.min.js"></script>
+</head>
+
+<body>
+	<div class="input-helper" id="hourAngleInput">格式要求：h m s</div>
+	<h1>照片测星定位beta</h1>
+	<div class="row" id="box" style="min-width:360px; height: 360px;">
+		<input type="file" id="srcFile" accept="image/*" />
+		<canvas id="canvas"></canvas>
+	</div>
+	<div class="row">
+		<div class="column2"></div>
+		<div class="column6" style="margin: auto">
+			<button type="button" class="actionButton Button1" id="resetPick">重置<br />标注</button>
+			<button type="button" class="actionButton Button2" id="celePick">天体<br />选择</button>
+			<button type="button" class="actionButton Button3" id="vaniZen">消失点定位</button>
+			<button type="button" class="actionButton Button4" id="horiZen">地平线定位</button>
+		</div>
+		<div class="column2"></div>
+	</div>
+	<div class="row">
+		<div class="inputColumn">
+			<table class="inputTable">
+				<tr>
+					<th>天体</td>
+					<th>名称</td>
+					<th>参考时角</td>
+					<th>赤纬</td>
+					<th>x</td>
+					<th>y</td>
+				</tr>
+				<tr>
+					<td class="zenith">0</td>
+					<td class="zenith">天顶</td>
+					<td colspan="2"></td>
+					<td><input type="number" class="coordsInput zenith" id="zenX"></td>
+					<td><input type="number" class="coordsInput zenith" id="zenY"></td>
+				</tr>
+				<tr>
+					<td style="width: 5%">1</td>
+					<td style="width: 20%"><input type="text" class="celesName" id="name1"></td>
+					<td style="width: 25%"><input type="number" class="hourAngle" id="hAngle1"></td>
+					<td style="width: 20%"><input type="number" class="declination" id="declin1"></td>
+					<td style="width: 15%"><input type="number" class="coordsInput" id="coordX1"></td>
+					<td style="width: 15%"><input type="number" class="coordsInput" id="coordY1"></td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td><input type="text" class="celesName" id="name2"></td>
+					<td><input type="number" class="hourAngle" id="hAngle2"></td>
+					<td><input type="number" class="declination" id="declin2"></td>
+					<td><input type="number" class="coordsInput" id="coordX2"></td>
+					<td><input type="number" class="coordsInput" id="coordY2"></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td><input type="text" class="celesName" id="name3"></td>
+					<td><input type="number" class="hourAngle" id="hAngle3"></td>
+					<td><input type="number" class="declination" id="decli3"></td>
+					<td><input type="number" class="coordsInput" id="coordX3"></td>
+					<td><input type="number" class="coordsInput" id="coordY3"></td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td><input type="text" class="celesName" id="name4"></td>
+					<td><input type="number" class="hourAngle" id="hAngle4"></td>
+					<td><input type="number" class="declination" id="declin4"></td>
+					<td><input type="number" class="coordsInput" id="coordX4"></td>
+					<td><input type="number" class="coordsInput" id="coordY4"></td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td><input type="text" class="celesName" id="name5"></td>
+					<td><input type="number" class="hourAngle" id="hAngle5"></td>
+					<td><input type="number" class="declination" id="declin5"></td>
+					<td><input type="number" class="coordsInput" id="coordX5"></td>
+					<td><input type="number" class="coordsInput" id="coordY5"></td>
+				</tr>
+			</table>
+		</div>
+		<br />
+	</div>
+	<div class="row">
+		<div class="column2">
+			<input type="checkbox" id="check1" checked />
+			<label for="check1">大气折射修正</label><br />
+			<input type="checkbox" id="check2" checked />
+			<label for="check2">重力方向修正</label><br />
+			<input type="checkbox" id="check3" checked />
+			<label for="check3">显示为角度</label><br />
+			<input type="checkbox" id="check4" />
+			<label for="check4">时间未定</label><br />
+			<label for="set1">时间偏差 </label><input id="set1" type="number" style="width: 45%"><br />
+			<label for="set2">时区设置 </label><input id="set2" type="number" style="width: 45%">
+		</div>
+		<div class="column6">
+			<table style="width: 100%">
+				<tr>
+					<th>天体</td>
+					<th>仰角</td>
+					<th>数据质量</td>
+				</tr>
+				<tr class="result">
+					<td id="celeBody1">placeholder</td>
+					<td id="elev1">1.14514</td>
+					<td id="dataQuali1">19.19810</td>
+				</tr>
+				<tr class="result">
+					<td id="celeBody2">placeholder</td>
+					<td id="elev2">1.14514</td>
+					<td id="dataQuali2">19.19810</td>
+				</tr>
+				<tr class="result">
+					<td id="celeBody3">placeholder</td>
+					<td id="elev3">1.14514</td>
+					<td id="dataQuali3">19.19810</td>
+				</tr>
+				<tr class="result">
+					<td id="celeBody4">placeholder</td>
+					<td id="elev4">1.14514</td>
+					<td id="dataQuali4">19.19810</td>
+				</tr>
+				<tr class="result">
+					<td id="celeBody5">placeholder</td>
+					<td id="elev5">1.14514</td>
+					<td id="dataQuali5">19.19810</td>
+				</tr>
+			</table>
+		</div>
+		<div class="column2">
+			<table style="width: 100%">
+				<tr>
+					<th>像素焦距z</th>
+				</tr>
+				<tr>
+					<td id="focLenPix" class="result">800.008</td>
+				</tr>
+				<tr>
+					<th>35mm焦距</th>
+				</tr>
+				<tr>
+					<td id="focLenMm" class="result">30mm</td>
+				</tr>
+				<tr>
+					<th>d bar</th>
+				</tr>
+				<tr>
+					<td id="devAvg" class="result">0.177%</td>
+				</tr>
+			</table>
+		</div>
+		<br />
+	</div>
+	<div class="row">
+		<div class="outputColumn">
+			<p style="text-align: center" id="textResult">定位结果</p><br />
+		</div>
+		<div id="map" style="width:auto; min-width:360px; height: 360px;"></div>
+		</canvas>
+	</div>
+	<script>
+		// 获取容器元素,得到父容器的宽和高
+		var container = document.getElementById('box');
+		var canvas = new fabric.Canvas("canvas", {
+			width: container.clientWidth,
+			height: container.clientHeight
+		})
+
+		const rect = new fabric.Rect({
+			top: 100,
+			left: 100,
+			width: 60,
+			height: 70,
+			fill: 'red',
+		});
+		canvas.add(rect);
+
+		// 绘制 X 轴
+		const xAxis = new fabric.Line([-500, 0, 500, 0], {
+			stroke: 'white',
+			strokeWidth: 2,
+		});
+
+		// 绘制 Y 轴
+		const yAxis = new fabric.Line([0, -500, 0, 500], {
+			stroke: 'white',
+			strokeWidth: 2,
+		});
+
+		// 将坐标轴添加到画布
+		canvas.add(xAxis);
+		canvas.add(yAxis);
+
+
+		//鼠标按下事件
+		canvas.on("mouse:down", function (e) {
+			this.panning = true;
+			canvas.selection = false;
+		});
+		//鼠标抬起事件
+		canvas.on("mouse:up", function (e) {
+			this.panning = false;
+			canvas.selection = true;
+		});
+		// 移动画布事件
+		canvas.on("mouse:move", function (e) {
+			if (this.panning && e && e.e) {
+				var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+				canvas.relativePan(delta);
+			}
+		});
+
+		canvas.on('mouse:wheel', opt => {
+			opt.e.preventDefault()
+			const delta = opt.e.deltaY // 滚轮，向上滚一下是 -100，向下滚一下是 100
+			let zoom = this.canvas.getZoom() // 获取画布当前缩放值
+			zoom *= 0.999 ** delta
+			if (zoom > 20) zoom = 20 // 限制最大缩放级别
+			if (zoom < 0.01) zoom = 0.01 // 限制最小缩放级别
+			// 以鼠标所在位置为原点缩放
+			this.canvas.zoomToPoint({ // 关键点
+				x: opt.e.offsetX,
+				y: opt.e.offsetY
+			},
+				zoom // 传入修改后的缩放级别
+			)
+		})
+
+		const input = document.getElementById('hAngle1');
+		const floatingDiv = document.getElementById('hourAngleInput');
+
+		input.addEventListener('focus', function () {
+			const rect = input.getBoundingClientRect(); // 获取 input 的位置
+			floatingDiv.style.display = 'block'; // 显示浮动 div
+			floatingDiv.style.top = `${rect.bottom + window.scrollY}px`; // 设置浮动 div 的顶部位置
+			floatingDiv.style.left = `${rect.left + window.scrollX}px`; // 设置浮动 div 的左侧位置
+		});
+
+		input.addEventListener('blur', function () {
+			floatingDiv.style.display = 'none'; // 隐藏浮动 div
+		});
+		// 照片预览
+		function onImgChange(e) {
+			// 获取首个文件
+			var file = e.target.files[0];
+			// img对象
+			canvas.setBackgroundImage(
+				e.target.result,
+				canvas.renderAll.bind(canvas)
+			)
+		}
+		document.getElementById("srcFile").addEventListener('change', onImgChange);
+
+		// 参数插入
+		function insert() {
+			// TODO
+		}
+
+
+		var map = L.map('map').setView([32.0, 110.0], 3);
+
+		L.tileLayer('https://{s}.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			maxZoom: 19,
+			subdomains: ['services', 'server'],
+			attribution: '&copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
+		}).addTo(map);
+
+		/* L.tileLayer('https://wprd0{s}.is.autonavi.com/appmaptile?x={x}&y={y}&z={z}&lang=zh_cn&size=1&scl=2&style=8&ltype=11', {
+			minZoom: 2,
+			maxZoom: 19,
+			subdomains: ['1', '2', '3', '4'],
+			needsCorrectionGCJ: true,
+			attribution: '&copy; 高德地图（细看有偏移，不影响太多）'
+		}).addTo(map); */
+		L.marker([28.7684, 120.8347]).addTo(map);
+
+		const url = 'leaflet/dist/CN.json';
+
+		// 使用fetch API加载JSON数据
+		fetch(url)
+			.then(response => {
+				// 检查响应是否成功
+				if (!response.ok) {
+					throw new Error('网络响应不是正常的状态');
+				}
+				// 将响应体解析为JSON
+				return response.json();
+			})
+			.then(data => {
+				L.geoJSON(data, {
+					style: function (feature) {
+						return {
+							color: feature.properties.level == 'province' ? '#FF0' : '#F00',
+							weight: 1,
+							opacity: 0.8,
+							fill: false
+						};
+					}
+				}).addTo(map);
+			})
+			.catch(error => {
+				// 处理错误
+				console.error('加载JSON数据时出错:', error);
+			});
+	</script>
+</body>
+
+</html>

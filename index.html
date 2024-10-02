@@ -4,6 +4,7 @@
 <head>
 	<link rel="stylesheet" href="css/site.css" />
 	<link rel="stylesheet" href="leaflet/dist/leaflet.css" />
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" crossorigin="">
 	<script src="leaflet/dist/leaflet.js"></script>
 	<script src="fabric/dist/index.min.js"></script>
 </head>
@@ -170,39 +171,25 @@
 		var container = document.getElementById('box');
 		var canvas = new fabric.Canvas("canvas", {
 			width: container.clientWidth,
-			height: container.clientHeight
+			height: container.clientHeight,
+			backgroundColor: 'black'
 		})
+		var movable = false
 
-		const rect = new fabric.Rect({
-			top: 100,
-			left: 100,
-			width: 60,
-			height: 70,
-			fill: 'red',
+		var text = new fabric.IText('选择星空照片。', {
+			fill: '#8a6119',
+			textAlign: 'center',
+			fontSize: 40,
+			fontFamily: '等线',
+			selectable: false
 		});
-		canvas.add(rect);
-
-		// 绘制 X 轴
-		const xAxis = new fabric.Line([-500, 0, 500, 0], {
-			stroke: 'white',
-			strokeWidth: 2,
-		});
-
-		// 绘制 Y 轴
-		const yAxis = new fabric.Line([0, -500, 0, 500], {
-			stroke: 'white',
-			strokeWidth: 2,
-		});
-
-		// 将坐标轴添加到画布
-		canvas.add(xAxis);
-		canvas.add(yAxis);
-
-
+		canvas.add(text)
 		//鼠标按下事件
 		canvas.on("mouse:down", function (e) {
-			this.panning = true;
-			canvas.selection = false;
+			if (movable && canvas.getActiveObject() == undefined) {
+				this.panning = true;
+				canvas.selection = false;
+			}
 		});
 		//鼠标抬起事件
 		canvas.on("mouse:up", function (e) {
@@ -218,6 +205,7 @@
 		});
 
 		canvas.on('mouse:wheel', opt => {
+			if (!movable) return
 			opt.e.preventDefault()
 			const delta = opt.e.deltaY // 滚轮，向上滚一下是 -100，向下滚一下是 100
 			let zoom = this.canvas.getZoom() // 获取画布当前缩放值
@@ -246,15 +234,36 @@
 		input.addEventListener('blur', function () {
 			floatingDiv.style.display = 'none'; // 隐藏浮动 div
 		});
+
 		// 照片预览
 		function onImgChange(e) {
 			// 获取首个文件
 			var file = e.target.files[0];
-			// img对象
-			canvas.setBackgroundImage(
-				e.target.result,
-				canvas.renderAll.bind(canvas)
-			)
+			var reader = new FileReader();
+			// 读取回调设置
+			reader.onload = function (e) {
+				var img = new Image();
+				img.onload = function () {
+					// 创建一个新的 Pattern 对象
+					var pattern = new fabric.Pattern({
+						source: img,
+						repeat: 'repeat'
+					});
+					// 创建一个新的 Rect 对象
+					var rect = new fabric.Rect({
+						width: img.width,
+						height: img.height,
+						fill: pattern,
+						selectable: false
+					});
+					// 添加 Rect 对象到画布上
+					canvas.add(rect);
+				};
+				img.src = e.target.result;
+			};
+			reader.readAsDataURL(file);
+			movable = true;
+			canvas.remove(text);
 		}
 		document.getElementById("srcFile").addEventListener('change', onImgChange);
 

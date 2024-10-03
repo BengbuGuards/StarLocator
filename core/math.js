@@ -82,5 +82,16 @@ function rad2Deg(rad) {
     return rad * 180 / Math.PI;
 }
 
+/**
+ * 剔除数组中的指定sigma外的异常值
+ * @param {Array<number>} arr
+ * @param {number} sigma
+ * @returns {Array<number>}
+ */
+function rejectOutliers(arr, sigma = 2) {
+    let mean = arr.reduce((a, b) => a + b) / arr.length;
+    let std = Math.sqrt(arr.reduce((a, b) => a + (b - mean) ** 2) / arr.length);
+    return arr.filter(x => Math.abs(x - mean) < sigma * std);
+}
 
-export { Vector, vectorAngle, deg2Rad, rad2Deg };
+export { Vector, vectorAngle, deg2Rad, rad2Deg, rejectOutliers };

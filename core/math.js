@@ -63,4 +63,24 @@ function vectorAngle(v1, v2) {
 }
 
 
-export { Vector, vectorAngle };
+/**
+ * 角度制转弧度制
+ * @param {number} deg 
+ * @returns {number}
+ */
+function deg2Rad(deg) {
+    return deg * Math.PI / 180;
+}
+
+
+/**
+ * 弧度制转角度制
+ * @param {number} rad 
+ * @returns {number}
+ */
+function rad2Deg(rad) {
+    return rad * 180 / Math.PI;
+}
+
+
+export { Vector, vectorAngle, deg2Rad, rad2Deg };

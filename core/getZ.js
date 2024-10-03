@@ -13,7 +13,7 @@ function getZFrom2Stars(star1, star2) {
     let theoreticalAngle = vectorAngle(
         Vector.fromGP(star1.lat, star1.lon),
         Vector.fromGP(star2.lat, star2.lon)
-    )
+    );
 
     /**
      * 根据已有条件，代入一个尝试的像素焦距求夹角

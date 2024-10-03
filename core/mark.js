@@ -1,4 +1,5 @@
 import { Star } from "./data.js";
+import { deg2Rad } from "./math.js";
 
 
 /**
@@ -39,25 +40,22 @@ function toDegrees(declination) {
 /**
  * 处理原始数据，标记星星
  * @param {Array<Array>} originalStars 所有星星的原始数据，在这个数组里的每个数组应为
- *                                     [名字, x, y, 时角, 赤纬（两者均为角度制）]
+ *                                     [x, y, 名字, 时角, 赤纬（两者均为角度制）]
  * @returns {Array<Star>} Star 对象数组
  */
 function markStars(originalStars) {
     let stars = []
     // 遍历每组原始数据
     for (let originalStar of originalStars) {
-        let [name, x, y, hourAngle, declination] = originalStar;
+        let [x, y, name, hourAngle, declination] = originalStar;
         // 转化单位
         hourAngle = toHours(hourAngle);
         declination = toDegrees(declination);
-        // 计算 GP（角度制）
-        let lat = declination;
-        let lon = 360 - hourAngle * 15;
-        // 转为弧度制
-        lat *= Math.PI / 180;
-        lon *= Math.PI / 180;
+        // 计算 GP 并转为弧度制
+        let lat = deg2Rad(declination);
+        let lon = deg2Rad(360 - hourAngle * 15);
         // 添加星星
-        stars.push(new Star(name, x, y, lat, lon));
+        stars.push(new Star(x, y, name, lat, lon));
     }
     return stars;
 }

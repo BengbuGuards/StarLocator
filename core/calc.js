@@ -86,30 +86,16 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
 
 
 /**
- * 两两计算位置，取平均值
+ * 平方倒数加权平均
+ * @param {Array<Array<number>>} crudePositions 粗数据，每个元素有两组经纬度
  * @param {Array<Star>} stars 星星数组
- * @param {number} z 像素焦距
- * @param {Array<number>} zenith 天顶坐标 [x, y]
- * @returns 平均经纬度（角度制）
- */
-function calc(stars, z, zenith) {
-    // 天顶向量
-    let zenithVector = new Vector(zenith[0], zenith[1], z);
-    // 存放粗的数据，每个元素有两组经纬度
-    let crudePositions = []
-    // 两两计算
-    for (let i = 0; i < stars.length; ++i) {
-        for (let j = i + 1; j < stars.length; ++j) {
-            crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
-        }
-    }
-
-    // 每颗星星的理论天顶角
-    let zenithAngles = [];
-    for (let star of stars) {
-        zenithAngles.push(vectorAngle(new Vector(star.x, star.y, z), zenithVector));
-    }
-
+ * @param {Array<number>} zenithAngles 理论天顶角
+ * @returns 平均经纬度（弧度制）
+ * @description 评估一个位置是否正确，计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
+ * 该值越大，这个位置越正确
+ * 返回正确的位置的平均值
+*/
+function squareWeightedAverage(crudePositions, stars, zenithAngles) {
     /**
      * 评估一个位置是否正确
      * 计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
@@ -147,6 +133,37 @@ function calc(stars, z, zenith) {
         avgLat += lat / positions.length;
         avgLon += lon / positions.length;
     }
+
+    return [avgLat, avgLon, positions];
+}
+
+/**
+ * 两两计算位置，取平均值
+ * @param {Array<Star>} stars 星星数组
+ * @param {number} z 像素焦距
+ * @param {Array<number>} zenith 天顶坐标 [x, y]
+ * @returns 平均经纬度（角度制）
+ */
+function calc(stars, z, zenith) {
+    // 天顶向量
+    let zenithVector = new Vector(zenith[0], zenith[1], z);
+    // 存放粗的数据，每个元素有两组经纬度
+    let crudePositions = []
+    // 两两计算
+    for (let i = 0; i < stars.length; ++i) {
+        for (let j = i + 1; j < stars.length; ++j) {
+            crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
+        }
+    }
+
+    // 每颗星星的理论天顶角
+    let zenithAngles = [];
+    for (let star of stars) {
+        zenithAngles.push(vectorAngle(new Vector(star.x, star.y, z), zenithVector));
+    }
+
+    // 加权平均
+    let [avgLat, avgLon, positions] = squareWeightedAverage(crudePositions, stars, zenithAngles);
 
     // 转角度制
     avgLat = rad2Deg(avgLat);

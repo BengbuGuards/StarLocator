@@ -107,7 +107,7 @@ function calc(stars, z, zenith) {
     }
 
     // 加权平均
-    let [avgLat, avgLon, positions] = squareWeightedAverage(crudePositions, stars, zenithAngles);
+    let [avgLat, avgLon] = squareWeightedAverage(crudePositions, stars, zenithAngles);    
 
     return [avgLat, avgLon];
 }

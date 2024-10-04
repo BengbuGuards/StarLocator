@@ -43,17 +43,20 @@ function squareWeightedAverage(crudePositions, stars, zenithAngles) {
         positions.push(s1 > s2 ? pair[0] : pair[1]);
         weights.push(Math.max(s1, s2));
     }
+    weights = weights.map(w => w / weights.reduce((a, b) => a + b));
+    console.log("weights", weights);
 
     // 求平均值
-    let avgLat = 0;
-    let avgLon = 0;
+    let sum_vector = new astro.Vector(0, 0, 0, 0);
     for (let latLon of positions) {
-        let [lat, lon] = latLon;
-        avgLat += lat / positions.length;
-        avgLon += lon / positions.length;
+        let Vector = astro.VectorFromSphere(new astro.Spherical(latLon[0], latLon[1], 1), 0);
+        sum_vector.x += Vector.x;
+        sum_vector.y += Vector.y;
+        sum_vector.z += Vector.z;
     }
+    let avg_sphere = astro.SphereFromVector(sum_vector);
 
-    return [avgLat, avgLon, positions];
+    return [avg_sphere.lat, avg_sphere.lon, positions];
 }
 
 export { squareWeightedAverage };

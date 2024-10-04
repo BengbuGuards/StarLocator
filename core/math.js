@@ -65,4 +65,25 @@ function rejectOutliers(arr, sigma = 2) {
     return arr.filter(x => Math.abs(x - mean) < sigma * std);
 }
 
-export { add, dot, multiply, deg2Rad, rad2Deg, rejectOutliers };
+/**
+ * 计算中位数
+ * @param {Array<number>} numbers
+ * @returns {number}
+ */
+function calculateMedian(numbers) {
+    // 首先对数组进行排序
+    numbers.sort((a, b) => a - b);
+  
+    const middleIndex = Math.floor(numbers.length / 2);
+  
+    // 判断数组长度是奇数还是偶数
+    if (numbers.length % 2 === 0) {
+      // 偶数个元素，返回中间两个元素的平均值
+      return (numbers[middleIndex - 1] + numbers[middleIndex]) / 2;
+    } else {
+      // 奇数个元素，返回中间的元素
+      return numbers[middleIndex];
+    }
+}
+
+export { add, dot, multiply, deg2Rad, rad2Deg, rejectOutliers, calculateMedian };

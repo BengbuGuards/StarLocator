@@ -1,6 +1,6 @@
 import * as astro from "./astronomy.js";
 import { deg2Rad } from "./math.js";
-import { squareWeightedAverage } from "./algorithm/squareWeightedAverage.js";
+import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";
 
 const sin = Math.sin;
 const cos = Math.cos;
@@ -107,7 +107,7 @@ function calc(stars, z, zenith) {
     }
 
     // 加权平均
-    let [avgLat, avgLon] = squareWeightedAverage(crudePositions, stars, zenithAngles);    
+    let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);    
 
     return [avgLat, avgLon];
 }

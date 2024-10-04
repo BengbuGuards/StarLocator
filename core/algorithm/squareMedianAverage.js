@@ -1,4 +1,4 @@
-import { rad2Deg } from "../math.js";
+import { rad2Deg, calculateMedian } from "../math.js";
 import * as astro from "../astronomy.js";
 
 
@@ -12,7 +12,7 @@ import * as astro from "../astronomy.js";
  * 该值越大，这个位置越正确
  * 返回正确的位置的平均值
 */
-function squareWeightedAverage(crudePositions, stars, zenithAngles) {
+function squareMedianAverage(crudePositions, stars, zenithAngles) {
     /**
      * 评估一个位置是否正确
      * 计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
@@ -36,27 +36,19 @@ function squareWeightedAverage(crudePositions, stars, zenithAngles) {
 
     // 评估，保留正确的位置和评估值
     let positions = [];
-    let weights = [];
     for (let pair of crudePositions) {
         let s1 = evaluate(pair[0]);
         let s2 = evaluate(pair[1]);
         positions.push(s1 > s2 ? pair[0] : pair[1]);
-        weights.push(Math.max(s1, s2));
     }
-    weights = weights.map(w => w / weights.reduce((a, b) => a + b));
 
-    // 求平均值
-    let sum_vector = new astro.Vector(0, 0, 0, 0);
-    for (let i = 0; i < positions.length; ++i) {
-        let latLon = positions[i];
-        let Vector = astro.VectorFromSphere(new astro.Spherical(latLon[0], latLon[1], 1), 0);
-        sum_vector.x += Vector.x * weights[i];
-        sum_vector.y += Vector.y * weights[i];
-        sum_vector.z += Vector.z * weights[i];
-    }
-    let avg_sphere = astro.SphereFromVector(sum_vector);
+    // 求positions中位数
+    let lat_list = positions.map(p => p[0]);
+    let lon_list = positions.map(p => p[1]);
+    let avg_lat = calculateMedian(lat_list);
+    let avg_lon = calculateMedian(lon_list);
 
-    return [avg_sphere.lat, avg_sphere.lon];
+    return [avg_lat, avg_lon];
 }
 
-export { squareWeightedAverage };
+export { squareMedianAverage };

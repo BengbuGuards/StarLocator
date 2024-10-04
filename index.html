@@ -13,88 +13,100 @@
 <body>
 	<div class="input-helper" id="hourAngleInput">格式要求：h m s</div>
 	<h1>照片测星定位beta</h1>
-	<div class="row" id="box" style="min-width:360px; height: 360px; margin-bottom: 3%;">
-		<input type="file" id="srcFile" accept="image/*" />
-		<canvas id="canvas"></canvas>
-		<div>
-			<div id="pic-info" style="float: left;"></div>
-			<div id="cursor-crd" style="float: right;"></div>
-		</div>
-	</div>
 	<div class="row">
-		<div class="column2"></div>
-		<div class="column6" style="margin: auto">
-			<button type="button" class="actionButton Button1" id="resetPick">重置<br />标注</button>
-			<button type="button" class="actionButton Button2" id="celePick" onclick="addPoint">天体<br />选择</button>
-			<button type="button" class="actionButton Button3" id="vaniZen">消失点定位</button>
-			<button type="button" class="actionButton Button4" id="horiZen">地平线定位</button>
+		<div class="col-2"></div>
+		<div class="col-7" id="box" style="min-width:360px; height: 360px">
+			<input type="file" id="srcFile" accept="image/*" />
+			<canvas id="canvas"></canvas>
+			<div>
+				<div id="pic-info" style="float: left"></div>
+				<div id="cursor-crd" style="float: right"></div>
+			</div>
 		</div>
-		<div class="column2"></div>
+		<div class="col-2"></div>
 	</div>
-	<div class="row">
-		<div class="inputColumn">
-			<table class="inputTable">
+	<div class="row" style="margin-top:45px">
+		<div class="col-2 col-sm-0"></div>
+		<div class="col" style="max-width:24px">
+			<button type="button" class="actionButton Button1" id="resetPick">
+				<img src="img\icon\resetPick.png"/ alt="重置标注" width="48" height="48" style="margin-left:-8px; margin-top:-3px">
+			</button><br/>
+			<button type="button" class="actionButton Button2" id="celePick" onclick="addPoint">
+				<img src="img\icon\celePick.png"/ alt="天体选择" width="48" height="48" style="margin-left:-8px; margin-top:-3px">
+			</button><br/>
+			<button type="button" class="actionButton Button3" id="vaniZen">
+				<img src="img\icon\vaniZen.png"/ alt="消失点定位" width="48" height="48" style="margin-left:-8px; margin-top:-3px">
+			</button><br/>
+			<button type="button" class="actionButton Button4" id="horiZen">
+				<img src="img\icon\horiZen.png"/ alt="地平线定位" width="48" height="48" style="margin-left:-8px; margin-top:-3px">
+			</button>
+		</div>
+		<div class="col-7">
+			<table class="inputTable" style="padding-right:22px">
 				<tr>
-					<th style="width: 5%">天体</td>
-					<th style="width: 20%">名称</td>
-					<th style="width: 25%">参考时角</td>
-					<th style="width: 20%">赤纬</td>
-					<th style="width: 15%">x</td>
-					<th style="width: 15%">y</td>
+					<th style="width: 5%">天体</th>
+					<th style="width: 20%">名称</th>
+					<th style="width: 25%">参考时角</th>
+					<th style="width: 20%">赤纬</th>
+					<th style="width: 15%">x</th>
+					<th style="width: 15%">y</th>
 				</tr>
 				<tr>
 					<td class="zenith">0</td>
 					<td class="zenith">天顶</td>
-					<td colspan="2"></td>
-					<td><input type="number" class="coordsInput zenith" id="zenX"></td>
-					<td><input type="number" class="coordsInput zenith" id="zenY"></td>
+					<td class="zenith">N/A</td>
+					<td class="zenith">N/A</td>
+					<td><input type="number" class="coordsInput zenith table" id="zenX"></td>
+					<td><input type="number" class="coordsInput zenith table" id="zenY"></td>
 				</tr>
 				<tr>
 					<td>1</td>
-					<td><input type="text" class="celesName" id="name1"></td>
-					<td><input type="number" class="hourAngle" id="hAngle1"></td>
-					<td><input type="number" class="declination" id="declin1"></td>
-					<td><input type="number" class="coordsInput" id="coordX1"></td>
-					<td><input type="number" class="coordsInput" id="coordY1"></td>
+					<td><input type="text" class="celesName table" id="name1"></td>
+					<td><input type="number" class="hourAngle table" id="hAngle1"></td>
+					<td><input type="number" class="declination table" id="declin1"></td>
+					<td><input type="number" class="coordsInput table" id="coordX1"></td>
+					<td><input type="number" class="coordsInput table" id="coordY1"></td>
 				</tr>
 				<tr>
 					<td>2</td>
-					<td><input type="text" class="celesName" id="name2"></td>
-					<td><input type="number" class="hourAngle" id="hAngle2"></td>
-					<td><input type="number" class="declination" id="declin2"></td>
-					<td><input type="number" class="coordsInput" id="coordX2"></td>
-					<td><input type="number" class="coordsInput" id="coordY2"></td>
+					<td><input type="text" class="celesName table" id="name2"></td>
+					<td><input type="number" class="hourAngle table" id="hAngle2"></td>
+					<td><input type="number" class="declination table" id="declin2"></td>
+					<td><input type="number" class="coordsInput table" id="coordX2"></td>
+					<td><input type="number" class="coordsInput table" id="coordY2"></td>
 				</tr>
 				<tr>
 					<td>3</td>
-					<td><input type="text" class="celesName" id="name3"></td>
-					<td><input type="number" class="hourAngle" id="hAngle3"></td>
-					<td><input type="number" class="declination" id="decli3"></td>
-					<td><input type="number" class="coordsInput" id="coordX3"></td>
-					<td><input type="number" class="coordsInput" id="coordY3"></td>
+					<td><input type="text" class="celesName table" id="name3"></td>
+					<td><input type="number" class="hourAngle table" id="hAngle3"></td>
+					<td><input type="number" class="declination table" id="decli3"></td>
+					<td><input type="number" class="coordsInput table" id="coordX3"></td>
+					<td><input type="number" class="coordsInput table" id="coordY3"></td>
 				</tr>
 				<tr>
 					<td>4</td>
-					<td><input type="text" class="celesName" id="name4"></td>
-					<td><input type="number" class="hourAngle" id="hAngle4"></td>
-					<td><input type="number" class="declination" id="declin4"></td>
-					<td><input type="number" class="coordsInput" id="coordX4"></td>
-					<td><input type="number" class="coordsInput" id="coordY4"></td>
+					<td><input type="text" class="celesName table" id="name4"></td>
+					<td><input type="number" class="hourAngle table" id="hAngle4"></td>
+					<td><input type="number" class="declination table" id="declin4"></td>
+					<td><input type="number" class="coordsInput table" id="coordX4"></td>
+					<td><input type="number" class="coordsInput table" id="coordY4"></td>
 				</tr>
 				<tr>
 					<td>5</td>
-					<td><input type="text" class="celesName" id="name5"></td>
-					<td><input type="number" class="hourAngle" id="hAngle5"></td>
-					<td><input type="number" class="declination" id="declin5"></td>
-					<td><input type="number" class="coordsInput" id="coordX5"></td>
-					<td><input type="number" class="coordsInput" id="coordY5"></td>
+					<td><input type="text" class="celesName table" id="name5"></td>
+					<td><input type="number" class="hourAngle table" id="hAngle5"></td>
+					<td><input type="number" class="declination table" id="declin5"></td>
+					<td><input type="number" class="coordsInput table" id="coordX5"></td>
+					<td><input type="number" class="coordsInput table" id="coordY5"></td>
 				</tr>
 			</table>
 		</div>
-		<br />
+
 	</div>
+	<h2>数据处理</h2>
 	<div class="row">
-		<div class="column2">
+		<div class="col-2"></div>
+		<div class="col" style="max-width:160px">
 			<input type="checkbox" id="check1" checked />
 			<label for="check1">大气折射修正</label><br />
 			<input type="checkbox" id="check2" checked />
@@ -106,7 +118,7 @@
 			<label for="set1">时间偏差 </label><input id="set1" type="number" style="width: 45%"><br />
 			<label for="set2">时区设置 </label><input id="set2" type="number" style="width: 45%">
 		</div>
-		<div class="column6">
+		<div class="col-5">
 			<table style="width: 100%">
 				<tr>
 					<th>天体</td>
@@ -140,8 +152,8 @@
 				</tr>
 			</table>
 		</div>
-		<div class="column2">
-			<table style="width: 100%">
+		<div class="col-1">
+			<table style="width: 86%; margin-left: -28px;">
 				<tr>
 					<th>像素焦距z</th>
 				</tr>
@@ -164,12 +176,11 @@
 		</div>
 		<br />
 	</div>
+	<h2>定位结果</h2>
 	<div class="row">
-		<div class="outputColumn">
-			<p style="text-align: center" id="textResult">定位结果</p><br />
-		</div>
-		<div id="map" style="width:auto; min-width:360px; height: 360px;"></div>
-		</canvas>
+		<div class="col-2"></div>
+		<div class="col-7" id="map" style="min-width:360px; height: 360px; margin-left:12px"></div>
+		<div class="col-2"></div>
 	</div>
 	<script>
 		

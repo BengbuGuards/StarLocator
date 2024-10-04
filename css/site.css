@@ -1,4 +1,4 @@
-
+﻿
 body {
 	background-color: #1c355d;
 	color: #dfdfdf;
@@ -51,14 +51,6 @@ input.table:hover {
 }
 .actionButton:active{
 	background-color: #194837;
-}
-.Button1{
-}
-.Button2{
-}
-.Button3{
-}
-.Button4{
 }
 .zenith{
 	color: #e44f0d;

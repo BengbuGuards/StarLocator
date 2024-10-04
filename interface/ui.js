@@ -188,7 +188,7 @@ window.onload = function () {
 
 	var leafletLink = document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0];
 	leafletLink.title = '一个交互式地图 JavaScript 库';
-	leafletLink.getElementsByTagName('svg')[0].remove();
+	// leafletLink.getElementsByTagName('svg')[0].remove();
 
 	//L.marker([28.7684, 120.8347]).addTo(map); //标点
 

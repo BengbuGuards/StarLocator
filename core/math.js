@@ -1,44 +1,15 @@
-const sin = Math.sin;
-const cos = Math.cos;
+import { Vector } from "./astronomy.js";
 
 
-/** 三维向量 */
-class Vector {
-    x; y; z;
-
-    /**
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     */
-    constructor(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    /**
-     * 将 GP 转化为单位方向向量
-     * @param {number} lat 纬度（弧度制）
-     * @param {number} lon 经度（弧度制）
-     * @returns {Vector} 一个向量对象
-     */
-    static fromGP(lat, lon) {
-        return new Vector(
-            cos(lat) * cos(lon),
-            cos(lat) * sin(lon),
-            sin(lat)
-        );
-    }
-
-    /**
-     * 获取该向量的模长
-     * @returns {number}
-     */
-    norm() {
-        return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-    }
-};
+/**
+ * 向量加法
+ * @param {Vector} v1
+ * @param {Vector} v2
+ * @returns {Vector}
+ */
+function add(v1, v2) {
+    return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, 0);
+}
 
 
 /**
@@ -53,13 +24,13 @@ function dot(v1, v2) {
 
 
 /**
- * 计算向量夹角（弧度制）
- * @param {Vector} v1
- * @param {Vector} v2
- * @returns {number}
+ * 向量元素乘
+ * @param {number} n
+ * @param {Vector} v
+ * @returns {Vector}
  */
-function vectorAngle(v1, v2) {
-    return Math.acos(dot(v1, v2) / (v1.norm() * v2.norm()));
+function multiply(n, v) {
+    return new Vector(n * v.x, n * v.y, n * v.z, 0);
 }
 
 
@@ -94,4 +65,4 @@ function rejectOutliers(arr, sigma = 2) {
     return arr.filter(x => Math.abs(x - mean) < sigma * std);
 }
 
-export { Vector, vectorAngle, deg2Rad, rad2Deg, rejectOutliers };
+export { add, dot, multiply, deg2Rad, rad2Deg, rejectOutliers };

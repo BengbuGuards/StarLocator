@@ -1,5 +1,5 @@
-import { Star } from "./data.js";
-import { Vector, vectorAngle, rejectOutliers } from "./math.js";
+import { AngleBetween, VectorFromSphere, Spherical } from "./astronomy.js";
+import { rejectOutliers, deg2Rad, rad2Deg } from "./math.js";
 
 
 /**
@@ -11,11 +11,14 @@ import { Vector, vectorAngle, rejectOutliers } from "./math.js";
 function getZFrom2Stars(star1, star2) {
     // 理论夹角
     let theoreticalCosAngle = Math.cos(
-        vectorAngle(
-            Vector.fromGP(star1.lat, star1.lon),
-            Vector.fromGP(star2.lat, star2.lon)
+        deg2Rad(
+            AngleBetween(
+                VectorFromSphere(new Spherical(rad2Deg(star1.lat), rad2Deg(star1.lon), 1), 0),
+                VectorFromSphere(new Spherical(rad2Deg(star2.lat), rad2Deg(star2.lon), 1), 0)
+            )
         )
     );
+    console.log("theoreticalCosAngle", theoreticalCosAngle);
 
     let a = theoreticalCosAngle ** 2 - 1;
     let b = (star1.x ** 2 + star1.y ** 2 + star2.x ** 2 + star2.y ** 2) * theoreticalCosAngle ** 2 - 2 * (star1.x * star2.x + star1.y * star2.y);

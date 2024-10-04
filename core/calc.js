@@ -55,6 +55,18 @@ function solve(plane1, plane2) {
 
 
 /**
+ * 计算一颗星星的高度角（与天顶角互余）
+ * @param {Star} star 星星
+ * @param {number} z 像素焦距
+ * @param {Array<number>} zenithVector 天顶向量
+ * @returns 高度角（弧度制）
+ */
+function getElevationAngle(star, z, zenithVector) {
+    return Math.PI / 2 - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
+}
+
+
+/**
  * 双星定位
  * @param {Star} star1 星星1
  * @param {Star} star2 星星2
@@ -63,18 +75,9 @@ function solve(plane1, plane2) {
  * @returns {Array<number>} 两组经纬度（弧度制）
  */
 function dualStarPositioning(star1, star2, z, zenithVector) {
-    /**
-     * 计算一颗星星的高度角（与天顶角互余）
-     * @param {Star} star 
-     * @returns 高度角（弧度制）
-     */
-    const getElevationAngle = (star) => Math.PI / 2
-        - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
-
-
     // 计算平面方程
-    let plane1 = getPlain(star1, getElevationAngle(star1));
-    let plane2 = getPlain(star2, getElevationAngle(star2));
+    let plane1 = getPlain(star1, getElevationAngle(star1, z, zenithVector));
+    let plane2 = getPlain(star2, getElevationAngle(star2, z, zenithVector));
 
     // 联立求解
     return solve(plane1, plane2);

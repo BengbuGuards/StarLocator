@@ -1,16 +1,17 @@
 // by BengbuGuards小流汗黄豆
-var container
-var canvas
-var cursor_crd
-var movable = false, isDrawing = false;
-var text
-var rect
-var map
+var container, canvas, canvasInst, tips, cursor_crd;
+var movable = false;
+var text, rect;
+var map;
+
+var lmbDown = false, cancelOp = false;
+var isPickingCele = false;
 
 // 页面加载完成事件
 window.onload = function () {
 	container = document.getElementById('box');
-	cursor_crd = document.getElementById('cursor-crd');
+	cursor_crd = document.getElementById('cursorCrd');
+	tips = document.getElementById('canvasStatus');
 
 	// 初始化画布
 	canvas = new fabric.Canvas("canvas", {
@@ -28,24 +29,54 @@ window.onload = function () {
 		hoverCursor: 'default'
 	});
 	canvas.add(text);
-	reZoomCanvas(text, false);
+	reZoomCanvas(text, true, false);
+	canvasInst = document.getElementsByClassName('upper-canvas')[0];
 
+	function setCanvasCursor(cursor) {
+		canvasInst.style.cursor = cursor;
+	}
 	// 画布缩放移动
 	canvas.on("mouse:down", function (e) {
-		if (movable && canvas.getActiveObject() == undefined) {
+		lmbDown = true;
+		if (!isPickingCele && movable && canvas.getActiveObject() == undefined) {
+			if (!this.panning) {
+				setCanvasCursor('grabbing');
+			}
 			this.panning = true;
 			canvas.selection = false;
 		}
 	});
 	canvas.on("mouse:up", function (e) {
-		if (movable && canvas.getActiveObject() == undefined) {
+		lmbDown = false;
+		if (isPickingCele) {
+			if (cancelOp) {
+				cancelOp = false;
+				// 取消操作
+			}else{
+				// 加入
+			}
+			isPickingCele = false;
+			tips.innerHTML = '';
+			setCanvasCursor('grab');
+		} else if (movable && canvas.getActiveObject() == undefined) {
 			this.panning = false;
 			canvas.selection = true;
+			setCanvasCursor('grab');
 		}
 	});
 	canvas.on("mouse:move", function (e) {
+		if (isPickingCele) {
+			if (lmbDown) {
+				cancelOp = true;
+				canvas.selection = false;
+				tips.innerHTML = '松开鼠标取消标记。';
+				setCanvasCursor('not-allowed');
+				return;
+			}
+			setCanvasCursor('crosshair');
+		}
 		// 坐标显示
-		if (movable && e) {
+		if (movable && e && !this.panning) {
 			let p = canvas.getPointer(e.e);
 			cursor_crd.innerHTML = `${Math.round(p.x)}，${Math.round(p.y)}`;
 		}
@@ -61,7 +92,7 @@ window.onload = function () {
 		}
 	})
 	canvas.on('mouse:wheel', opt => {
-		if (!movable) return
+		if (!movable) return;
 		opt.e.preventDefault()
 		const delta = opt.e.deltaY
 		let zoom = this.canvas.getZoom()
@@ -76,12 +107,14 @@ window.onload = function () {
 		)
 	})
 
-	function reZoomCanvas(rect, resize = true) {
+	function reZoomCanvas(rect, alignRect = false, resize = true) {
 		var scaleX = canvas.width / rect.width;
 		var scaleY = canvas.height / rect.height;
 		var scale = Math.min(scaleX, scaleY);
 		var newX = canvas.width / 2 - rect.width / 2, newY = canvas.height / 2 - rect.height / 2
-		canvas.setViewportTransform([1, 0, 0, 1, newX, newY]);
+		if (alignRect)
+			canvas.setViewportTransform([1, 0, 0, 1, newX, newY]);
+		else canvas.setViewportTransform([1, 0, 0, 1, canvas.width / 2, canvas.height / 2]);
 		if (resize)
 			canvas.zoomToPoint({ x: canvas.width / 2, y: canvas.height / 2 }, scale);
 	}
@@ -91,34 +124,46 @@ window.onload = function () {
 		canvas.setWidth(container.clientWidth);
 		canvas.setHeight(container.clientHeight);
 		if (movable) reZoomCanvas(rect);
-		else reZoomCanvas(text, false);
+		else reZoomCanvas(text, true, false);
 	}
+
+	document.getElementById('resetZoom').addEventListener('click', function () {
+		if (movable) reZoomCanvas(rect);
+	});
+	document.getElementById('celePick').addEventListener('click', function () {
+		if (!movable) return;
+		isPickingCele = !isPickingCele;
+		tips.innerHTML = `${isPickingCele ? '单击要选择的天体。' : ''}`;
+	});
 
 	// 读取到文件事件
 	function onImgChange(e) {
-		var file = e.target.files[0];
-		var reader = new FileReader();
+		let file = e.target.files[0];
+		let reader = new FileReader();
 		reader.onload = function (e) {
-			var img = new Image();
+			let img = new Image();
 			img.onload = function () {
+				let width = img.width, height = img.height;
 				// 移除先前图片
 				if (rect != undefined)
 					canvas.remove(rect);
 				// 创建图片Rect
-				var pattern = new fabric.Pattern({
+				let pattern = new fabric.Pattern({
 					source: img,
 					repeat: 'repeat'
 				});
 				rect = new fabric.Rect({
-					width: img.width,
-					height: img.height,
+					left: width / (-2),
+					top: height / (-2),
+					width: width,
+					height: height,
 					fill: pattern,
 					selectable: false,
-					hoverCursor: 'default'
+					hoverCursor: 'grab'
 				});
 				canvas.add(rect);
 				// 更新页面
-				document.getElementById('pic-info').innerHTML = `${img.width} × ${img.height}`;
+				document.getElementById('picInfo').innerHTML = `${img.width} × ${img.height}&nbsp;&nbsp;&nbsp;`;
 				reZoomCanvas(rect);
 			};
 			img.src = e.target.result;
@@ -126,6 +171,7 @@ window.onload = function () {
 		reader.readAsDataURL(file);
 		movable = true;
 		canvas.selection = true;
+		canvas.defaultCursor = 'grab';
 		canvas.remove(text);
 	}
 	document.getElementById("srcFile").addEventListener('change', onImgChange);
@@ -134,10 +180,15 @@ window.onload = function () {
 	map = L.map('map').setView([32.0, 110.0], 3);
 
 	L.tileLayer('https://{s}.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+		minZoom: 2,
 		maxZoom: 19,
 		subdomains: ['services', 'server'],
-		attribution: '&copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
+		attribution: '球面墨卡托投影 <span aria-hidden="true">|</span> &copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
 	}).addTo(map);
+
+	var leafletLink = document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0];
+	leafletLink.title = '一个交互式地图 JavaScript 库';
+	leafletLink.getElementsByTagName('svg')[0].remove();
 
 	//L.marker([28.7684, 120.8347]).addTo(map); //标点
 

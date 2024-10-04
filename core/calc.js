@@ -1,5 +1,6 @@
-import { Star } from "./data.js";
-import { rad2Deg, Vector, vectorAngle } from "./math.js";
+import * as astro from "./astronomy.js";
+import { deg2Rad } from "./math.js";
+import { squareWeightedAverage } from "./algorithm/squareWeightedAverage.js";
 
 const sin = Math.sin;
 const cos = Math.cos;
@@ -9,7 +10,7 @@ const sqrt = Math.sqrt;
 /**
  * 获取一颗星星的平面方程 Ax + By + Cz = D 的 A, B, C, D
  * @param {Star} star 星星
- * @param {number} elevationAngle 高度角
+ * @param {number} elevationAngle 高度角（弧度制）
  * @returns {Array<number>} [A, B, C, D]
  */
 function getPlain(star, elevationAngle) {
@@ -24,6 +25,11 @@ function getPlain(star, elevationAngle) {
     ];
 }
 
+    /**
+     * 2024-10-4 gc
+     * 大气折射修正的经验公式，精度聊胜于无。输入、输出单位均为弧度
+     * 折射修正仰角 = 仰角 - 0.000000034144 * cot(仰角) ** 3 + 0.000005128 * cot(仰角) ** 2 - 0.000301915 * cot(仰角)
+     */
 
 /**
  * 解两个平面与地球（单位球）联立的方程组
@@ -42,20 +48,9 @@ function solve(plane1, plane2) {
     let y2 = (A1 ** 2 * B2 * D2 - A1 * A2 * B1 * D2 - A1 * A2 * B2 * D1 - A1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) + A2 ** 2 * B1 * D1 + A2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) - B1 * C1 * C2 * D2 + B1 * C2 ** 2 * D1 + B2 * C1 ** 2 * D2 - B2 * C1 * C2 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
     let z2 = (A1 * B2 - A2 * B1) * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2) + (A1 ** 2 * C2 * D2 - A1 * A2 * C1 * D2 - A1 * A2 * C2 * D1 + A2 ** 2 * C1 * D1 + B1 ** 2 * C2 * D2 - B1 * B2 * C1 * D2 - B1 * B2 * C2 * D1 + B2 ** 2 * C1 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
 
-    /**
-     * 空间直角坐标转经纬度（弧度制）
-     * @param {number} x
-     * @param {number} y
-     * @param {number} z
-     * @returns {Array<number>} [纬度, 经度]（弧度制）
-     */
-    function xyz2LatLon(x, y, z) {
-        let lat = Math.asin(z);
-        let lon = Math.atan2(y, x);
-        return [lat, lon];
-    }
-
-    return [xyz2LatLon(x1, y1, z1), xyz2LatLon(x2, y2, z2)];
+    let solve1 = astro.SphereFromVector(new astro.Vector(x1, y1, z1, 0));
+    let solve2 = astro.SphereFromVector(new astro.Vector(x2, y2, z2, 0));
+    return [[solve1.lat, solve1.lon], [solve2.lat, solve2.lon]];
 }
 
 
@@ -74,7 +69,8 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
      * @returns 高度角（弧度制）
      */
     const getElevationAngle = (star) => Math.PI / 2
-        - vectorAngle(new Vector(star.x, star.y, z), zenithVector);
+        - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
+
 
     // 计算平面方程
     let plane1 = getPlain(star1, getElevationAngle(star1));
@@ -94,7 +90,7 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  */
 function calc(stars, z, zenith) {
     // 天顶向量
-    let zenithVector = new Vector(zenith[0], zenith[1], z);
+    let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0)
     // 存放粗的数据，每个元素有两组经纬度
     let crudePositions = []
     // 两两计算
@@ -107,53 +103,19 @@ function calc(stars, z, zenith) {
     // 每颗星星的理论天顶角
     let zenithAngles = [];
     for (let star of stars) {
-        zenithAngles.push(vectorAngle(new Vector(star.x, star.y, z), zenithVector));
+        zenithAngles.push(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
     }
 
-    /**
-     * 评估一个位置是否正确
-     * 计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
-     * @param {Array<number>} pos 经纬度（弧度制）
-     * @returns 该值越大，这个位置越正确
-     */
-    function evaluate(pos) {
-        let sum = 0;
-        for (let k = 0; k < stars.length; ++k) {
-            // 计算该位置的实际天顶角
-            let angle = vectorAngle(
-                Vector.fromGP(pos[0], pos[1]),
-                Vector.fromGP(stars[k].lat, stars[k].lon)
-            );
-            // 与理论天顶角比较
-            let diff = angle - zenithAngles[k];
-            sum += diff ** 2;
-        }
-        return 1 / sum;
-    }
-
-    // 评估，保留正确的位置
-    let positions = [];
-    for (let pair of crudePositions) {
-        let s1 = evaluate(pair[0]);
-        let s2 = evaluate(pair[1]);
-        positions.push(s1 > s2 ? pair[0] : pair[1]);
-    }
-
-    // 求平均值
-    let avgLat = 0;
-    let avgLon = 0;
-    for (let latLon of positions) {
-        let [lat, lon] = latLon;
-        avgLat += lat / positions.length;
-        avgLon += lon / positions.length;
-    }
-
-    // 转角度制
-    avgLat = rad2Deg(avgLat);
-    avgLon = rad2Deg(avgLon);
+    // 加权平均
+    let [avgLat, avgLon, positions] = squareWeightedAverage(crudePositions, stars, zenithAngles);
 
     return [avgLat, avgLon];
 }
 
-
+/**
+ * 2024-10-4 gc 重力纬度修正
+ * 对计算完成的纬度进行进一步重力方向修正。输入输出单位均为角度
+ * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
+ */
+ 
 export { calc };

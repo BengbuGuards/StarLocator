@@ -18,7 +18,6 @@ function getZFrom2Stars(star1, star2) {
             )
         )
     );
-    console.log("theoreticalCosAngle", theoreticalCosAngle);
 
     let a = theoreticalCosAngle ** 2 - 1;
     let b = (star1.x ** 2 + star1.y ** 2 + star2.x ** 2 + star2.y ** 2) * theoreticalCosAngle ** 2 - 2 * (star1.x * star2.x + star1.y * star2.y);

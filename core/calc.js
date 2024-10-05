@@ -35,7 +35,7 @@ function getPlain(star, elevationAngle) {
  * 解两个平面与地球（单位球）联立的方程组
  * @param {Array<number>} plane1 [A1, B1, C1, D1]
  * @param {Array<number>} plane2 [A2, B2, C2, D2]
- * @returns {Array<Array<number>>} 两个交点的经纬度（弧度制）
+ * @returns {Array<Array<number>>} 两个交点的经纬度（角度制）
  */
 function solve(plane1, plane2) {
     let [A1, B1, C1, D1] = plane1;
@@ -60,7 +60,7 @@ function solve(plane1, plane2) {
  * @param {Star} star2 星星2
  * @param {number} z 像素焦距
  * @param {Array<number>} zenithVector 天顶向量
- * @returns {Array<number>} 两组经纬度（弧度制）
+ * @returns {Array<number>} 两组经纬度（角度制）
  */
 function dualStarPositioning(star1, star2, z, zenithVector) {
     // 计算平面方程

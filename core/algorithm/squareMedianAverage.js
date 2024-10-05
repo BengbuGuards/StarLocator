@@ -7,7 +7,7 @@ import * as astro from "../astronomy.js";
  * @param {Array<Array<number>>} crudePositions 粗数据，每个元素有两组经纬度（角度制）
  * @param {Array<Star>} stars 星星数组
  * @param {Array<number>} zenithAngles 理论天顶角（角度制）
- * @returns 平均经纬度（弧度制）
+ * @returns 平均经纬度（角度制）
  * @description 评估一个位置是否正确，计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
  * 该值越大，这个位置越正确
  * 返回正确的位置的平均值

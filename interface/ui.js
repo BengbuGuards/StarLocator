@@ -1,8 +1,11 @@
 // by BengbuGuards小流汗黄豆
-var container, canvas, canvasInst, tips, cursor_crd;
+var container, canvas, canvasInst, tips, cursorCrd, inputTable;
 var movable = false;
 var text, rect;
 var map;
+
+var iStar;
+var points = [], ptLabels = [], numOfPts = 0;
 
 var lmbDown = false, cancelOp = false;
 var isPickingCele = false;
@@ -10,8 +13,9 @@ var isPickingCele = false;
 // 页面加载完成事件
 window.onload = function () {
 	container = document.getElementById('box');
-	cursor_crd = document.getElementById('cursorCrd');
+	cursorCrd = document.getElementById('cursorCrd');
 	tips = document.getElementById('canvasStatus');
+	inputTable = document.getElementById('inputTable')
 
 	// 初始化画布
 	canvas = new fabric.Canvas("canvas", {
@@ -52,8 +56,10 @@ window.onload = function () {
 			if (cancelOp) {
 				cancelOp = false;
 				// 取消操作
-			}else{
+			} else {
 				// 加入
+				let p = canvas.getPointer(e.e);
+				addStarAtPoint(p.x, p.y);
 			}
 			isPickingCele = false;
 			tips.innerHTML = '';
@@ -78,7 +84,7 @@ window.onload = function () {
 		// 坐标显示
 		if (movable && e && !this.panning) {
 			let p = canvas.getPointer(e.e);
-			cursor_crd.innerHTML = `${Math.round(p.x)}，${Math.round(p.y)}`;
+			cursorCrd.innerHTML = `${Math.round(p.x)}，${Math.round(p.y)}`;
 		}
 		if (this.panning && e && e.e) {
 			var delta = new fabric.Point(e.e.movementX, e.e.movementY);
@@ -88,7 +94,7 @@ window.onload = function () {
 	canvas.on('mouse:out', function (e) {
 		if (movable && e) {
 			let p = canvas.getPointer(e.e);
-			cursor_crd.innerHTML = '';
+			cursorCrd.innerHTML = '';
 		}
 	})
 	canvas.on('mouse:wheel', opt => {
@@ -176,6 +182,10 @@ window.onload = function () {
 	}
 	document.getElementById("srcFile").addEventListener('change', onImgChange);
 
+	iStar = new Image();
+	iStar.src = 'img/icon/stars.svg';
+	    var ctx = canvas.getContext('2d');
+
 	// 初始化地图
 	map = L.map('map').setView([32.0, 110.0], 3);
 
@@ -186,9 +196,11 @@ window.onload = function () {
 		attribution: '球面墨卡托投影 <span aria-hidden="true">|</span> &copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
 	}).addTo(map);
 
-	var leafletLink = document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0];
-	leafletLink.title = '一个交互式地图 JavaScript 库';
-	// leafletLink.getElementsByTagName('svg')[0].remove();
+	document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0].title = '一个交互式地图 JavaScript 库';
+	document.getElementsByClassName('leaflet-control-zoom-in')[0].title = '放大';
+	document.getElementsByClassName('leaflet-control-zoom-out')[0].title = '缩小';
+	document.getElementsByClassName('leaflet-attribution-flag')[0].remove();
+	// leafletLink.getElementsByTagName('svg')[0]
 
 	//L.marker([28.7684, 120.8347]).addTo(map); //标点
 
@@ -215,6 +227,36 @@ window.onload = function () {
 		.catch(error => {
 			console.error('加载JSON数据时出错:', error);
 		});
+}
+function addStarAtPoint(x, y) {
+	numOfPts++;
+	let width = 32, height = 32;
+	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
+		left: x - 16,
+		top: y - 16,
+		width: width,
+		height: height,
+		fill: '#FFD248',
+		hasControls: false
+	});
+	let text = new fabric.Text('xxx', {
+		left: x + 16,
+		top: y - 5,
+		fontSize: 16,
+		selectable: false,
+		hoverCursor: 'grab'
+	});
+	point.on("moving", e => {
+		text.left = point.left + 32, text.top = point.top + 11;
+		text.setCoords();
+	});
+	canvas.add(point);
+	canvas.add(text);
+
+	points.push(point);
+	ptLabels.push(text);
+
+	// TODO: 加入到表格中
 }
 /* const input = document.getElementById('hAngle1');
 const floatingDiv = document.getElementById('hourAngleInput');

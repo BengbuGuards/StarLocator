@@ -36,6 +36,15 @@ input.table:hover {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
+.removeLine{
+	background: none;
+	width: 60%;
+    height: 60%;
+    background-color: #e44f0d60;
+    border-radius: 50%;
+	color: #e44f0d;
+	user-select: none;
+}
 
 .actionButton{
 	color: white;
@@ -62,6 +71,10 @@ input.table:hover {
 	margin-left: 5%;
 	margin-right: 5%;
 	width: 90%;
+}
+.formatedInput{
+    display: flex;
+    padding-right: 5px;
 }
 .hourAngle{
 	margin-left: 4%;

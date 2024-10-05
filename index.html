@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
+	<title>照片测星定位beta</title>
+	<meta charset="utf-8">
 	<link rel="stylesheet" href="css/site.css" />
 	<link rel="stylesheet" href="leaflet/dist/leaflet.css" />
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" crossorigin="">
@@ -51,14 +53,15 @@
 			</button>
 		</div>
 		<div class="col-7">
-			<table class="inputTable" style="padding-right:22px">
+			<table class="inputTable" id="inputTable" style="padding-right:22px">
 				<tr>
 					<th style="width: 5%">天体</th>
 					<th style="width: 20%">名称</th>
 					<th style="width: 25%">参考时角</th>
 					<th style="width: 20%">赤纬</th>
-					<th style="width: 15%">x</th>
-					<th style="width: 15%">y</th>
+					<th style="width: 13.5%">x</th>
+					<th style="width: 13.5%">y</th>
+					<th style="width: 3%; display: none;"></th>
 				</tr>
 				<tr>
 					<td class="zenith">0</td>
@@ -71,10 +74,23 @@
 				<tr>
 					<td>1</td>
 					<td><input type="text" class="celesName table" id="name1"></td>
-					<td><input type="number" class="hourAngle table" id="hAngle1"></td>
-					<td><input type="number" class="declination table" id="declin1"></td>
+					<td>
+						<div class="formatedInput">
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> h 
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> m 
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> s 
+						</div>
+					</td>
+					<td>
+						<div class="formatedInput">
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> ′ 
+							<div contenteditable="plaintext-only" style="flex: 1;"></div> ″ 
+						</div>
+					</td>
 					<td><input type="number" class="coordsInput table" id="coordX1"></td>
 					<td><input type="number" class="coordsInput table" id="coordY1"></td>
+					<td class="removeLine">–</td>
 				</tr>
 				<tr>
 					<td>2</td>

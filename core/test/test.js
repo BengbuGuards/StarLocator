@@ -30,9 +30,9 @@ const originalStars = [
 ]
 
 const geoTargets = [
-    [35.09282, 115],
-    [35.09282, 115],
-    [35.09282, 115]
+    [34.999625, 115],
+    [34.999625, 115],
+    [34.999625, 115]
 ]
 
 const zeniths = [
@@ -45,11 +45,15 @@ let errors = [];
 for (let i = 0; i < originalStars.length; i++) {
     let stars = markStars(originalStars[i]);
     console.log("stars: ", stars);
+
     let z = getZ(stars, zeniths[i], true);  // 使用大气折射修正
     // let z = getZ(stars, zeniths[i], false);  // 不使用大气折射修正
     console.log("z: ", z);
-    let geoEstimate = calc(stars, z, zeniths[i]);
+
+    let geoEstimate = calc(stars, z, zeniths[i], true);  // 使用重力修正
+    // let geoEstimate = calc(stars, z, zeniths[i]);  // 不使用重力修正
     console.log("geoEstimate", geoEstimate);
+    
     let error = Math.sqrt((geoEstimate[0] - geoTargets[i][0]) ** 2 + (geoEstimate[1] - geoTargets[i][1]) ** 2);
     errors.push(error);
     console.log("error: ", error);

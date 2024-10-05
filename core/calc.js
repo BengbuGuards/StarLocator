@@ -25,11 +25,6 @@ function getPlain(star, elevationAngle) {
     ];
 }
 
-    /**
-     * 2024-10-4 gc
-     * 大气折射修正的经验公式，精度聊胜于无。输入、输出单位均为弧度
-     * 折射修正仰角 = 仰角 - 0.000000034144 * cot(仰角) ** 3 + 0.000005128 * cot(仰角) ** 2 - 0.000301915 * cot(仰角)
-     */
 
 /**
  * 解两个平面与地球（单位球）联立的方程组
@@ -79,7 +74,7 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  * @param {Array<number>} zenith 天顶坐标 [x, y]
  * @returns 平均经纬度（角度制）
  */
-function calc(stars, z, zenith) {
+function calc(stars, z, zenith, isFixGravity = false) {
     // 天顶向量
     let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0)
     // 存放粗的数据，每个元素有两组经纬度
@@ -100,13 +95,16 @@ function calc(stars, z, zenith) {
     // 加权平均
     let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);    
 
+    /**
+     * 2024-10-4 gc 重力纬度修正
+     * 对计算完成的纬度进行进一步重力方向修正。输入输出单位均为角度
+     * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
+     */
+    if (isFixGravity) {
+        avgLat = avgLat + (0.00032712 * sin(avgLat) ** 2 - 0.00000368 * sin(avgLat) - 0.099161) * sin (avgLat * 2);
+    }
+
     return [avgLat, avgLon];
 }
-
-/**
- * 2024-10-4 gc 重力纬度修正
- * 对计算完成的纬度进行进一步重力方向修正。输入输出单位均为角度
- * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
- */
  
 export { calc };

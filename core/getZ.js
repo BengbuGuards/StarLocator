@@ -1,6 +1,6 @@
 import * as astro from "./astronomy.js";
 import { AngleBetween, VectorFromSphere, Spherical } from "./astronomy.js";
-import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize } from "./math.js";
+import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize, minimize } from "./math.js";
 
 const sin = Math.sin;
 const cos = Math.cos;
@@ -131,9 +131,8 @@ function getZWithoutRefraction(stars, z0, zenith) {
             ));
         }
     }
-    // 二分法
-    while (z_max - z_min > 1e-6) {
-        let z = (z_min + z_max) / 2;
+    // 使用优化函数求解
+    function z_error(z) {
         // 计算天顶的观测向量
         let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0);
         // 计算各星的观测向量
@@ -157,16 +156,12 @@ function getZWithoutRefraction(stars, z0, zenith) {
         // 计算夹角总误差
         let error = 0;
         for (let i = 0; i < angles.length; ++i) {
-            error += anglesReal[i] - angles[i];
+            error += Math.abs(anglesReal[i] - angles[i]);
         }
-        // 更新区间
-        if (error > 0) {
-            z_min = z;
-        } else {
-            z_max = z;
-        }
+        return error;
     }
-    return (z_min + z_max) / 2;
+    let z = minimize(z_error, z_min, z_max);
+    return z;
 }
 
 

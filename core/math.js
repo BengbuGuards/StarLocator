@@ -113,7 +113,28 @@ function calculateMedian(numbers) {
     }
 }
 
+
+function minimize(func, lowerBound, upperBound, tolerance = 1e-6) {
+    let left = lowerBound;
+    let right = upperBound;
+    
+    while ((right - left) > tolerance) {
+        let midLeft = left + (right - left) / 3;
+        let midRight = right - (right - left) / 3;
+        
+        if (func(midLeft) < func(midRight)) {
+            right = midRight;
+        } else {
+            left = midLeft;
+        }
+    }
+    
+    // 返回最小点 x
+    return (left + right) / 2;
+}
+
+
 export {
     add, dot, multiply, cross, normalize,
-    deg2Rad, rad2Deg, rejectOutliers, calculateMedian
+    deg2Rad, rad2Deg, rejectOutliers, calculateMedian, minimize
 };

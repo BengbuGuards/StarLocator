@@ -1,5 +1,9 @@
+import * as astro from "./astronomy.js";
 import { AngleBetween, VectorFromSphere, Spherical } from "./astronomy.js";
-import { rejectOutliers, deg2Rad, rad2Deg } from "./math.js";
+import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize, minimize } from "./math.js";
+
+const sin = Math.sin;
+const cos = Math.cos;
 
 
 /**
@@ -52,7 +56,7 @@ function getZFrom2Stars(star1, star2) {
  * @param {Array<Star>} stars 星星数组
  * @returns {number} 平均像素焦距
  */
-function getZ(stars) {
+function getAnalyticalZ(stars) {
     let Z_list = [];
     // 两两计算
     for (let i = 0; i < stars.length; ++i) {
@@ -68,4 +72,114 @@ function getZ(stars) {
 }
 
 
-export { getZ };
+/**
+ * 计算一颗星星的高度角（与天顶角互余）
+ * @param {Star} star 星星
+ * @param {number} z 像素焦距
+ * @param {Array<number>} zenithVector 天顶向量
+ * @returns 高度角（弧度制）
+ */
+function getElevationAngle(star, z, zenithVector) {
+    return Math.PI / 2 - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
+}
+
+
+/**
+ * 使用二分法修正折射偏差后的像素焦距
+ * @param {Array<Star>} stars 星星数组
+ * @param {number} z0 初始像素焦距
+ * @param {Array<number>} zenith 天顶坐标 [x, y]
+ * @returns {number} 像素焦距
+ */
+function getZWithoutRefraction(stars, z0, zenith) {
+    /**
+     * 向天顶向量逆时针旋转指定角度
+     * @param {astro.Vector} vector 向量
+     * @param {astro.Vector} zenithVector 天顶向量
+     * @param {number} angle 旋转角度（角度）
+     * @returns {astro.Vector} 旋转后的向量（单位向量）
+     */
+    function rotate(vector, zenithVector, angle) {
+        // 单位化
+        vector = normalize(vector);
+        zenithVector = normalize(zenithVector);
+        // 旋转轴
+        let axis = cross(vector, zenithVector);
+        // 保证逆时针旋转
+        angle = deg2Rad(-angle);
+        // 罗德里格斯旋转公式
+        let rotationMatrix = new astro.RotationMatrix([
+            [cos(angle) + axis.x ** 2 * (1 - cos(angle)), axis.x * axis.y * (1 - cos(angle)) - axis.z * sin(angle), axis.x * axis.z * (1 - cos(angle)) + axis.y * sin(angle)],
+            [axis.y * axis.x * (1 - cos(angle)) + axis.z * sin(angle), cos(angle) + axis.y ** 2 * (1 - cos(angle)), axis.y * axis.z * (1 - cos(angle)) - axis.x * sin(angle)],
+            [axis.z * axis.x * (1 - cos(angle)) - axis.y * sin(angle), axis.z * axis.y * (1 - cos(angle)) + axis.x * sin(angle), cos(angle) + axis.z ** 2 * (1 - cos(angle))]
+        ])
+        return astro.RotateVector(rotationMatrix, vector);
+    }
+
+    // z的上下限10%
+    let z_min = z0 * 0.9;
+    let z_max = z0 * 1.1;
+    // 计算各星的赤道向量
+    let starVectorEquator = stars.map(star => new astro.VectorFromSphere(new astro.Spherical(rad2Deg(star.lat), rad2Deg(star.lon), 1), 0));
+    // 计算各星理论夹角
+    let angles = [];
+    for (let i = 0; i < stars.length; ++i) {
+        for (let j = i + 1; j < stars.length; ++j) {
+            angles.push(astro.AngleBetween(
+                starVectorEquator[i],
+                starVectorEquator[j]
+            ));
+        }
+    }
+    // 使用优化函数求解
+    function z_error(z) {
+        // 计算天顶的观测向量
+        let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0);
+        // 计算各星的观测向量
+        let starVectorObserver = stars.map(star => new astro.Vector(star.x, star.y, z, 0));
+        // 计算各星高度角
+        let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
+        // 计算去折射高度角修正值（添加到zenithAngles上就是未折射时的高度角）
+        let starRefraction = starAngles.map(angle => astro.InverseRefraction("normal", angle));
+        // 计算去折射后的各星的观测向量
+        let starVectorReal = [];
+        for (let i = 0; i < stars.length; ++i) {
+            starVectorReal.push(rotate(starVectorObserver[i], zenithVector, starRefraction[i]));
+        }
+        // 计算去折射后的各星夹角
+        let anglesReal = [];
+        for (let i = 0; i < stars.length; ++i) {
+            for (let j = i + 1; j < stars.length; ++j) {
+                anglesReal.push(astro.AngleBetween(starVectorReal[i], starVectorReal[j]));
+            }
+        }
+        // 计算夹角总误差
+        let error = 0;
+        for (let i = 0; i < angles.length; ++i) {
+            error += Math.abs(anglesReal[i] - angles[i]);
+        }
+        return error;
+    }
+    let z = minimize(z_error, z_min, z_max);
+    return z;
+}
+
+
+/**
+ * 获取像素焦距
+ * @param {Array<Star>} stars 星星数组
+ * @param {Array<number>} zenith 天顶坐标 [x, y]
+ * @param {boolean} isFixRefraction 是否修正折射
+ * @returns {number} 像素焦距
+ */
+function getZ(stars, zenith = NaN, isFixRefraction = false) {
+    if (isFixRefraction) {
+        let z0 = getAnalyticalZ(stars);
+        return getZWithoutRefraction(stars, z0, zenith);
+    } else {
+        return getAnalyticalZ(stars);
+    }
+}
+
+
+export { getZ, getElevationAngle };

@@ -35,6 +35,33 @@ function multiply(n, v) {
 
 
 /**
+ * 向量叉乘
+ * @param {Vector} v1
+ * @param {Vector} v2
+ * @returns {Vector}
+ */
+function cross(v1, v2) {
+    return new Vector(
+        v1.y * v2.z - v1.z * v2.y,
+        v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x,
+        0
+    );
+}
+
+
+/**
+ * 向量归一化
+ * @param {Vector} v
+ * @returns {Vector}
+ */
+function normalize(v) {
+    let length = v.Length();
+    return new Vector(v.x / length, v.y / length, v.z / length, 0);
+}
+
+
+/**
  * 角度制转弧度制
  * @param {number} deg 
  * @returns {number}
@@ -86,4 +113,28 @@ function calculateMedian(numbers) {
     }
 }
 
-export { add, dot, multiply, deg2Rad, rad2Deg, rejectOutliers, calculateMedian };
+
+function minimize(func, lowerBound, upperBound, tolerance = 1e-6) {
+    let left = lowerBound;
+    let right = upperBound;
+    
+    while ((right - left) > tolerance) {
+        let midLeft = left + (right - left) / 3;
+        let midRight = right - (right - left) / 3;
+        
+        if (func(midLeft) < func(midRight)) {
+            right = midRight;
+        } else {
+            left = midLeft;
+        }
+    }
+    
+    // 返回最小点 x
+    return (left + right) / 2;
+}
+
+
+export {
+    add, dot, multiply, cross, normalize,
+    deg2Rad, rad2Deg, rejectOutliers, calculateMedian, minimize
+};

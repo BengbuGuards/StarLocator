@@ -19,24 +19,34 @@ const originalStars = [
         [-15.31, -873.57, '天仓一', '16h18m52.15s', '-8°41\'5.3"'],
         [947.26, 321.65, '北落师门', '17h40m32.44s', '-29°29\'27.2"'],
         [1217.42, -913.35, '垒壁阵七', '17h45m39.36s', '-7°26\'47.7"']
+    ], 
+    [
+        [-1201.17, -1819.50, '虚宿二',	'19h22m30.01s',	'+5°21\'7.5"'],
+        [-361.46, -1706.09, '瓠瓜二',	'19h51m46.58s',	'+16°0\'7.2"'],
+        [1124.82, -6691.48, 'ο And',	'17h36m29.46s',	'+42°27\'41.6"'],
+        [-629.95, -6035.47, '室宿二',	'17h34m34.77s',	'+28°13\'10.7"'],
+        [663.58, -2323.9, '天津九',	'19h52m21.03s',	'+34°3\'58.9"']
     ]
 ]
 
 const geoTargets = [
+    [35.09282, 115],
     [35.09282, 115],
     [35.09282, 115]
 ]
 
 const zeniths = [
     [0, -5196.15],
-    [0, -5196.15]
+    [0, -5196.15],
+    [0, -17013.85]
 ]
 
 let errors = [];
 for (let i = 0; i < originalStars.length; i++) {
     let stars = markStars(originalStars[i]);
     console.log("stars: ", stars);
-    let z = getZ(stars);
+    let z = getZ(stars, zeniths[i], true);  // 使用大气折射修正
+    // let z = getZ(stars, zeniths[i], false);  // 不使用大气折射修正
     console.log("z: ", z);
     let geoEstimate = calc(stars, z, zeniths[i]);
     console.log("geoEstimate", geoEstimate);

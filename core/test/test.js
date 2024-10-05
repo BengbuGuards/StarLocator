@@ -36,7 +36,8 @@ let errors = [];
 for (let i = 0; i < originalStars.length; i++) {
     let stars = markStars(originalStars[i]);
     console.log("stars: ", stars);
-    let z = getZ(stars);
+    let z = getZ(stars, zeniths[i], true);
+    // let z = getZ(stars, zeniths[i], false);
     console.log("z: ", z);
     let geoEstimate = calc(stars, z, zeniths[i]);
     console.log("geoEstimate", geoEstimate);

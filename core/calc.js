@@ -1,5 +1,5 @@
 import * as astro from "./astronomy.js";
-import { deg2Rad } from "./math.js";
+import { getElevationAngle } from "./getZ.js";
 import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";
 
 const sin = Math.sin;
@@ -51,18 +51,6 @@ function solve(plane1, plane2) {
     let solve1 = astro.SphereFromVector(new astro.Vector(x1, y1, z1, 0));
     let solve2 = astro.SphereFromVector(new astro.Vector(x2, y2, z2, 0));
     return [[solve1.lat, solve1.lon], [solve2.lat, solve2.lon]];
-}
-
-
-/**
- * 计算一颗星星的高度角（与天顶角互余）
- * @param {Star} star 星星
- * @param {number} z 像素焦距
- * @param {Array<number>} zenithVector 天顶向量
- * @returns 高度角（弧度制）
- */
-function getElevationAngle(star, z, zenithVector) {
-    return Math.PI / 2 - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
 }
 
 

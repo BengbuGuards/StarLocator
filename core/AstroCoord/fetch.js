@@ -4,7 +4,7 @@ import { solarBodies } from './calc.js';
 /**
  * 根据恒星名称获取其赤经和赤纬
  * @param {string} starName 恒星名称
- * @returns {Promise<[number, number]>} 返回一个Promise对象，包含赤经和赤纬
+ * @returns {Promise<[number, number]>} 返回一个Promise对象，包含赤经和赤纬J2000
  */
 async function getRaDeCbyName(starName) {
     // 不查询太阳系天体
@@ -48,7 +48,7 @@ async function getRaDeCbyName(starName) {
 /**
  * 根据恒星名称获取其时角和赤纬
  * @param {string} starName 恒星名称
- * @returns {Promise<[number, number]>} 返回一个Promise对象，包含时角和赤纬
+ * @returns {Promise<[number, number]>} 返回一个Promise对象，包含时角和赤纬J2000
  */
 async function getRaDecbyNames(starNames) {
     // 异步获取恒星的赤经和赤纬

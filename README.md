@@ -1,7 +1,7 @@
 # StarLocator
 WHAT IS STARLOCATOR
 
-StarLocator is a celestial positioning application mainly based on a maritime navigation technique that has been applied for centuries. In this app, a photo of night sky and the exact time when it was taken were used as source information to calculate the rough position where the position of the photo taker on the earth. It is quite like using the camera as a sextant to measure the elevation of celestial body in the picture just as sailors did since 17th century, and there is NOTHING to do with astrology, metaphysics.
+StarLocator is a celestial positioning application mainly based on a maritime navigation technique that has been applied for centuries. In this app, a photo of night sky and the exact time when it was taken were used as source information to calculate the rough position of the photo taker was on the earth. It is quite like using the camera as a sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is NOTHING to do with astrology, metaphysics and telepathy.
 
 HOW TO USE
 

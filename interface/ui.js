@@ -184,7 +184,7 @@ window.onload = function () {
 
 	iStar = new Image();
 	iStar.src = 'img/icon/stars.svg';
-	    var ctx = canvas.getContext('2d');
+	var ctx = canvas.getContext('2d');
 
 	// 初始化地图
 	map = L.map('map').setView([32.0, 110.0], 3);
@@ -229,7 +229,27 @@ window.onload = function () {
 		});
 }
 function addStarAtPoint(x, y) {
+	// 保留两位小数
+	x = Math.round(x * 100) / 100;
+	y = Math.round(y * 100) / 100;
+
 	numOfPts++;
+
+	// 判断星星数量是否已超过表格行数
+	let inputTable = document.getElementById('inputTable');
+	if (numOfPts > inputTable.rows.length - 2) {	// 减掉一行标题与一行天顶
+		// 添加一行
+		let newRow = inputTable.insertRow(numOfPts + 1);
+		// 添加单元格
+		let secondStarRow = inputTable.rows[3];
+		// 第二颗星星的行，用于 HTML 模板
+		// 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
+		for (let i = 0; i <= 5; ++i) {
+			newRow.insertCell(i).innerHTML	// 将第二行 HTML 抄过来并替换数字
+				= secondStarRow.cells[i].innerHTML.replace('2', `${numOfPts}`);
+		}
+	}
+
 	let width = 32, height = 32;
 	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
 		left: x - 16,
@@ -256,7 +276,9 @@ function addStarAtPoint(x, y) {
 	points.push(point);
 	ptLabels.push(text);
 
-	// TODO: 加入到表格中
+	// 加入到表格中
+	document.getElementById(`coordX${numOfPts}`).value = x;
+	document.getElementById(`coordY${numOfPts}`).value = y;
 }
 /* const input = document.getElementById('hAngle1');
 const floatingDiv = document.getElementById('hourAngleInput');

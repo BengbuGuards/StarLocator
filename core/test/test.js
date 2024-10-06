@@ -50,8 +50,8 @@ for (let i = 0; i < originalStars.length; i++) {
     // let z = getZ(stars, zeniths[i], false);  // 不使用大气折射修正
     console.log("z: ", z);
 
-    let geoEstimate = calc(stars, z, zeniths[i], true);  // 使用重力修正
-    // let geoEstimate = calc(stars, z, zeniths[i]);  // 不使用重力修正
+    let geoEstimate = calc(stars, z, zeniths[i], true, true);  // 使用重力修正和大气折射修正
+    // let geoEstimate = calc(stars, z, zeniths[i]);  // 不使用重力修正和大气折射修正
     console.log("geoEstimate", geoEstimate);
     
     let error = Math.sqrt((geoEstimate[0] - geoTargets[i][0]) ** 2 + (geoEstimate[1] - geoTargets[i][1]) ** 2);

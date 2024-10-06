@@ -1,4 +1,5 @@
 import * as astro from "./astronomy.js";
+import { rad2Deg } from "./math.js";
 import { getElevationAngle } from "./getZ.js";
 import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";
 
@@ -75,7 +76,7 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  * @param {boolean} isFixGravity 是否修正重力
  * @returns 平均经纬度（角度制）
  */
-function calc(stars, z, zenith, isFixGravity = false) {
+function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     // 天顶向量
     let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0)
     // 存放粗的数据，每个元素有两组经纬度
@@ -87,11 +88,16 @@ function calc(stars, z, zenith, isFixGravity = false) {
         }
     }
 
-    // 每颗星星的理论天顶角
-    let zenithAngles = [];
-    for (let star of stars) {
-        zenithAngles.push(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));
+    // 计算各星高度角
+    let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
+    console.log(starAngles);
+    // 去折射修正
+    if (isFixRefraction) {
+        starAngles = starAngles.map(angle => angle + astro.InverseRefraction("normal", angle));
     }
+    console.log(starAngles);
+    // 计算各星的天顶角
+    let zenithAngles = starAngles.map(angle => 90 - angle);
 
     // 加权平均
     let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);    

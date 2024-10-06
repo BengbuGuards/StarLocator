@@ -27,6 +27,9 @@ input.table {
 input.table:hover {
 	background-color: #1d2430;
 }
+a {
+	color: #204898；
+}
 #canvas {
 	margin: 0 auto;
 	background: #000;

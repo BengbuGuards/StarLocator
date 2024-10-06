@@ -27,8 +27,11 @@ input.table {
 input.table:hover {
 	background-color: #1d2430;
 }
-a {
-	color: #204898；
+a:link {
+	color: #204898;
+}
+a:visited {
+	color: #189c65;
 }
 #canvas {
 	margin: 0 auto;

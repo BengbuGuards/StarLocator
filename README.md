@@ -3,7 +3,9 @@ StarLocator 是什么| WHAT IS STARLOCATOR
 
 StarLocator是一款天文定位应用，主要基于一种已经应用了数个世纪的航海导航技术。该应用使用夜空照片及其精确拍摄时间为源数据，计算照片拍摄地在地球上的大致位置。该过程类似以相机对图中的天体高度角进行测量代替17世纪以来的水手使用六分仪的测量，与占星术、玄学和心灵感应无关。
 
+
 StarLocator is a celestial positioning application mainly based on a maritime navigation technique that has been applied for centuries. In this app, a photo of night sky and the exact time when it was taken were used as source information to calculate the rough position of the photo taker was on the earth. The process is quite like using the camera as a sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is NOTHING to do with astrology, metaphysics and telepathy.
+
 
 使用方法 | HOW TO USE
 
@@ -17,6 +19,7 @@ e)	需要知道该照片拍摄的准确时间（年月日时分，若知道秒�
 3.	点击那个看起来像翘屁末影人的按钮开始绘制铅垂线。越多越好。
 4.	另外两个按钮？你不会感兴趣的。（因为我们还没做完）
 5.	猛猛拍打“给我算！”按钮然后就能在下面看到结果了。
+
 
 1.	Click “选择文件”, import your image. The image should follow these requirements:
 a)	It is a real image of night sky;

@@ -4,7 +4,6 @@ var movable = false;
 var text, rect;
 var map;
 
-var iStar;
 var points = [], ptLabels = [], numOfPts = 0;
 
 var lmbDown = false, cancelOp = false;
@@ -182,10 +181,6 @@ window.onload = function () {
 	}
 	document.getElementById("srcFile").addEventListener('change', onImgChange);
 
-	iStar = new Image();
-	iStar.src = 'img/icon/stars.svg';
-	var ctx = canvas.getContext('2d');
-
 	// 初始化地图
 	map = L.map('map').setView([32.0, 110.0], 3);
 
@@ -257,18 +252,24 @@ function addStarAtPoint(x, y) {
 		width: width,
 		height: height,
 		fill: '#FFD248',
-		hasControls: false
+		hasControls: false,
+		id: numOfPts // 标记其索引
 	});
 	let text = new fabric.Text('xxx', {
 		left: x + 16,
-		top: y - 5,
+		top: y - 10,
 		fontSize: 16,
+		fontFamily: '微软雅黑',
+		fill: '#FFD248',
 		selectable: false,
 		hoverCursor: 'grab'
 	});
 	point.on("moving", e => {
-		text.left = point.left + 32, text.top = point.top + 11;
+		text.left = point.left + 32, text.top = point.top + 6;
 		text.setCoords();
+		// 修改表格内容（貌似性能不是很好）
+		document.getElementById(`coordX${point.id}`).value = Math.round((point.left + 16) * 100) / 100;
+		document.getElementById(`coordY${point.id}`).value = Math.round((point.top + 16) * 100) / 100;
 	});
 	canvas.add(point);
 	canvas.add(text);

@@ -77,7 +77,7 @@ function getAnalyticalZ(stars) {
  * @param {Star} star 星星
  * @param {number} z 像素焦距
  * @param {Array<number>} zenithVector 天顶向量
- * @returns 高度角（弧度制）
+ * @returns {number} 高度角（弧度）
  */
 function getElevationAngle(star, z, zenithVector) {
     return Math.PI / 2 - deg2Rad(astro.AngleBetween(new astro.Vector(star.x, star.y, z, 0), zenithVector));

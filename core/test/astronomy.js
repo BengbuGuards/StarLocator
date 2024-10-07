@@ -1,6 +1,6 @@
 import { getHaDecbyNames } from '../AstroCoord/calc.js';
 
-let starNames = ['16 Boo', "venus"];
+let starNames = ['16 Boo', "金星", "角宿一", "月球"];
 
 let date = new Date("2024-10-06T14:00:00Z");
 getHaDecbyNames(starNames, date).then(results => {

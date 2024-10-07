@@ -90,12 +90,10 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
 
     // 计算各星高度角
     let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
-    console.log(starAngles);
     // 去折射修正
     if (isFixRefraction) {
         starAngles = starAngles.map(angle => angle + astro.InverseRefraction("normal", angle));
     }
-    console.log(starAngles);
     // 计算各星的天顶角
     let zenithAngles = starAngles.map(angle => 90 - angle);
 

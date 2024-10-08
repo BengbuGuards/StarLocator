@@ -71,21 +71,7 @@ function initializeEvents() {
     canvas.on("mouse:up", handleMouseUp);
     canvas.on("mouse:move", handleMouseMove);
     canvas.on('mouse:out', handleMouseOut);
-    canvas.on('mouse:wheel',opt => {
-		if (!movable) return;
-		opt.e.preventDefault()
-		const delta = opt.e.deltaY
-		let zoom = this.canvas.getZoom()
-		zoom *= 0.999 ** delta
-		if (zoom > 20) zoom = 20
-		if (zoom < 0.01) zoom = 0.1
-		this.canvas.zoomToPoint({
-			x: opt.e.offsetX,
-			y: opt.e.offsetY
-		},
-			zoom
-		)
-	});
+    canvas.on('mouse:wheel',handleMouseWheel);
 
     // 窗口事件绑定
     window.onresize = handleResize;
@@ -216,7 +202,7 @@ function handleMouseMove(e) {
     }
 }
 
-// 处理选择模式
+// 星体及铅垂线取消选择
 function handlePickingMode(e) {
     if (lmbDown) {
         cancelOp = true;
@@ -234,6 +220,22 @@ function handleMouseOut(e) {
         let p = canvas.getPointer(e.e);
 		cursorCrd.innerHTML = '';
     }
+}
+
+function handleMouseWheel(opt) {
+    if (!movable) return;
+opt.e.preventDefault();
+const delta = opt.e.deltaY;
+let zoom = canvas.getZoom(); // 使用 canvas 直接引用
+zoom *= 0.999 ** delta;
+
+if (zoom > 20) zoom = 20;
+if (zoom < 0.01) zoom = 0.1;
+
+canvas.zoomToPoint({
+    x: opt.e.offsetX,
+    y: opt.e.offsetY
+}, zoom);
 }
 
 // 处理页面改变大小事件
@@ -377,7 +379,12 @@ function addStarAtPoint(x, y) {
 
 // 添加铅垂线端点的函数
 function addPLEndpoint(x, y){
-	// 保留两位小数
+	let endpoint={
+        x:x,
+        y:y
+    }
+    
+    // 保留两位小数
 	x = Math.round(x * 100) / 100;
 	y = Math.round(y * 100) / 100;
 
@@ -409,17 +416,18 @@ function addPLEndpoint(x, y){
 	canvas.add(point);
 	canvas.add(PLpointtext);
 
-	PLPoints.push(point);
+	PLPoints.push(endpoint);
 	PLPointLabels.push(PLpointtext);
 }
 
 function addPL(){
 	if (PLPoints.length==2){
 		numPL++;
+        console.log(numPL);
 		PLs.push(PLPoints);
+        console.log(PLs);
 		PLPoints=[];
 		PLLabels.push(PLPointLabels);
 		PLPointLabels=[];
 	}
-	return _;
 }

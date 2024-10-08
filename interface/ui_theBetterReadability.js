@@ -6,7 +6,10 @@ var movable = false; // 是否可移动
 var text, rect; // 文本，矩形
 var map; // 地图
 
+// 星体变量
 var points = [], ptLabels = [], numOfPts = 0; // 星星点，标签，星星数量
+
+// 铅垂线变量
 let PLPoints = []; // 一条铅垂线的端点
 let PLs = []; // 铅垂线
 let numPL = 0; // 铅垂线数量
@@ -14,7 +17,11 @@ let numPLPoint = 0; // 铅垂线端点数量
 let PLPointLabels = []; // 一条铅垂线的标签
 let PLLabels = []; // 铅垂线标签
 
-var lmbDown = false, cancelOp = false; // 鼠标左键是否按下，是否取消操作
+// 鼠标事件变量
+var lmbDown = false; // 鼠标左键是否按下
+var cancelOp = false // 是否取消选择星体or铅垂线的操作
+
+// 选择事件变量
 var isPickingCele = false; // 是否正在选择天体
 let isPickingPL = false; // 是否正在选择铅垂线	
 
@@ -55,11 +62,6 @@ function initializeCanvas() {
     canvas.add(text);
     reZoomCanvas(text, true, false);
     canvasInst = document.getElementsByClassName('upper-canvas')[0];
-}
-
-// 鼠标模式
-function setCanvasCursor(cursor) {
-    canvasInst.style.cursor = cursor;
 }
 
 // 初始化事件
@@ -125,6 +127,11 @@ function initializeMap() {
 		});
 }
 
+// 鼠标模式
+function setCanvasCursor(cursor) {
+    canvasInst.style.cursor = cursor;
+}
+
 // 处理鼠标按下事件
 function handleMouseDown(e) {
     lmbDown = true;
@@ -186,7 +193,7 @@ function handleMouseUp(e) {
 // 处理鼠标移动事件
 function handleMouseMove(e) {
     if (isPickingCele || isPickingPL) {
-        handlePickingMode(e);
+        CancelPicking(e);
     }
 
     // 坐标显示
@@ -203,7 +210,7 @@ function handleMouseMove(e) {
 }
 
 // 星体及铅垂线取消选择
-function handlePickingMode(e) {
+function CancelPicking(e) {
     if (lmbDown) {
         cancelOp = true;
         canvas.selection = false;
@@ -222,20 +229,22 @@ function handleMouseOut(e) {
     }
 }
 
+// 处理鼠标滚轮事件用于缩放照片大小
 function handleMouseWheel(opt) {
-    if (!movable) return;
-opt.e.preventDefault();
-const delta = opt.e.deltaY;
-let zoom = canvas.getZoom(); // 使用 canvas 直接引用
-zoom *= 0.999 ** delta;
+    if (!movable)               return;   
+    opt.e.preventDefault();
+    const delta = opt.e.deltaY;
+    let zoom = canvas.getZoom(); // 使用 canvas 直接引用
+    zoom *= 0.999 ** delta;
 
-if (zoom > 20) zoom = 20;
-if (zoom < 0.01) zoom = 0.1;
+    if (zoom > 20)              zoom = 20;
+    if (zoom < 0.01)                zoom = 0.1;
 
-canvas.zoomToPoint({
-    x: opt.e.offsetX,
-    y: opt.e.offsetY
-}, zoom);
+    canvas.zoomToPoint({
+        x: opt.e.offsetX,
+        y: opt.e.offsetY
+    }, 
+    zoom);
 }
 
 // 处理页面改变大小事件
@@ -383,7 +392,7 @@ function addPLEndpoint(x, y){
         x:x,
         y:y
     }
-    
+
     // 保留两位小数
 	x = Math.round(x * 100) / 100;
 	y = Math.round(y * 100) / 100;

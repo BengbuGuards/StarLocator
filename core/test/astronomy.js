@@ -1,9 +1,11 @@
-import { getHaDecbyNames } from '../AstroCoord/calc.js';
+import { AstroCalculator } from '../AstroCoord/calc.js';
 
 let starNames = ['16 Boo', "金星", "角宿一", "月球"];
 
 let date = new Date("2024-10-06T14:00:00Z");
-getHaDecbyNames(starNames, date).then(results => {
+
+let astroCalculator = new AstroCalculator();
+astroCalculator.getHaDecbyNames(starNames, date).then(results => {
     for (let [name, [ha, dec]] of results) {
         console.log(`The hour angle of ${name} is ${ha} degrees, and the declination is ${dec} degrees.`);
     }

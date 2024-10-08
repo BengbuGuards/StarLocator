@@ -6,11 +6,12 @@ var map;		// 地图
 
 var points = [], ptLabels = [], numOfPts = 0;		// 星星点，标签，星星数量
 
-let linePoints = []; // 存储一对铅垂线的端点
-let lines = []; // 铅垂线
-let numLine=0; // 铅垂线数量
-let numLinePoint=0; // 铅垂线端点数量
-let lineLabels = []; // 铅垂线标签
+let PLPoints = []; // 一条铅垂线的端点
+let PLs = []; // 铅垂线
+let numPL=0; // 铅垂线数量
+let numPLPoint=0; // 铅垂线端点数量
+let PLPointLabels = []; // 一条铅垂线的标签
+let PLLabels = []; // 铅垂线标签
 
 var lmbDown = false, cancelOp = false;		// 鼠标左键是否按下，是否取消操作
 
@@ -39,6 +40,7 @@ window.onload = function () {
 		selectable: false,
 		hoverCursor: 'default'
 	});
+	
 	canvas.add(text);
 	reZoomCanvas(text, true, false);
 	canvasInst = document.getElementsByClassName('upper-canvas')[0];
@@ -75,7 +77,7 @@ window.onload = function () {
 		} 
 
 		// 选择铅垂线
-		else if (isPickingPL && linePoints.length < 2) {
+		else if (isPickingPL) {
 			if (cancelOp){
 				cancelOp = false;
 				// 取消操作
@@ -83,12 +85,9 @@ window.onload = function () {
 			else {
 				// 加入
 				let p = canvas.getPointer(e.e);
-				addPLEndpoint(p.x, p.y);
-				if (linePoints.length==2){
-					lines.push(linePoints);
-					linePoints=[];
-				}               
+				addPLEndpoint(p.x, p.y);              
 			}
+			addPL();
 			isPickingPL = false;
 			tips.innerHTML = '';
 			setCanvasCursor('grab');
@@ -103,7 +102,7 @@ window.onload = function () {
 
 	canvas.on("mouse:move", function (e) {
 		// 选择天体
-		if (isPickingCele) {
+		if (isPickingCele || isPickingPL) {
 			if (lmbDown) {
 				cancelOp = true;
 				canvas.selection = false;
@@ -112,18 +111,6 @@ window.onload = function () {
 				return;
 			}
 			setCanvasCursor('crosshair');
-		}
-
-		// 选择铅垂线
-		else if (isPickingPL) {
-			if (lmbDown) {
-				cancelOp = true;
-				canvas.selection = false;
-				tips.innerHTML = '松开鼠标取消标记。';
-				setCanvasCursor('not-allowed');
-				return;
-			}
-			setCanvasCursor('crosshair');                 
 		}
 
 		// 坐标显示
@@ -198,7 +185,12 @@ window.onload = function () {
 	document.getElementById('vaniZen').addEventListener('click', function () {
 		if (!movable) return;
 		isPickingPL = !isPickingPL;
-		tips.innerHTML = `${isPickingPL ? '请依次点击要选择的铅垂线的两个端点。' : ''}`;
+		if(PLPoints.length==0){
+			tips.innerHTML = `${isPickingPL ? '单击要选择的铅垂线的起点。' : ''}`;
+		}
+		else{
+			tips.innerHTML = `${isPickingPL ? '单击要选择的铅垂线的起点。' : ''}`;
+		}
 	});
 	//--------------------------------------------
 
@@ -309,7 +301,7 @@ function addStarAtPoint(x, y) {
 	}
 
 	let width = 32, height = 32;
-	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
+	var point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
 		left: x - 16,
 		top: y - 16,
 		width: width,
@@ -318,7 +310,7 @@ function addStarAtPoint(x, y) {
 		hasControls: false,
 		id: numOfPts // 标记其索引
 	});
-	let text = new fabric.Text('xxx', {
+	var text = new fabric.Text('xxx', {
 		left: x + 16,
 		top: y - 10,
 		fontSize: 16,
@@ -351,8 +343,7 @@ function addPLEndpoint(x, y){
 	x = Math.round(x * 100) / 100;
 	y = Math.round(y * 100) / 100;
 
-	numLinePoint++;
-	numLine=parseInt(numLinePoint/2);
+	numPLPoint++;
 
 	let width = 32, height = 32;
 	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
@@ -360,16 +351,16 @@ function addPLEndpoint(x, y){
 		top: y - 16,
 		width: width,
 		height: height,
-		fill: '#1919E6',
+		fill: '#67B29A',
 		hasControls: false,
-		id: numLinePoint // 标记其索引
+		id: numPLPoint // 标记其索引
 	});
 	let text = new fabric.Text('>>>', {
 		left: x + 16,
 		top: y - 10,
 		fontSize: 16,
 		fontFamily: '微软雅黑',
-		fill: '#1919E6',
+		fill: '#67B29A',
 		selectable: false,
 		hoverCursor: 'grab'
 	});
@@ -380,8 +371,19 @@ function addPLEndpoint(x, y){
 	canvas.add(point);
 	canvas.add(text);
 
-	linePoints.push(point);
-	lineLabels.push(text);
+	PLPoints.push(point);
+	PLPointLabels.push(text);
+}
+
+function addPL(){
+	if (PLPoints.length==2){
+		numPL++;
+		PLs.push(PLPoints);
+		PLPoints=[];
+		PLLabels.push(PLPointLabels);
+		PLPointLabels=[];
+	}
+	return _;
 }
 /* const input = document.getElementById('hAngle1');
 const floatingDiv = document.getElementById('hourAngleInput');

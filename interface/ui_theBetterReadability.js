@@ -80,8 +80,8 @@ function initializeEvents() {
     
     // 按钮事件绑定
     document.getElementById('resetZoom').addEventListener('click', resetZoom);
-    document.getElementById('celePick').addEventListener('click', togglePickCele);
-    document.getElementById('vaniZen').addEventListener('click', togglePickPL);
+    document.getElementById('celePick').addEventListener('click', pickCele);
+    document.getElementById('vaniZen').addEventListener('click', pickPL);
     document.getElementById("srcFile").addEventListener('change', onImgChange);
 }
 
@@ -261,28 +261,26 @@ function reZoomCanvas(rect, alignRect = false, resize = true) {
     var scaleY = canvas.height / rect.height;
     var scale = Math.min(scaleX, scaleY);
     var newX = canvas.width / 2 - rect.width / 2, newY = canvas.height / 2 - rect.height / 2
-    if (alignRect)
-        canvas.setViewportTransform([1, 0, 0, 1, newX, newY]);
+    if (alignRect)      canvas.setViewportTransform([1, 0, 0, 1, newX, newY]);
     else canvas.setViewportTransform([1, 0, 0, 1, canvas.width / 2, canvas.height / 2]);
-    if (resize)
-        canvas.zoomToPoint({ x: canvas.width / 2, y: canvas.height / 2 }, scale);
+    if (resize)     canvas.zoomToPoint({ x: canvas.width / 2, y: canvas.height / 2 }, scale);
 }
 
 // 选择重置缩放事件
 function resetZoom() {
-    if (movable) reZoomCanvas(rect);
+    if (movable)        reZoomCanvas(rect);
 }
 
 // 选择天体事件
-function togglePickCele() {
-    if (!movable) return;
+function pickCele() {
+    if (!movable)       return;
     isPickingCele = !isPickingCele;
     tips.innerHTML = `${isPickingCele ? '单击要选择的天体。' : ''}`;
 }
 
 // 选择铅垂线事件
-function togglePickPL() {
-    if (!movable) return;
+function pickPL() {
+    if (!movable)       return;
     isPickingPL = !isPickingPL;
     tips.innerHTML = `${isPickingPL ? '单击添加铅垂线端点。' : ''}`;
 }
@@ -296,8 +294,7 @@ function onImgChange(e) {
 			img.onload = function () {
 				let width = img.width, height = img.height;
 				// 移除先前图片
-				if (rect != undefined)
-					canvas.remove(rect);
+				if (rect != undefined)      canvas.remove(rect);
 				// 创建图片Rect
 				let pattern = new fabric.Pattern({
 					source: img,
@@ -369,7 +366,8 @@ function addStarAtPoint(x, y) {
 		hoverCursor: 'grab'
 	});
 	point.on("moving", e => {
-		startext.left = point.left + 32, startext.top = point.top + 6;
+		startext.left = point.left + 32;
+        startext.top = point.top + 6;
 		startext.setCoords();
 		// 修改表格内容（貌似性能不是很好）
 		document.getElementById(`coordX${point.id}`).value = Math.round((point.left + 16) * 100) / 100;
@@ -388,18 +386,10 @@ function addStarAtPoint(x, y) {
 
 // 添加铅垂线端点的函数
 function addPLEndpoint(x, y){
-	let endpoint={
-        x:x,
-        y:y
-    }
-
-    // 保留两位小数
-	x = Math.round(x * 100) / 100;
-	y = Math.round(y * 100) / 100;
-
 	numPLPoint++;
 
 	let width = 32, height = 32;
+
 	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
 		left: x - 16,
 		top: y - 16,
@@ -409,6 +399,7 @@ function addPLEndpoint(x, y){
 		hasControls: false,
 		id: numPLPoint // 标记其索引
 	});
+
 	let PLpointtext = new fabric.Text('>>>', {
 		left: x + 16,
 		top: y - 10,
@@ -418,10 +409,18 @@ function addPLEndpoint(x, y){
 		selectable: false,
 		hoverCursor: 'grab'
 	});
+
+    let endpoint=[x,y];
+
 	point.on("moving", e => {
-		PLpointtext.left = point.left + 32, PLpointtext.top = point.top + 6;
+		PLpointtext.left = point.left + 32
+        PLpointtext.top = point.top + 6;
 		PLpointtext.setCoords();
+		console.log(PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0]);
+        PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][0]=point.left+16;
+        PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][1]=point.top+16;
 	});
+
 	canvas.add(point);
 	canvas.add(PLpointtext);
 
@@ -432,7 +431,6 @@ function addPLEndpoint(x, y){
 function addPL(){
 	if (PLPoints.length==2){
 		numPL++;
-        console.log(numPL);
 		PLs.push(PLPoints);
         console.log(PLs);
 		PLPoints=[];

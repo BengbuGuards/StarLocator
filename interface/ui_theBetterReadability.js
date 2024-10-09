@@ -14,8 +14,6 @@ let PLPoints = []; // 一条铅垂线的端点
 let PLs = []; // 铅垂线
 let numPL = 0; // 铅垂线数量
 let numPLPoint = 0; // 铅垂线端点数量
-let PLPointLabels = []; // 一条铅垂线的标签
-let PLLabels = []; // 铅垂线标签
 
 // 鼠标事件变量
 var lmbDown = false; // 鼠标左键是否按下
@@ -24,6 +22,85 @@ var cancelOp = false // 是否取消选择星体or铅垂线的操作
 // 选择事件变量
 var isPickingCele = false; // 是否正在选择天体
 let isPickingPL = false; // 是否正在选择铅垂线	
+
+// 基类
+class ShapeObject {
+    constructor(x, y, id, canvas, Color, label) {
+        this.x = x;
+        this.y = y;
+        this.id = id;
+        this.canvas = canvas;
+        this.Color = Color;
+
+        this.point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
+            left: x - 16,
+            top: y - 16,
+            width: 32,
+            height: 32,
+            fill: this.Color,
+            hasControls: false,
+            id: this.id
+        });
+
+        this.label = new fabric.Text(label, {
+            left: x + 16,
+            top: y - 10,
+            fontSize: 16,
+            fontFamily: '微软雅黑',
+            fill: this.Color,
+            selectable: false,
+            hoverCursor: 'grab'
+        });
+
+        this.point.on('moving', this.onMove.bind(this));
+        this.canvas.add(this.point);
+        this.canvas.add(this.label);
+    }
+
+    onMove() {
+        this.label.left = this.point.left + 32;
+        this.label.top = this.point.top + 6;
+        this.label.setCoords();
+    }
+}
+
+// 星体类
+class CelestialBody extends ShapeObject {
+    constructor(x, y, id, canvas) {
+        super(x, y, id, canvas, '#FFD248', 'xxx');
+    }
+
+    addToTable() {
+        document.getElementById(`coordX${this.id}`).value = this.x;
+        document.getElementById(`coordY${this.id}`).value = this.y;
+    }
+
+	onMove() {
+        this.label.left = this.point.left + 32;
+        this.label.top = this.point.top + 6;
+        this.label.setCoords();
+
+ 		// 修改表格内容（貌似性能不是很好）
+		document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16) * 100) / 100;
+ 		document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16) * 100) / 100;
+    }
+}
+
+// 铅垂线类
+class PLpoint extends ShapeObject {
+    constructor(x, y, id, canvas) {
+        super(x, y, id, canvas, '#67B29A', '>>>');
+        this.coordinate=[x,y];
+    }
+
+    onMove() {
+        super.onMove();
+
+        console.log(PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
+        PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
+        PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
+    }
+}
 
 // 页面加载完成事件
 window.onload = function () {
@@ -328,8 +405,7 @@ function addStarAtPoint(x, y) {
 	// 保留两位小数
 	x = Math.round(x * 100) / 100;
 	y = Math.round(y * 100) / 100;
-
-	numOfPts++;
+    numOfPts++;
 
 	// 判断星星数量是否已超过表格行数
 	let inputTable = document.getElementById('inputTable');
@@ -346,86 +422,59 @@ function addStarAtPoint(x, y) {
 		}
 	}
 
-	let width = 32, height = 32;
-	var point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
-		left: x - 16,
-		top: y - 16,
-		width: width,
-		height: height,
-		fill: '#FFD248',
-		hasControls: false,
-		id: numOfPts // 标记其索引
-	});
-	var startext = new fabric.Text('xxx', {
-		left: x + 16,
-		top: y - 10,
-		fontSize: 16,
-		fontFamily: '微软雅黑',
-		fill: '#FFD248',
-		selectable: false,
-		hoverCursor: 'grab'
-	});
-	point.on("moving", e => {
-		startext.left = point.left + 32;
-        startext.top = point.top + 6;
-		startext.setCoords();
-		// 修改表格内容（貌似性能不是很好）
-		document.getElementById(`coordX${point.id}`).value = Math.round((point.left + 16) * 100) / 100;
-		document.getElementById(`coordY${point.id}`).value = Math.round((point.top + 16) * 100) / 100;
-	});
-	canvas.add(point);
-	canvas.add(startext);
-
-	points.push(point);
-	ptLabels.push(startext);
-
-	// 加入到表格中
-	document.getElementById(`coordX${numOfPts}`).value = x;
-	document.getElementById(`coordY${numOfPts}`).value = y;
+    let star = new CelestialBody(x, y, numOfPts, canvas);
+    star.addToTable();
+    points.push(star.point);
+    ptLabels.push(star.label);
 }
 
 // 添加铅垂线端点的函数
-function addPLEndpoint(x, y){
-	numPLPoint++;
+// function addPLEndpoint(x, y){
+// 	numPLPoint++;
 
-	let width = 32, height = 32;
+// 	let width = 32, height = 32;
 
-	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
-		left: x - 16,
-		top: y - 16,
-		width: width,
-		height: height,
-		fill: '#67B29A',
-		hasControls: false,
-		id: numPLPoint // 标记其索引
-	});
+// 	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
+// 		left: x - 16,
+// 		top: y - 16,
+// 		width: width,
+// 		height: height,
+// 		fill: '#67B29A',
+// 		hasControls: false,
+// 		id: numPLPoint // 标记其索引
+// 	});
 
-	let PLpointtext = new fabric.Text('>>>', {
-		left: x + 16,
-		top: y - 10,
-		fontSize: 16,
-		fontFamily: '微软雅黑',
-		fill: '#67B29A',
-		selectable: false,
-		hoverCursor: 'grab'
-	});
+// 	let PLpointtext = new fabric.Text('>>>', {
+// 		left: x + 16,
+// 		top: y - 10,
+// 		fontSize: 16,
+// 		fontFamily: '微软雅黑',
+// 		fill: '#67B29A',
+// 		selectable: false,
+// 		hoverCursor: 'grab'
+// 	});
 
-    let endpoint=[x,y];
+//     let endpoint=[x,y];
 
-	point.on("moving", e => {
-		PLpointtext.left = point.left + 32
-        PLpointtext.top = point.top + 6;
-		PLpointtext.setCoords();
-		console.log(PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0]);
-        PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][0]=point.left+16;
-        PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][1]=point.top+16;
-	});
+// 	point.on("moving", e => {
+// 		PLpointtext.left = point.left + 32
+//      PLpointtext.top = point.top + 6;
+// 		PLpointtext.setCoords();
+// 		console.log(PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0]);
+//      PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][0]=point.left+16;
+//      PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][1]=point.top+16;
+// 	});
 
-	canvas.add(point);
-	canvas.add(PLpointtext);
+// 	canvas.add(point);
+// 	canvas.add(PLpointtext);
 
-	PLPoints.push(endpoint);
-	PLPointLabels.push(PLpointtext);
+// 	PLPoints.push(endpoint);
+// 	PLPointLabels.push(PLpointtext);
+// }
+function addPLEndpoint(x, y) {
+    numPLPoint++;
+    let plpoint = new PLpoint(x, y, numPLPoint, canvas);
+    PLPoints.push(plpoint.coordinate);
 }
 
 function addPL(){
@@ -434,7 +483,5 @@ function addPL(){
 		PLs.push(PLPoints);
         console.log(PLs);
 		PLPoints=[];
-		PLLabels.push(PLPointLabels);
-		PLPointLabels=[];
 	}
 }

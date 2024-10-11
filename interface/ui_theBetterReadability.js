@@ -97,7 +97,7 @@ class PLpoint extends ShapeObject {
 
     onMove() {
         super.onMove();
-        // isMovingPLPoint = this.id;
+        isMovingPLPoint = this.id;
 
         if(numPLPoint%2==0){
             PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
@@ -316,18 +316,18 @@ function handleMouseMove(e) {
         CancelPicking(e);
     }
 
-    // // 铅垂线跟随
-    // if (PLs.length%2==0 && isMovingPLPoint){
-    //     // globalPLs[Math.ceil(isMovingPLPoint/2-1)].set({
-    //     //     x1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][0],
-    //     //     y1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][1],
-    //     //     x2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][0],
-    //     //     y2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][1]
-    //     // });
-    //     // globalPLs[Math.ceil(isMovingPLPoint/2-1)].setCoords(); // 更新线的位置
-    //     // canvas.renderAll(); // 刷新画布以显示更改
-    //     console.log(typeof globalPLs); // 检查数组内容
-    // }
+    // 铅垂线跟随
+    if (numPL>0 && isMovingPLPoint){
+        globalPLs[Math.ceil(isMovingPLPoint/2-1)].line.set({
+            x1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][0],
+            y1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][1],
+            x2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][0],
+            y2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][1]
+        });
+        globalPLs[Math.ceil(isMovingPLPoint/2-1)].line.setCoords(); // 更新线的位置
+        canvas.renderAll(); // 刷新画布以显示更改
+        console.log(typeof globalPLs); // 检查数组内容
+    }
 
     // 坐标显示
     if (movable && e && !this.panning) {

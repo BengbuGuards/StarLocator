@@ -14,6 +14,8 @@ let PLPoints = []; // 一条铅垂线的端点
 let PLs = []; // 铅垂线
 let numPL = 0; // 铅垂线数量
 let numPLPoint = 0; // 铅垂线端点数量
+let isMovingPLPoint = 0; // 是否正在选择铅垂线端点
+let globalPLs = []; // 全局铅垂线
 
 // 鼠标事件变量
 var lmbDown = false; // 鼠标左键是否按下
@@ -23,7 +25,7 @@ var cancelOp = false // 是否取消选择星体or铅垂线的操作
 var isPickingCele = false; // 是否正在选择天体
 let isPickingPL = false; // 是否正在选择铅垂线	
 
-// 基类
+// 点基类
 class ShapeObject {
     constructor(x, y, id, canvas, Color, label) {
         this.x = x;
@@ -86,7 +88,7 @@ class CelestialBody extends ShapeObject {
     }
 }
 
-// 铅垂线类
+// 铅垂线端点类
 class PLpoint extends ShapeObject {
     constructor(x, y, id, canvas) {
         super(x, y, id, canvas, '#67B29A', '>>>');
@@ -95,10 +97,50 @@ class PLpoint extends ShapeObject {
 
     onMove() {
         super.onMove();
+        // isMovingPLPoint = this.id;
 
-        console.log(PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
-        PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
-        PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
+        if(numPLPoint%2==0){
+            PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
+            PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
+            console.log(PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
+        }
+        else{
+            PLPoints[0]=this.point.left+16;
+            PLPoints[1]=this.point.top+16;
+            PLPoints=[PLPoints];
+            console.log(PLPoints);
+        }
+    }
+
+    onMouseUp() {
+        isMovingPLPoint = 0;
+    }
+}
+
+// 线基类
+class LineObject {
+    constructor(coordinates, id, canvas, Color) {
+        this.coordinates = coordinates;
+        this.canvas = canvas;
+        this.Color = Color;
+        this.id = id;
+
+        this.line = new fabric.Line(this.coordinates, {
+            fill: this.Color,
+            stroke: this.Color,
+            strokeWidth: 1,
+            selectable: false,
+            hoverCursor: 'grab'
+        });
+
+        this.canvas.add(this.line);
+    }
+}
+
+// 铅垂线类
+class PLLine extends LineObject {
+    constructor(coordinates, id, canvas) {
+        super(coordinates, id, canvas, '#67B29A');
     }
 }
 
@@ -269,9 +311,23 @@ function handleMouseUp(e) {
 
 // 处理鼠标移动事件
 function handleMouseMove(e) {
+    // 星体及铅垂线取消选择
     if (isPickingCele || isPickingPL) {
         CancelPicking(e);
     }
+
+    // // 铅垂线跟随
+    // if (PLs.length%2==0 && isMovingPLPoint){
+    //     // globalPLs[Math.ceil(isMovingPLPoint/2-1)].set({
+    //     //     x1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][0],
+    //     //     y1: PLs[Math.ceil(isMovingPLPoint/2-1)][0][1],
+    //     //     x2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][0],
+    //     //     y2: PLs[Math.ceil(isMovingPLPoint/2-1)][1][1]
+    //     // });
+    //     // globalPLs[Math.ceil(isMovingPLPoint/2-1)].setCoords(); // 更新线的位置
+    //     // canvas.renderAll(); // 刷新画布以显示更改
+    //     console.log(typeof globalPLs); // 检查数组内容
+    // }
 
     // 坐标显示
     if (movable && e && !this.panning) {
@@ -429,52 +485,11 @@ function addStarAtPoint(x, y) {
 }
 
 // 添加铅垂线端点的函数
-// function addPLEndpoint(x, y){
-// 	numPLPoint++;
-
-// 	let width = 32, height = 32;
-
-// 	let point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
-// 		left: x - 16,
-// 		top: y - 16,
-// 		width: width,
-// 		height: height,
-// 		fill: '#67B29A',
-// 		hasControls: false,
-// 		id: numPLPoint // 标记其索引
-// 	});
-
-// 	let PLpointtext = new fabric.Text('>>>', {
-// 		left: x + 16,
-// 		top: y - 10,
-// 		fontSize: 16,
-// 		fontFamily: '微软雅黑',
-// 		fill: '#67B29A',
-// 		selectable: false,
-// 		hoverCursor: 'grab'
-// 	});
-
-//     let endpoint=[x,y];
-
-// 	point.on("moving", e => {
-// 		PLpointtext.left = point.left + 32
-//      PLpointtext.top = point.top + 6;
-// 		PLpointtext.setCoords();
-// 		console.log(PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0]);
-//      PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][0]=point.left+16;
-//      PLs[Math.ceil(point.id/2)-1][point.id % 2 == 0 ? 1 : 0][1]=point.top+16;
-// 	});
-
-// 	canvas.add(point);
-// 	canvas.add(PLpointtext);
-
-// 	PLPoints.push(endpoint);
-// 	PLPointLabels.push(PLpointtext);
-// }
 function addPLEndpoint(x, y) {
     numPLPoint++;
     let plpoint = new PLpoint(x, y, numPLPoint, canvas);
-    PLPoints.push(plpoint.coordinate);
+    PLPoints.push([x,y]);
+    console.log(PLPoints);
 }
 
 function addPL(){
@@ -482,6 +497,8 @@ function addPL(){
 		numPL++;
 		PLs.push(PLPoints);
         console.log(PLs);
+        let pl = new PLLine(PLPoints.flat(), numPL, canvas);
+        globalPLs.push(pl);
 		PLPoints=[];
 	}
 }

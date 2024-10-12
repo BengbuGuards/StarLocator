@@ -1,5 +1,3 @@
-// by BengbuGuards小流汗黄豆
-
 // 声明全局变量
 var container, canvas, canvasInst, tips, cursorCrd, inputTable; // 容器，画布，画布实例，提示，鼠标坐标，输入表格
 var movable = false; // 是否可移动
@@ -91,7 +89,7 @@ class CelestialBody extends ShapeObject {
 // 铅垂线端点类
 class PLpoint extends ShapeObject {
     constructor(x, y, id, canvas) {
-        super(x, y, id, canvas, '#67B29A', '>>>');
+        super(x, y, id, canvas, '#35dc96', '>>>');
         this.coordinate=[x,y];
     }
 
@@ -140,7 +138,7 @@ class LineObject {
 // 铅垂线类
 class PLLine extends LineObject {
     constructor(coordinates, id, canvas) {
-        super(coordinates, id, canvas, '#67B29A');
+        super(coordinates, id, canvas, '#35dc96');
     }
 }
 

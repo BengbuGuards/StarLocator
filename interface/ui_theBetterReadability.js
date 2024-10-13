@@ -1,6 +1,7 @@
 // 声明全局变量
 var container, canvas, canvasInst, tips, cursorCrd, inputTable; // 容器，画布，画布实例，提示，鼠标坐标，输入表格
 var movable = false; // 是否可移动
+var panning = false; // 是否正在移动画布 
 var text, rect; // 文本，矩形
 var map; // 地图
 
@@ -89,7 +90,7 @@ class CelestialBody extends ShapeObject {
 // 铅垂线端点类
 class PLpoint extends ShapeObject {
     constructor(x, y, id, canvas) {
-        super(x, y, id, canvas, '#35dc96', '>>>');
+        super(x, y, id, canvas, '#35dc96', '');
         this.coordinate=[x,y];
     }
 
@@ -196,6 +197,7 @@ function initializeEvents() {
     window.onresize = handleResize;
     
     // 按钮事件绑定
+	document.getElementById('resetPick').addEventListener('click', clearData);
     document.getElementById('resetZoom').addEventListener('click', resetZoom);
     document.getElementById('celePick').addEventListener('click', pickCele);
     document.getElementById('vaniZen').addEventListener('click', pickPL);
@@ -255,10 +257,10 @@ function handleMouseDown(e) {
 
     // 画布缩放移动
     if (!isPickingCele && !isPickingPL && movable && canvas.getActiveObject() === undefined) {
-        if (!this.panning) {
+        if (!panning) {
             setCanvasCursor('grabbing');
         }
-        this.panning = true;
+        panning = true;
         canvas.selection = false;
     }
 }
@@ -301,7 +303,7 @@ function handleMouseUp(e) {
 
     // 画布移动
     else if (movable && canvas.getActiveObject() === undefined) {
-        this.panning = false;
+        panning = false;
         canvas.selection = true;
         setCanvasCursor('grab');
     }
@@ -328,13 +330,13 @@ function handleMouseMove(e) {
     }
 
     // 坐标显示
-    if (movable && e && !this.panning) {
+    if (movable && e && !panning) {
         let p = canvas.getPointer(e.e);
         cursorCrd.innerHTML = `${Math.round(p.x)}，${Math.round(p.y)}`;
     }
 
     // 处理画布移动
-    if (this.panning && e && e.e) {
+    if (panning && e && e.e) {
         var delta = new fabric.Point(e.e.movementX, e.e.movementY);
         canvas.relativePan(delta);
     }
@@ -397,6 +399,11 @@ function reZoomCanvas(rect, alignRect = false, resize = true) {
     if (resize)     canvas.zoomToPoint({ x: canvas.width / 2, y: canvas.height / 2 }, scale);
 }
 
+// 重置标注
+function clearData(){
+	// TODO
+}
+
 // 选择重置缩放事件
 function resetZoom() {
     if (movable)        reZoomCanvas(rect);
@@ -425,7 +432,10 @@ function onImgChange(e) {
 			img.onload = function () {
 				let width = img.width, height = img.height;
 				// 移除先前图片
-				if (rect != undefined)      canvas.remove(rect);
+				if (rect != undefined){
+					canvas.remove(rect);
+					clearData();
+				}
 				// 创建图片Rect
 				let pattern = new fabric.Pattern({
 					source: img,

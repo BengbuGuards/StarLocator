@@ -74,7 +74,8 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  * @param {number} z 像素焦距
  * @param {Array<number>} zenith 天顶坐标 [x, y]
  * @param {boolean} isFixGravity 是否修正重力
- * @returns 平均经纬度（角度制）
+ * @param {boolean} isFixRefraction 是否修正大气折射
+ * @returns {Array<number>} 平均经纬度（角度制）
  */
 function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     // 天顶向量

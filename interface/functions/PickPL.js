@@ -2,6 +2,7 @@ import { DefaultButtonFonctioner } from './default.js';
 import { PLpoint, PLLine } from '../classes/elements.js';
 
 
+// 选择铅垂线按钮功能类
 class PickPL extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
@@ -50,6 +51,7 @@ class PickPL extends DefaultButtonFonctioner{
         console.log(this.interactPhoto.PLPoints);
     }
 
+    // 添加铅垂线的函数
     addPL(){
         if (this.interactPhoto.PLPoints.length==2){
             this.interactPhoto.numPL++;

@@ -2,6 +2,7 @@ import { DefaultButtonFonctioner } from './default.js';
 import { CelestialBody } from '../classes/elements.js';
 
 
+// 选择天体按钮功能类
 class PickCele extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);

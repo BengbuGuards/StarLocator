@@ -47,8 +47,8 @@ function initializeEvents(buttonManager) {
     window.onresize = buttonManager.handleResize.call(buttonManager);
     
     // 按钮事件绑定
-    document.getElementById('resetPick').addEventListener('click', buttonManager.interactPhoto.buttonFonctioner.clearData.bind(buttonManager.interactPhoto.buttonFonctioner));
-    document.getElementById('resetZoom').addEventListener('click', buttonManager.interactPhoto.buttonFonctioner.resetZoom.bind(buttonManager.interactPhoto.buttonFonctioner));
+    document.getElementById('resetPick').addEventListener('click', interactPhoto.buttonFonctioner.clearData.bind(interactPhoto.buttonFonctioner));
+    document.getElementById('resetZoom').addEventListener('click', interactPhoto.buttonFonctioner.resetZoom.bind(interactPhoto.buttonFonctioner));
     document.getElementById('celePick').addEventListener('click', buttonManager.pickCele.onClick.bind(buttonManager.pickCele));
     document.getElementById('vaniZen').addEventListener('click', buttonManager.pickPL.onClick.bind(buttonManager.pickPL));
     document.getElementById("srcFile").addEventListener('change', e => buttonManager.imageChange.onClick.call(buttonManager.imageChange, e));

@@ -1,6 +1,7 @@
 import { DefaultButtonFonctioner } from '../functions/default.js';
 
 
+// 照片与其可交互信息的类
 class InteractPhoto {
     constructor() {
         // 页面各元素变量

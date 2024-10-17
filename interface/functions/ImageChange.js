@@ -2,6 +2,7 @@ import * as fabric from '../../fabric/dist/fabric.mjs';
 import { DefaultButtonFonctioner } from './default.js';
 
 
+// 图片更换功能类
 class ImageChange extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);

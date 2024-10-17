@@ -3,6 +3,7 @@ import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
 import { ImageChange } from '../functions/ImageChange.js';
 
+// 事件管理器，管理鼠标事件、按钮事件与照片的交互
 class EventManager{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;

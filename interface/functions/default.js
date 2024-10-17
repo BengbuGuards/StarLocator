@@ -1,6 +1,7 @@
 import * as fabric from '../../fabric/dist/fabric.mjs';
 
 
+// 默认按钮功能类，所有按钮功能类的父类
 class DefaultButtonFonctioner{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;

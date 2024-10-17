@@ -1,4 +1,3 @@
-import * as Astronomy from "./astronomy.browser.js";
 import { rad2Deg } from "./math.js";
 import { getElevationAngle } from "./getZ.js";
 import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";

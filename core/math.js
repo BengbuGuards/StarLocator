@@ -1,6 +1,3 @@
-import * as Astronomy from "./astronomy.browser.js";
-
-
 /**
  * 向量加法
  * @param {Vector} v1

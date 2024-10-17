@@ -1,4 +1,3 @@
-import * as Astronomy from '../astronomy.browser.js';
 import { getRaDecbyNames } from './fetch.js';
 
 const solarBodies = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];

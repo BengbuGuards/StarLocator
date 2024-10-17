@@ -1,4 +1,4 @@
-import * as astro from '../astronomy.js';
+import * as Astronomy from '../astronomy.browser.js';
 import { getRaDecbyNames } from './fetch.js';
 
 const solarBodies = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
@@ -11,10 +11,10 @@ const solarBodies = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'satu
  * @returns {[number, number]} 返回时角和赤纬
 */
 function getHaDecbyRaDec(raDec, date) {
-    const observer = new astro.Observer(0, 0, 0);
-    astro.DefineStar("Star1", raDec[0], raDec[1], 1000);
-    let equ_ofdate = astro.Equator("Star1", date, observer, true, true);
-    let hourAngle = astro.HourAngle("Star1", date, observer);
+    const observer = new Astronomy.Observer(0, 0, 0);
+    Astronomy.DefineStar("Star1", raDec[0], raDec[1], 1000);
+    let equ_ofdate = Astronomy.Equator("Star1", date, observer, true, true);
+    let hourAngle = Astronomy.HourAngle("Star1", date, observer);
     return [hourAngle, equ_ofdate.dec];
 }
 
@@ -28,9 +28,9 @@ function getHaDecbyRaDec(raDec, date) {
 function getHaDecinSolar(starName, date) {
     // 将name第一个字母大写，其他字母小写
     starName = starName.charAt(0).toUpperCase() + starName.slice(1).toLowerCase();
-    const observer = new astro.Observer(0, 0, 0);
-    let equ_ofdate = astro.Equator(starName, date, observer, true, true);
-    let hourAngle = astro.HourAngle(starName, date, observer);
+    const observer = new Astronomy.Observer(0, 0, 0);
+    let equ_ofdate = Astronomy.Equator(starName, date, observer, true, true);
+    let hourAngle = Astronomy.HourAngle(starName, date, observer);
     return [hourAngle, equ_ofdate.dec];
 }
 

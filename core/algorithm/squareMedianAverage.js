@@ -1,5 +1,5 @@
 import { rad2Deg, calculateMedian } from "../math.js";
-import * as astro from "../astronomy.js";
+import * as Astronomy from "../astronomy.browser.js";
 
 
 /**
@@ -23,9 +23,9 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
         let sum = 0;
         for (let k = 0; k < stars.length; ++k) {
             // 计算该位置的实际天顶角
-            let angle = astro.AngleBetween(
-                astro.VectorFromSphere(new astro.Spherical(pos[0], pos[1], 1), 0),
-                astro.VectorFromSphere(new astro.Spherical(rad2Deg(stars[k].lat), rad2Deg(stars[k].lon), 1), 0)
+            let angle = Astronomy.AngleBetween(
+                Astronomy.VectorFromSphere(new Astronomy.Spherical(pos[0], pos[1], 1), 0),
+                Astronomy.VectorFromSphere(new Astronomy.Spherical(rad2Deg(stars[k].lat), rad2Deg(stars[k].lon), 1), 0)
             );
             // 与理论天顶角比较
             let diff = angle - zenithAngles[k];

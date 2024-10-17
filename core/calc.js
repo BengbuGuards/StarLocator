@@ -1,4 +1,4 @@
-import * as astro from "./astronomy.js";
+import * as Astronomy from "./astronomy.browser.js";
 import { rad2Deg } from "./math.js";
 import { getElevationAngle } from "./getZ.js";
 import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";
@@ -44,8 +44,8 @@ function solve(plane1, plane2) {
     let y2 = (A1 ** 2 * B2 * D2 - A1 * A2 * B1 * D2 - A1 * A2 * B2 * D1 - A1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) + A2 ** 2 * B1 * D1 + A2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) - B1 * C1 * C2 * D2 + B1 * C2 ** 2 * D1 + B2 * C1 ** 2 * D2 - B2 * C1 * C2 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
     let z2 = (A1 * B2 - A2 * B1) * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2) + (A1 ** 2 * C2 * D2 - A1 * A2 * C1 * D2 - A1 * A2 * C2 * D1 + A2 ** 2 * C1 * D1 + B1 ** 2 * C2 * D2 - B1 * B2 * C1 * D2 - B1 * B2 * C2 * D1 + B2 ** 2 * C1 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
 
-    let solve1 = astro.SphereFromVector(new astro.Vector(x1, y1, z1, 0));
-    let solve2 = astro.SphereFromVector(new astro.Vector(x2, y2, z2, 0));
+    let solve1 = Astronomy.SphereFromVector(new Astronomy.Vector(x1, y1, z1, 0));
+    let solve2 = Astronomy.SphereFromVector(new Astronomy.Vector(x2, y2, z2, 0));
     return [[solve1.lat, solve1.lon], [solve2.lat, solve2.lon]];
 }
 
@@ -79,7 +79,7 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  */
 function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     // 天顶向量
-    let zenithVector = new astro.Vector(zenith[0], zenith[1], z, 0)
+    let zenithVector = new Astronomy.Vector(zenith[0], zenith[1], z, 0)
     // 存放粗的数据，每个元素有两组经纬度
     let crudePositions = []
     // 两两计算
@@ -93,7 +93,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
     // 去折射修正
     if (isFixRefraction) {
-        starAngles = starAngles.map(angle => angle + astro.InverseRefraction("normal", angle));
+        starAngles = starAngles.map(angle => angle + Astronomy.InverseRefraction("normal", angle));
     }
     // 计算各星的天顶角
     let zenithAngles = starAngles.map(angle => 90 - angle);

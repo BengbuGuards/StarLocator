@@ -1,4 +1,4 @@
-import { Vector } from "./astronomy.js";
+import * as Astronomy from "./astronomy.browser.js";
 
 
 /**
@@ -8,7 +8,7 @@ import { Vector } from "./astronomy.js";
  * @returns {Vector}
  */
 function add(v1, v2) {
-    return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, 0);
+    return new Astronomy.Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, 0);
 }
 
 
@@ -30,7 +30,7 @@ function dot(v1, v2) {
  * @returns {Vector}
  */
 function multiply(n, v) {
-    return new Vector(n * v.x, n * v.y, n * v.z, 0);
+    return new Astronomy.Vector(n * v.x, n * v.y, n * v.z, 0);
 }
 
 
@@ -41,7 +41,7 @@ function multiply(n, v) {
  * @returns {Vector}
  */
 function cross(v1, v2) {
-    return new Vector(
+    return new Astronomy.Vector(
         v1.y * v2.z - v1.z * v2.y,
         v1.z * v2.x - v1.x * v2.z,
         v1.x * v2.y - v1.y * v2.x,
@@ -57,7 +57,7 @@ function cross(v1, v2) {
  */
 function normalize(v) {
     let length = v.Length();
-    return new Vector(v.x / length, v.y / length, v.z / length, 0);
+    return new Astronomy.Vector(v.x / length, v.y / length, v.z / length, 0);
 }
 
 

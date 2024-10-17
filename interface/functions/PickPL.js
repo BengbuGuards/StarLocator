@@ -5,15 +5,16 @@ import { PLpoint, PLLine } from '../classes/elements.js';
 class PickPL extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
+        this.isPickingPL = false;   // 是否正在选择铅垂线
     }
 
     onClick() {
-        if (!this.interactPhoto.movable)       return;
+        super.onClick();
         
-        this.interactPhoto.isPickingPL = !this.interactPhoto.isPickingPL;
-        this.interactPhoto.tips.innerHTML = `${this.interactPhoto.isPickingPL ? '单击添加铅垂线端点。' : ''}`;
+        this.isPickingPL = !this.isPickingPL;
+        this.interactPhoto.tips.innerHTML = `${this.isPickingPL ? '单击添加铅垂线端点。' : ''}`;
 
-        if (this.interactPhoto.isPickingPL) {
+        if (this.isPickingPL) {
             this.interactPhoto.buttonFonctioner = this;
         } else {
             this.interactPhoto.resetButtonFonctioner();
@@ -24,7 +25,7 @@ class PickPL extends DefaultButtonFonctioner{
         super.handleMouseUp(e);
 
         // 选择铅垂线
-        if (this.interactPhoto.isPickingPL) {
+        if (this.isPickingPL) {
             if (this.interactPhoto.cancelOp){
                 this.interactPhoto.cancelOp = false;
                 // 取消操作
@@ -35,7 +36,7 @@ class PickPL extends DefaultButtonFonctioner{
                 this.addPLEndpoint(p.x, p.y);              
             }
             this.addPL();
-            this.interactPhoto.isPickingPL = false;
+            this.isPickingPL = false;
             this.interactPhoto.tips.innerHTML = '';
             this.interactPhoto.setCanvasCursor('grab');
         } 

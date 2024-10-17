@@ -73,13 +73,13 @@ class PLpoint extends ShapeObject {
         this.PLs = []; // 铅垂线
         this.numPL = 0; // 铅垂线数量
         this.numPLPoint = 0; // 铅垂线端点数量
-        this.isMovingPLPoint = 0; // 是否正在选择铅垂线端点
+        this.movingPLPointID = 0; // 正在移动的铅垂线端点ID
         this.globalPLs = []; // 全局铅垂线
     }
 
     onMove() {
         super.onMove();
-        this.isMovingPLPoint = this.id;
+        this.movingPLPointID = this.id;
 
         if(this.numPLPoint%2==0){
             this.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
@@ -95,7 +95,7 @@ class PLpoint extends ShapeObject {
     }
 
     onMouseUp() {
-        this.isMovingPLPoint = 0;
+        this.movingPLPointID = 0;
     }
 }
 

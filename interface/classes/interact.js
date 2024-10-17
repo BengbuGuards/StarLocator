@@ -11,7 +11,6 @@ class InteractPhoto {
         this.cursorCrd = null;  // 鼠标坐标
         this.inputTable = null; // 输入表格
         this.movable = false;   // 是否可移动
-        this.panning = false;   // 是否正在移动画布
         this.text = null;       // 文本
         this.rect = null;       // 矩形
         this.map = null;        // 地图
@@ -26,16 +25,12 @@ class InteractPhoto {
         this.PLs = []; // 铅垂线
         this.numPL = 0; // 铅垂线数量
         this.numPLPoint = 0; // 铅垂线端点数量
-        this.isMovingPLPoint = 0; // 是否正在选择铅垂线端点
+        this.movingPLPointID = 0; // 是否正在选择铅垂线端点
         this.globalPLs = []; // 全局铅垂线
 
         // 鼠标事件变量
-        this.lmbDon = false; // 鼠标左键是否按下
+        this.lmbDown = false; // 鼠标左键是否按下
         this.cancelOp = false; // 是否取消选择星体or铅垂线的操作
-        
-        // 选择事件变量
-        this.isPickingCele = false; // 是否正在选择天体
-        this.isPickingPL = false;   // 是否正在选择铅垂线
 
         // 按钮功能状态变量
         this.defaultButtonFonctioner = new DefaultButtonFonctioner(this);

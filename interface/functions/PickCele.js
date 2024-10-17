@@ -5,15 +5,16 @@ import { CelestialBody } from '../classes/elements.js';
 class PickCele extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
+        this.isPickingCele = false; // 是否正在选择天体
     }
 
     onClick() {
-        if (!this.interactPhoto.movable)       return;
-
-        this.interactPhoto.isPickingCele = !this.interactPhoto.isPickingCele;
-        this.interactPhoto.tips.innerHTML = `${this.interactPhoto.isPickingCele ? '单击要选择的天体。' : ''}`;
+        super.onClick();
         
-        if (this.interactPhoto.isPickingCele) {
+        this.isPickingCele = !this.isPickingCele;
+        this.interactPhoto.tips.innerHTML = `${this.isPickingCele ? '单击要选择的天体。' : ''}`;
+        
+        if (this.isPickingCele) {
             this.interactPhoto.buttonFonctioner = this;
         } else {
             this.interactPhoto.resetButtonFonctioner();
@@ -31,7 +32,7 @@ class PickCele extends DefaultButtonFonctioner{
             let p = this.interactPhoto.canvas.getPointer(e.e);
             this.addStarAtPoint(p.x, p.y);
         }
-        this.interactPhoto.isPickingCele = false;
+        this.isPickingCele = false;
         this.interactPhoto.tips.innerHTML = '';
         this.interactPhoto.setCanvasCursor('grab');
 

@@ -32,25 +32,26 @@ function initializeCanvas(interactPhoto) {
 }
 
 // 初始化事件
-function initializeEvents(interactPhoto) {
+function initializeEvents(buttonManager) {
+    let interactPhoto = buttonManager.interactPhoto;
     interactPhoto.setCanvasCursor('grab');
     
     // 鼠标事件绑定
-    interactPhoto.canvas.on("mouse:down", e => interactPhoto.handleMouseDown.call(interactPhoto, e));
-    interactPhoto.canvas.on("mouse:up", e => interactPhoto.handleMouseUp.call(interactPhoto, e));
-    interactPhoto.canvas.on("mouse:move", e => interactPhoto.handleMouseMove.call(interactPhoto, e));
-    interactPhoto.canvas.on('mouse:out', e => interactPhoto.handleMouseOut.call(interactPhoto, e));
-    interactPhoto.canvas.on('mouse:wheel', opt => interactPhoto.handleMouseWheel.call(interactPhoto, opt));
+    interactPhoto.canvas.on("mouse:down", e => buttonManager.handleMouseDown.call(buttonManager, e));
+    interactPhoto.canvas.on("mouse:up", e => buttonManager.handleMouseUp.call(buttonManager, e));
+    interactPhoto.canvas.on("mouse:move", e => buttonManager.handleMouseMove.call(buttonManager, e));
+    interactPhoto.canvas.on('mouse:out', e => buttonManager.handleMouseOut.call(buttonManager, e));
+    interactPhoto.canvas.on('mouse:wheel', opt => buttonManager.handleMouseWheel.call(buttonManager, opt));
 
     // 窗口事件绑定
-    window.onresize = interactPhoto.handleResize.call(interactPhoto);
+    window.onresize = buttonManager.handleResize.call(buttonManager);
     
     // 按钮事件绑定
-    document.getElementById('resetPick').addEventListener('click', interactPhoto.defaultButtonFonctioner.clearData.bind(interactPhoto.defaultButtonFonctioner));
-    document.getElementById('resetZoom').addEventListener('click', interactPhoto.defaultButtonFonctioner.resetZoom.bind(interactPhoto.defaultButtonFonctioner));
-    document.getElementById('celePick').addEventListener('click', interactPhoto.pickCele.onClick.bind(interactPhoto.pickCele));
-    document.getElementById('vaniZen').addEventListener('click', interactPhoto.pickPL.onClick.bind(interactPhoto.pickPL));
-    document.getElementById("srcFile").addEventListener('change', e => interactPhoto.imageChange.onClick.call(interactPhoto.imageChange, e));
+    document.getElementById('resetPick').addEventListener('click', buttonManager.interactPhoto.buttonFonctioner.clearData.bind(buttonManager.interactPhoto.buttonFonctioner));
+    document.getElementById('resetZoom').addEventListener('click', buttonManager.interactPhoto.buttonFonctioner.resetZoom.bind(buttonManager.interactPhoto.buttonFonctioner));
+    document.getElementById('celePick').addEventListener('click', buttonManager.pickCele.onClick.bind(buttonManager.pickCele));
+    document.getElementById('vaniZen').addEventListener('click', buttonManager.pickPL.onClick.bind(buttonManager.pickPL));
+    document.getElementById("srcFile").addEventListener('change', e => buttonManager.imageChange.onClick.call(buttonManager.imageChange, e));
 }
 
 // 初始化地图

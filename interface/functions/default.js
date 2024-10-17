@@ -1,8 +1,8 @@
 import * as fabric from '../../fabric/dist/fabric.mjs';
-import { CelestialBody, PLpoint, PLLine } from './elements.js';
+import { CelestialBody, PLpoint, PLLine } from '../classes/elements.js';
 
 
-class ButtonFonctioner{
+class DefaultButtonFonctioner{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;
     }
@@ -39,23 +39,8 @@ class ButtonFonctioner{
     handleMouseUp(e) {
         this.interactPhoto.lmbDown = false;
 
-        // 选择天体
-        if (this.interactPhoto.isPickingCele) {
-            if (this.interactPhoto.cancelOp) {
-                this.interactPhoto.cancelOp = false;
-                // 取消操作
-            } else {
-                // 加入
-                let p = this.interactPhoto.canvas.getPointer(e.e);
-                this.addStarAtPoint(p.x, p.y);
-            }
-            this.interactPhoto.isPickingCele = false;
-            this.interactPhoto.tips.innerHTML = '';
-            this.interactPhoto.setCanvasCursor('grab');
-        } 
-    
         // 选择铅垂线
-        else if (this.interactPhoto.isPickingPL) {
+        if (this.interactPhoto.isPickingPL) {
             if (this.interactPhoto.cancelOp){
                 this.interactPhoto.cancelOp = false;
                 // 取消操作
@@ -205,5 +190,4 @@ class ButtonFonctioner{
     }
 }
 
-
-export { ButtonFonctioner };
+export { DefaultButtonFonctioner };

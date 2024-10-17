@@ -1,8 +1,5 @@
-import { initializeElements, initializeCanvas, initializeEvents, initializeMap } from '../init.js';
-import { ButtonFonctioner } from '../classes/ButtionFunctioner.js';
-import { PickCele } from '../functions/PickCele.js';
-import { PickPL } from '../functions/PickPL.js';
-import { ImageChange } from '../functions/ImageChange.js';
+import { DefaultButtonFonctioner } from '../functions/default.js';
+
 
 class InteractPhoto {
     constructor() {
@@ -41,20 +38,8 @@ class InteractPhoto {
         this.isPickingPL = false;   // 是否正在选择铅垂线
 
         // 按钮事件变量
-        this.defaultButtonFonctioner = new ButtonFonctioner(this); // 默认按钮事件对象
+        this.defaultButtonFonctioner = new DefaultButtonFonctioner(this);
         this.buttonFonctioner = this.defaultButtonFonctioner; // 当前按钮事件对象
-        this.pickCele = new PickCele(this); // 选择天体事件对象
-        this.pickPL = new PickPL(this); // 选择铅垂线事件对象
-        this.imageChange = new ImageChange(this); // 读取图片事件对象
-
-        // 页面加载完成事件
-        const interactPhotoInstance = this;
-        window.onload = function () {
-            initializeElements(interactPhotoInstance);
-            initializeCanvas(interactPhotoInstance);
-            initializeEvents(interactPhotoInstance);
-            initializeMap(interactPhotoInstance);
-        }
     }
 
     // 调整画布的缩放和视图位置
@@ -71,37 +56,6 @@ class InteractPhoto {
     // 鼠标模式
     setCanvasCursor(cursor) {
         this.canvasInst.style.cursor = cursor;
-    }
-
-    // 鼠标事件处理
-    // 处理鼠标按下事件
-    handleMouseDown(e) {
-        this.buttonFonctioner.handleMouseDown(e);
-    }
-
-    // 处理鼠标抬起事件
-    handleMouseUp(e) {
-        this.buttonFonctioner.handleMouseUp(e);
-    }
-
-    // 处理鼠标移动事件
-    handleMouseMove(e) {
-        this.buttonFonctioner.handleMouseMove(e);
-    }
-
-    // 处理鼠标移出事件
-    handleMouseOut(e) {
-        this.buttonFonctioner.handleMouseOut(e);
-    }
-
-    // 处理鼠标滚轮事件用于缩放照片大小
-    handleMouseWheel(opt) {
-        this.buttonFonctioner.handleMouseWheel(opt);
-    }
-
-    // 处理页面改变大小事件
-    handleResize() {
-        this.buttonFonctioner.handleResize();
     }
 }
 

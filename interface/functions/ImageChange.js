@@ -1,8 +1,8 @@
 import * as fabric from '../../fabric/dist/fabric.mjs';
-import { ButtonFonctioner } from "../classes/ButtionFunctioner.js";
+import { DefaultButtonFonctioner } from './default.js';
 
 
-class ImageChange extends ButtonFonctioner{
+class ImageChange extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
     }

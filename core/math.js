@@ -114,11 +114,21 @@ function calculateMedian(numbers) {
 }
 
 
-function minimize(func, lowerBound, upperBound, tolerance = 1e-6) {
+/**
+ * 三段二分法求函数极小值
+ * @param {Function} func
+ * @param {number} lowerBound 区间左端点
+ * @param {number} upperBound 区间右端点
+ * @param {number} tolerance 误差容限
+ * @param {number} maxIter 最大迭代次数
+ * @returns {number}
+ */
+function minimize(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) {
     let left = lowerBound;
     let right = upperBound;
+    let iter = 0;
     
-    while ((right - left) > tolerance) {
+    while ((right - left) > tolerance && iter < maxIter) {
         let midLeft = left + (right - left) / 3;
         let midRight = right - (right - left) / 3;
         
@@ -127,6 +137,7 @@ function minimize(func, lowerBound, upperBound, tolerance = 1e-6) {
         } else {
             left = midLeft;
         }
+        iter += 1;
     }
     
     // 返回最小点 x

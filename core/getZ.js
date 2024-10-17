@@ -85,7 +85,7 @@ function getElevationAngle(star, z, zenithVector) {
 
 
 /**
- * 使用二分法修正折射偏差后的像素焦距
+ * 使用三段二分法修正折射偏差后的像素焦距
  * @param {Array<Star>} stars 星星数组
  * @param {number} z0 初始像素焦距
  * @param {Array<number>} zenith 天顶坐标 [x, y]

@@ -1,5 +1,3 @@
-import * as fabric from '../../fabric/dist/fabric.mjs';
-
 // 点基类
 class ShapeObject {
     constructor(x, y, id, canvas, Color, label) {

@@ -1,5 +1,3 @@
-import * as fabric from '../fabric/dist/fabric.mjs';
-
 // 初始化页面元素
 function initializeElements(interactPhoto) {
     interactPhoto.container = document.getElementById('box');

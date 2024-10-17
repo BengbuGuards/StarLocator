@@ -1,4 +1,3 @@
-import * as fabric from '../../fabric/dist/fabric.mjs';
 import { DefaultButtonFonctioner } from './default.js';
 
 

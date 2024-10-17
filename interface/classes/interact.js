@@ -37,7 +37,7 @@ class InteractPhoto {
         this.isPickingCele = false; // 是否正在选择天体
         this.isPickingPL = false;   // 是否正在选择铅垂线
 
-        // 按钮事件变量
+        // 按钮功能状态变量
         this.defaultButtonFonctioner = new DefaultButtonFonctioner(this);
         this.buttonFonctioner = this.defaultButtonFonctioner; // 当前按钮事件对象
     }
@@ -56,6 +56,11 @@ class InteractPhoto {
     // 鼠标模式
     setCanvasCursor(cursor) {
         this.canvasInst.style.cursor = cursor;
+    }
+
+    // 重置按钮功能状态
+    resetButtonFonctioner() {
+        this.buttonFonctioner = this.defaultButtonFonctioner;
     }
 }
 

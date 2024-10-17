@@ -50,6 +50,7 @@ function initializeEvents(buttonManager) {
     document.getElementById('celePick').addEventListener('click', buttonManager.pickCele.onClick.bind(buttonManager.pickCele));
     document.getElementById('vaniZen').addEventListener('click', buttonManager.pickPL.onClick.bind(buttonManager.pickPL));
     document.getElementById("srcFile").addEventListener('change', e => buttonManager.imageChange.onClick.call(buttonManager.imageChange, e));
+    document.getElementById('actionCalcul').addEventListener('click', buttonManager.calc.onClick.bind(buttonManager.calc));
 }
 
 // 初始化地图

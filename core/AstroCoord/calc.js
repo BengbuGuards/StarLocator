@@ -10,6 +10,9 @@ const solarBodies = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'satu
  * @returns {[number, number]} 返回时角和赤纬
 */
 function getHaDecbyRaDec(raDec, date) {
+    if (isNaN(raDec[0]) || isNaN(raDec[1])) {
+        return [NaN, NaN];
+    }
     const observer = new Astronomy.Observer(0, 0, 0);
     Astronomy.DefineStar("Star1", raDec[0], raDec[1], 1000);
     let equ_ofdate = Astronomy.Equator("Star1", date, observer, true, true);
@@ -48,7 +51,7 @@ class AstroCalculator {
      */
     async loadStarZH2EN() {
         try {
-            const response = await fetch('core/AstroCoord/starZH2EN.json');
+            const response = await fetch('/core/AstroCoord/starZH2EN.json');
             if (!response.ok) {
                 throw new Error('网络响应不是正常的状态');
             }

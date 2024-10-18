@@ -38,6 +38,7 @@ class PickPL extends DefaultButtonFonctioner{
             }
             this.addPL();
             this.isPickingPL = false;
+            this.interactPhoto.resetButtonFonctioner();
             this.interactPhoto.tips.innerHTML = '';
             this.interactPhoto.setCanvasCursor('grab');
         } 
@@ -46,7 +47,7 @@ class PickPL extends DefaultButtonFonctioner{
     // 添加铅垂线端点的函数
     addPLEndpoint(x, y) {
         this.interactPhoto.numPLPoint++;
-        let plpoint = new PLpoint(x, y, this.interactPhoto.numPLPoint, this.interactPhoto.canvas);
+        let plpoint = new PLpoint(x, y, this.interactPhoto);
         this.interactPhoto.PLPoints.push([x,y]);
         console.log(this.interactPhoto.PLPoints);
     }

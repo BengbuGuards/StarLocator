@@ -1,6 +1,6 @@
-import { rad2Deg } from "./math.js";
-import { getElevationAngle } from "./getZ.js";
-import { squareMedianAverage } from "./algorithm/squareMedianAverage.js";
+import {rad2Deg} from "./math.js";
+import {getElevationAngle} from "./getZ.js";
+import {squareMedianAverage} from "./algorithm/squareMedianAverage.js";
 
 const sin = Math.sin;
 const cos = Math.cos;
@@ -13,7 +13,7 @@ const sqrt = Math.sqrt;
  * @param {number} elevationAngle 高度角（弧度制）
  * @returns {Array<number>} [A, B, C, D]
  */
-function getPlain(star, elevationAngle) {
+function getPlane(star, elevationAngle) {
     let phi = star.lat;
     let lam = star.lon;
     let theta = elevationAngle;
@@ -59,8 +59,8 @@ function solve(plane1, plane2) {
  */
 function dualStarPositioning(star1, star2, z, zenithVector) {
     // 计算平面方程
-    let plane1 = getPlain(star1, getElevationAngle(star1, z, zenithVector));
-    let plane2 = getPlain(star2, getElevationAngle(star2, z, zenithVector));
+    let plane1 = getPlane(star1, getElevationAngle(star1, z, zenithVector));
+    let plane2 = getPlane(star2, getElevationAngle(star2, z, zenithVector));
 
     // 联立求解
     return solve(plane1, plane2);
@@ -98,7 +98,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     let zenithAngles = starAngles.map(angle => 90 - angle);
 
     // 加权平均
-    let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);    
+    let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);
 
     /**
      * 2024-10-4 gc 重力纬度修正
@@ -106,10 +106,10 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
      * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
      */
     if (isFixGravity) {
-        avgLat = avgLat + (0.00032712 * sin(avgLat) ** 2 - 0.00000368 * sin(avgLat) - 0.099161) * sin (avgLat * 2);
+        avgLat = avgLat + (0.00032712 * sin(avgLat) ** 2 - 0.00000368 * sin(avgLat) - 0.099161) * sin(avgLat * 2);
     }
 
     return [avgLat, avgLon];
 }
- 
-export { calc };
+
+export {calc};

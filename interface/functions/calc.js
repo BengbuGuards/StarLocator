@@ -13,6 +13,7 @@ class Calc extends DefaultButtonFonctioner{
 
     onClick() {
         super.onClick();
+        if (!this.interactPhoto.movable) return;
         
         // 读取数据
         let globalPLs = this.interactPhoto.PLs;

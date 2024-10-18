@@ -11,6 +11,7 @@ class CeleCoord extends DefaultButtonFonctioner{
 
     onClick() {
         super.onClick();
+        if (!this.interactPhoto.movable) return;
         
         let starNames = this.getStarNames();
         let date = this.interactPhoto.getDateTime();

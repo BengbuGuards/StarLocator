@@ -11,6 +11,7 @@ class PickPL extends DefaultButtonFonctioner{
 
     onClick() {
         super.onClick();
+        if (!this.interactPhoto.movable) return;
         
         this.isPickingPL = !this.isPickingPL;
         this.interactPhoto.tips.innerHTML = `${this.isPickingPL ? '单击添加铅垂线端点。' : ''}`;
@@ -24,6 +25,7 @@ class PickPL extends DefaultButtonFonctioner{
 
     handleMouseUp(e) {
         super.handleMouseUp(e);
+        if (!this.interactPhoto.movable) return;
 
         // 选择铅垂线
         if (this.isPickingPL) {

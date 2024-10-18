@@ -11,6 +11,7 @@ class PickCele extends DefaultButtonFonctioner{
 
     onClick() {
         super.onClick();
+        if (!this.interactPhoto.movable) return;
         
         this.isPickingCele = !this.isPickingCele;
         this.interactPhoto.tips.innerHTML = `${this.isPickingCele ? '单击要选择的天体。' : ''}`;
@@ -24,6 +25,7 @@ class PickCele extends DefaultButtonFonctioner{
 
     handleMouseUp(e) {
         super.handleMouseUp(e);
+        if (!this.interactPhoto.movable) return;
 
         if (this.interactPhoto.cancelOp) {
             this.interactPhoto.cancelOp = false;

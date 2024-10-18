@@ -15,7 +15,7 @@ class Calc extends DefaultButtonFonctioner{
         super.onClick();
         
         // 读取数据
-        let globalPLs = this.getPLsCorrd(this.interactPhoto.globalPLs);
+        let globalPLs = this.interactPhoto.PLs;
         let originalStars = this.getOriginalStars();
         
         // 检查数据
@@ -63,20 +63,6 @@ class Calc extends DefaultButtonFonctioner{
         } finally {
             this.interactPhoto.resetButtonFonctioner();
         }
-    }
-
-    // 获取铅垂线端点坐标
-    getPLsCorrd(globalPLs){
-        let corrd3dArray=[];
-        for(let PLline of globalPLs){
-            corrd3dArray.push(
-                [
-                    [PLline.coordinates[0], PLline.coordinates[1]],
-                    [PLline.coordinates[2], PLline.coordinates[3]]
-                ]
-            );
-        }
-        return corrd3dArray;
     }
 
     // 添加天顶坐标到表格

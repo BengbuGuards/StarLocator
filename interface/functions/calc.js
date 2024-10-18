@@ -9,6 +9,7 @@ import { markStars } from '../../core/mark.js';
 class Calc extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
+        this.mapMarker = null;
     }
 
     onClick() {
@@ -107,7 +108,13 @@ class Calc extends DefaultButtonFonctioner{
         document.getElementById('outputLong').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + "°";
         document.getElementById('outputLat').textContent = Math.round(geoEstimate[1] * 10000 ) / 10000 + "°";
         let map = this.interactPhoto.map;
+        // 清除之前的标记
+        if(this.mapMarker){
+            map.removeLayer(this.mapMarker);
+        }
+        // 添加新的标记
         let marker = L.marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
+        this.mapMarker = marker;
         map.setView([geoEstimate[0], geoEstimate[1]], 3);
     }
 }

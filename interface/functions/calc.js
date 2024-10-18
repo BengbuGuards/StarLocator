@@ -31,27 +31,38 @@ class Calc extends DefaultButtonFonctioner{
         this.interactPhoto.buttonFonctioner = this;
         this.interactPhoto.tips.innerHTML = `计算中...`;
         
-        // 计算灭点，注意检查数量
-        let zenith = getVPoint(globalPLs);
-        this.addZenithtoTable(zenith);
-        
-        // 计算焦距
-        let stars = markStars(originalStars);
-        console.log("stars: ", stars);
-        let isFixRefraction = document.getElementById('check1').checked;
-        let z = getZ(stars, zenith, isFixRefraction);
-        this.showZ(z);
+        try {
+            // 计算灭点，注意检查数量
+            let zenith = getVPoint(globalPLs);
+            this.addZenithtoTable(zenith);
+            
+            // 计算焦距
+            let stars = markStars(originalStars);
+            console.log("stars: ", stars);
+            let isFixRefraction = document.getElementById('check1').checked;
+            let z = getZ(stars, zenith, isFixRefraction);
+            if(isNaN(z)){
+                throw new Error("无法计算像素焦距");
+            }
+            this.showZ(z);
 
-        // 计算地理坐标
-        let isFixGravity = document.getElementById('check2').checked;
-        let geoEstimate = calc(stars, z, zenith, isFixGravity, isFixRefraction);
+            // 计算地理坐标
+            let isFixGravity = document.getElementById('check2').checked;
+            let geoEstimate = calc(stars, z, zenith, isFixGravity, isFixRefraction);
+            if(geoEstimate.length==0 || isNaN(geoEstimate[0]) || isNaN(geoEstimate[1])){
+                throw new Error("无法计算地理坐标");
+            }
 
-        // 显示结果
-        this.showGeoEstimate(geoEstimate);
-        
-        // 结束计算
-        this.interactPhoto.tips.innerHTML = '';
-        this.interactPhoto.resetButtonFonctioner();
+            // 显示结果
+            this.showGeoEstimate(geoEstimate);
+
+            // 结束计算
+            this.interactPhoto.tips.innerHTML = '';
+        } catch (e) {
+            this.interactPhoto.tips.innerHTML = `计算失败：${e.message}，请检查数据`;
+        } finally {
+            this.interactPhoto.resetButtonFonctioner();
+        }
     }
 
     // 获取铅垂线端点坐标

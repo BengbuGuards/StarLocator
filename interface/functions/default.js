@@ -69,13 +69,12 @@ class DefaultButtonFonctioner{
             });
             this.interactPhoto.globalPLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)].line.setCoords(); // 更新线的位置
             this.interactPhoto.canvas.renderAll(); // 刷新画布以显示更改
-            console.log(typeof this.interactPhoto.globalPLs); // 检查数组内容
         }
 
         // 坐标显示
         if (this.interactPhoto.movable && e && !this.panning) {
             let p = this.interactPhoto.canvas.getPointer(e.e);
-            this.interactPhoto.cursorCrd.innerHTML = `${Math.round(p.x)}，${Math.round(p.y)}`;
+            this.interactPhoto.cursorCrd.innerHTML = `${Math.round(p.x*100)/100}，${Math.round(p.y*100)/100}`;
         }
 
         // 处理画布移动

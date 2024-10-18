@@ -40,7 +40,6 @@ class Calc extends DefaultButtonFonctioner{
             
             // 计算焦距
             let stars = markStars(originalStars);
-            console.log("stars: ", stars);
             let isFixRefraction = document.getElementById('check1').checked;
             let z = getZ(stars, zenith, isFixRefraction);
             if(isNaN(z)){

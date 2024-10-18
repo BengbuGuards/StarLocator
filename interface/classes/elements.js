@@ -8,8 +8,8 @@ class ShapeObject {
         this.Color = Color;
 
         this.point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
-            left: x - 16,
-            top: y - 16,
+            left: x - 16.5,
+            top: y - 16.5,
             width: 32,
             height: 32,
             fill: this.Color,
@@ -18,8 +18,8 @@ class ShapeObject {
         });
 
         this.label = new fabric.Text(label, {
-            left: x + 16,
-            top: y - 10,
+            left: x + 16.5,
+            top: y - 10.5,
             fontSize: 16,
             fontFamily: '微软雅黑',
             fill: this.Color,
@@ -33,7 +33,7 @@ class ShapeObject {
     }
 
     onMove() {
-        this.label.left = this.point.left + 32;
+        this.label.left = this.point.left + 33;
         this.label.top = this.point.top + 6;
         this.label.setCoords();
     }
@@ -56,8 +56,8 @@ class CelestialBody extends ShapeObject {
         this.label.setCoords();
 
  		// 修改表格内容（貌似性能不是很好）
-		document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16) * 100) / 100;
- 		document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16) * 100) / 100;
+		document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16.5) * 100) / 100;
+ 		document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16.5) * 100) / 100;
     }
 }
 
@@ -74,15 +74,15 @@ class PLpoint extends ShapeObject {
         this.interactPhoto.movingPLPointID = this.id;
 
         if(this.interactPhoto.numPLPoint%2==0){
-            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
-            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
-            console.log(this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
+            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16.5;
+            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16.5;
+            // console.log(this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
         }
         else{
-            this.interactPhoto.PLPoints[0]=this.point.left+16;
-            this.interactPhoto.PLPoints[1]=this.point.top+16;
+            this.interactPhoto.PLPoints[0]=this.point.left+16.5;
+            this.interactPhoto.PLPoints[1]=this.point.top+16.5;
             this.interactPhoto.PLPoints=[this.interactPhoto.PLPoints];
-            console.log(this.interactPhoto.PLPoints);
+            // console.log(this.interactPhoto.PLPoints);
         }
     }
 

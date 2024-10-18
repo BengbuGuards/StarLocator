@@ -3,6 +3,7 @@ import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
 import { ImageChange } from '../functions/ImageChange.js';
 import { Calc } from '../functions/calc.js';
+import { CeleCoord } from '../functions/CeleCoord.js';
 
 // 事件管理器，管理鼠标事件、按钮事件与照片的交互
 class EventManager{
@@ -13,6 +14,7 @@ class EventManager{
         this.pickPL = new PickPL(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto);
         this.calc = new Calc(this.interactPhoto);
+        this.celeCoord = new CeleCoord(this.interactPhoto);
 
         // 页面加载完成事件
         window.onload = function () {

@@ -203,8 +203,14 @@
 				<label for="check3">显示为角度</label><br />
 				<input type="checkbox" id="check4" />
 				<label for="check4">时间未定</label><br />
-				<label for="set1">拍摄时间 </label><input id="setTime" type="number" style="width: 45%"><br />
-				<label for="set2">时间偏差 </label><input id="setTimeDev" type="number" style="width: 45%">
+				<label for="set1">
+				拍摄时间 
+				</label><input id="setDate" type="date" style="width: 25%">
+				</label><input id="setTime" type="time" step="1" style="width: 20%">
+				时区 
+				<input id="setTimeZone" type="number" min="-12" max="12" step="1" style="width: 10%">
+				<br />
+				<label for="set2">时间偏差 </label><input id="setTimeDev" type="number" style="width: 65%">
 			</div>
 			<table style="width: 100%; margin-top: 15px;">
 				<tr>

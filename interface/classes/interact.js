@@ -15,6 +15,9 @@ class InteractPhoto {
         this.text = null;       // 文本
         this.rect = null;       // 矩形
         this.map = null;        // 地图
+        this.date = null;       // 日期
+        this.time = null;       // 时间
+        this.timeZone = null;   // 时区
 
         // 星体变量
         this.points = [];       // 星星点
@@ -57,6 +60,26 @@ class InteractPhoto {
     // 重置按钮功能状态
     resetButtonFonctioner() {
         this.buttonFonctioner = this.defaultButtonFonctioner;
+    }
+
+    // 获取当前日期时间时区的Date对象
+    getDateTime() {
+        let timeZoneOffset = this.timeZone.value;
+        if (timeZoneOffset.length === 1) {
+            timeZoneOffset = '0' + timeZoneOffset + ':00';
+        } else if (timeZoneOffset.length === 2) {
+            timeZoneOffset = timeZoneOffset + ':00';
+        }
+
+        let date = new Date(
+            this.date.value
+            + 'T'
+            + this.time.value
+            + (this.timeZone.value >= 0 ? '+' : '')
+            + timeZoneOffset
+        );
+        
+        return date;
     }
 }
 

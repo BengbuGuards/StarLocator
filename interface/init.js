@@ -4,6 +4,14 @@ function initializeElements(interactPhoto) {
     interactPhoto.cursorCrd = document.getElementById('cursorCrd');
     interactPhoto.tips = document.getElementById('canvasStatus');
     interactPhoto.inputTable = document.getElementById('inputTable');
+    interactPhoto.date = document.getElementById('setDate');
+    interactPhoto.time = document.getElementById('setTime');
+    interactPhoto.timeZone = document.getElementById('setTimeZone');
+    // 设置当前日期、时间、时区
+    let now = new Date();
+    interactPhoto.date.value = now.toISOString().split('T')[0];
+    interactPhoto.time.value = now.toTimeString().split(' ')[0];
+    interactPhoto.timeZone.value = - parseInt(now.getTimezoneOffset() / 60);
 }
 
 // 初始化画布
@@ -51,6 +59,7 @@ function initializeEvents(buttonManager) {
     document.getElementById('vaniZen').addEventListener('click', buttonManager.pickPL.onClick.bind(buttonManager.pickPL));
     document.getElementById("srcFile").addEventListener('change', e => buttonManager.imageChange.onClick.call(buttonManager.imageChange, e));
     document.getElementById('actionCalcul').addEventListener('click', buttonManager.calc.onClick.bind(buttonManager.calc));
+    document.getElementById('manualTime').addEventListener('click', buttonManager.celeCoord.onClick.bind(buttonManager.celeCoord));
 }
 
 // 初始化地图

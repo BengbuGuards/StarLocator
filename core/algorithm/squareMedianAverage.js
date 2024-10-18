@@ -1,5 +1,4 @@
 import { rad2Deg, calculateMedian } from "../math.js";
-import * as Astronomy from "../astronomy.browser.js";
 
 
 /**

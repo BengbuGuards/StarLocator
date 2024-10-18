@@ -8,7 +8,7 @@ import { deg2Rad } from "./math.js";
  * @return {number}
  */
 function toHours(hourAngle) {
-    const pattern = /(\d+)h(\d+)m(\d+\.\d+)s/;
+    const pattern = /(\d+)h(\d+)m(\d+(?:\.\d+)?)s/;
     let match = hourAngle.match(pattern);
 
     let h = parseFloat(match[1]);
@@ -25,7 +25,7 @@ function toHours(hourAngle) {
  * @returns {number}
  */
 function toDegrees(declination) {
-    const pattern = /([+\-])(\d+)°(\d+)\'(\d+\.\d+)\"/;
+    const pattern = /([+-]?)(\d+)°(\d+)'(\d+(?:\.\d+)?)"/;
     let match = declination.match(pattern);
 
     let sign = match[1];
@@ -33,7 +33,7 @@ function toDegrees(declination) {
     let m = parseFloat(match[3]);
     let s = parseFloat(match[4]);
 
-    return (sign === '+' ? 1 : -1) * (d + m / 60 + s / 3600);
+    return (sign === '-' ? -1 : 1) * (d + m / 60 + s / 3600);
 }
 
 

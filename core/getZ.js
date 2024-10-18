@@ -1,4 +1,3 @@
-import * as Astronomy from "./astronomy.browser.js";
 import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize, minimize } from "./math.js";
 
 const sin = Math.sin;

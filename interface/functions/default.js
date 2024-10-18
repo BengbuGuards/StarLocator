@@ -44,7 +44,8 @@ class DefaultButtonFonctioner{
         
         if (!this.interactPhoto.movable) return;
         // 画布移动
-        if (this.interactPhoto.canvas.getActiveObject() === undefined) {
+        if (this.interactPhoto.buttonFonctioner === this.interactPhoto.defaultButtonFonctioner
+            && this.interactPhoto.canvas.getActiveObject() === undefined) {
             this.panning = false;
             this.interactPhoto.canvas.selection = true;
             this.interactPhoto.setCanvasCursor('grab');
@@ -68,7 +69,7 @@ class DefaultButtonFonctioner{
             });
             this.interactPhoto.globalPLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)].line.setCoords(); // 更新线的位置
             this.interactPhoto.canvas.renderAll(); // 刷新画布以显示更改
-            console.log(typeof globalPLs); // 检查数组内容
+            console.log(typeof this.interactPhoto.globalPLs); // 检查数组内容
         }
 
         // 坐标显示

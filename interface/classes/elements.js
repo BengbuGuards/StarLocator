@@ -63,37 +63,31 @@ class CelestialBody extends ShapeObject {
 
 // 铅垂线端点类
 class PLpoint extends ShapeObject {
-    constructor(x, y, id, canvas) {
-        super(x, y, id, canvas, '#35dc96', '');
+    constructor(x, y, interactPhoto) {
+        super(x, y, interactPhoto.numPLPoint, interactPhoto.canvas, '#35dc96', '');
         this.coordinate=[x,y];
-        // 铅垂线变量
-        this.PLPoints = []; // 一条铅垂线的端点
-        this.PLs = []; // 铅垂线
-        this.numPL = 0; // 铅垂线数量
-        this.numPLPoint = 0; // 铅垂线端点数量
-        this.movingPLPointID = 0; // 正在移动的铅垂线端点ID
-        this.globalPLs = []; // 全局铅垂线
+        this.interactPhoto = interactPhoto;
     }
 
     onMove() {
         super.onMove();
-        this.movingPLPointID = this.id;
+        this.interactPhoto.movingPLPointID = this.id;
 
-        if(this.numPLPoint%2==0){
-            this.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
-            this.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
-            console.log(this.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
+        if(this.interactPhoto.numPLPoint%2==0){
+            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16;
+            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16;
+            console.log(this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
         }
         else{
-            this.PLPoints[0]=this.point.left+16;
-            this.PLPoints[1]=this.point.top+16;
-            this.PLPoints=[this.PLPoints];
-            console.log(this.PLPoints);
+            this.interactPhoto.PLPoints[0]=this.point.left+16;
+            this.interactPhoto.PLPoints[1]=this.point.top+16;
+            this.interactPhoto.PLPoints=[this.interactPhoto.PLPoints];
+            console.log(this.interactPhoto.PLPoints);
         }
     }
 
     onMouseUp() {
-        this.movingPLPointID = 0;
+        this.interactPhoto.movingPLPointID = 0;
     }
 }
 

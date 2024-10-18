@@ -114,8 +114,14 @@ class Calc extends DefaultButtonFonctioner{
 
     // 显示地理坐标
     showGeoEstimate(geoEstimate){
+        if (geoEstimate[1] > 180) {
+            geoEstimate[1] -= 360;
+        }
         document.getElementById('outputLong').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + "°";
         document.getElementById('outputLat').textContent = Math.round(geoEstimate[1] * 10000 ) / 10000 + "°";
+        let map = this.interactPhoto.map;
+        let marker = L.marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
+        map.setView([geoEstimate[0], geoEstimate[1]], 3);
     }
 }
 

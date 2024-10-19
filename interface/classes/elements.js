@@ -1,20 +1,19 @@
 // 点基类
 class ShapeObject {
-    constructor(x, y, id, canvas, Color, label) {
+    constructor(x, y, id, canvas, color, label) {
         this.x = x;
         this.y = y;
         this.id = id;
         this.canvas = canvas;
-        this.Color = Color;
+        this.color = color;
 
         this.point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
             left: x - 16.5,
             top: y - 16.5,
             width: 32,
             height: 32,
-            fill: this.Color,
-            hasControls: false,
-            id: this.id
+            fill: this.color,
+            hasControls: false
         });
 
         this.label = new fabric.Text(label, {
@@ -22,7 +21,7 @@ class ShapeObject {
             top: y - 10.5,
             fontSize: 16,
             fontFamily: '微软雅黑',
-            fill: this.Color,
+            fill: this.color,
             selectable: false,
             hoverCursor: 'grab'
         });
@@ -61,11 +60,11 @@ class CelestialBody extends ShapeObject {
     }
 }
 
-// 铅垂线端点类
+// 线端点类
 class PLpoint extends ShapeObject {
-    constructor(x, y, interactPhoto) {
-        super(x, y, interactPhoto.numPLPoint, interactPhoto.canvas, '#35dc96', '');
-        this.coordinate=[x,y];
+    constructor(coordinates, interactPhoto, id, color) {
+        super(coordinates[0], coordinates[1], id, interactPhoto.canvas, color, '');
+        this.coordinate = coordinates;
         this.interactPhoto = interactPhoto;
     }
 
@@ -89,19 +88,24 @@ class PLpoint extends ShapeObject {
     onMouseUp() {
         this.interactPhoto.movingPLPointID = 0;
     }
+
+    remove() {
+        this.canvas.remove(this.point);
+        this.canvas.remove(this.label);
+    }
 }
 
 // 线基类
 class LineObject {
-    constructor(coordinates, id, canvas, Color) {
+    constructor(coordinates, interactPhoto, color) {
         this.coordinates = coordinates;
-        this.canvas = canvas;
-        this.Color = Color;
-        this.id = id;
+        this.canvas = interactPhoto.canvas;
+        this.id = interactPhoto.numPL;
+        this.color = color;
 
         this.line = new fabric.Line(this.coordinates, {
-            fill: this.Color,
-            stroke: this.Color,
+            fill: this.color,
+            stroke: this.color,
             strokeWidth: 1,
             selectable: false,
             hoverCursor: 'grab'
@@ -112,9 +116,11 @@ class LineObject {
 }
 
 // 端点线类
-class PLLine extends LineObject {
-    constructor(coordinates, id, canvas) {
-        super(coordinates, id, canvas, '#35dc96');
+class PLLine {
+    constructor(coordinates, interactPhoto) {
+        this.lineObject = new LineObject(coordinates, interactPhoto, '#35dc96');
+        this.points1 = new PLpoint(coordinates.slice(0, 2), interactPhoto, interactPhoto.numPLPoint - 1, '#35dc96');
+        this.points2 = new PLpoint(coordinates.slice(2, 4), interactPhoto, interactPhoto.numPLPoint, '#35dc96');
     }
 }
 

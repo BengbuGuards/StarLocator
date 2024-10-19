@@ -7,7 +7,6 @@ class PickPL extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.isPickingPL = false;   // 是否正在选择铅垂线
-        this.alonePLPoint = null;   // 临时的单个铅垂线端点
     }
 
     onClick() {
@@ -37,8 +36,7 @@ class PickPL extends DefaultButtonFonctioner{
             else {
                 // 加入
                 let p = this.interactPhoto.canvas.getPointer(e.e);
-                this.addPLEndpoint(p.x, p.y);
-                this.addPL();
+                this.addPL([p.x, p.y]);
                 this.isPickingPL = false;
                 this.interactPhoto.resetButtonFonctioner();
                 this.interactPhoto.tips.innerHTML = '';
@@ -47,28 +45,13 @@ class PickPL extends DefaultButtonFonctioner{
         } 
     }
 
-    // 添加铅垂线端点的函数
-    addPLEndpoint(x, y) {
-        this.interactPhoto.numPLPoint++;
-        if (this.interactPhoto.PLPointsCoord.length==0) {
-            this.alonePLPoint = new PLpoint([x, y], this.interactPhoto, this.interactPhoto.numPLPoint, '#35dc96');
-        }
-        this.interactPhoto.PLPointsCoord.push([x,y]);
-        console.log(this.interactPhoto.PLPointsCoord);
-    }
-
     // 添加铅垂线的函数
-    addPL(){
-        if (this.interactPhoto.PLPointsCoord.length==2){
-            this.alonePLPoint.remove();
-            this.alonePLPoint = null;
-            this.interactPhoto.numPL++;
-            this.interactPhoto.globalPLPointsCoord.push(this.interactPhoto.PLPointsCoord);
-            console.log(this.interactPhoto.globalPLPointsCoord);
-            let pl = new PLLine(this.interactPhoto.PLPointsCoord.flat(), this.interactPhoto);
+    addPL(coordinate){
+        if (this.interactPhoto.globalPLs.length == 0 || this.interactPhoto.globalPLs.slice(-1)[0].points.length == 2){
+            let pl = new PLLine(this.interactPhoto);
             this.interactPhoto.globalPLs.push(pl);
-            this.interactPhoto.PLPointsCoord=[];
         }
+        this.interactPhoto.globalPLs.slice(-1)[0].addPoint(coordinate);
     }
 }
 

@@ -50,19 +50,19 @@ class PickPL extends DefaultButtonFonctioner{
     addPLEndpoint(x, y) {
         this.interactPhoto.numPLPoint++;
         let plpoint = new PLpoint(x, y, this.interactPhoto);
-        this.interactPhoto.PLPoints.push([x,y]);
-        console.log(this.interactPhoto.PLPoints);
+        this.interactPhoto.PLPointsCoord.push([x,y]);
+        console.log(this.interactPhoto.PLPointsCoord);
     }
 
     // 添加铅垂线的函数
     addPL(){
-        if (this.interactPhoto.PLPoints.length==2){
+        if (this.interactPhoto.PLPointsCoord.length==2){
             this.interactPhoto.numPL++;
-            this.interactPhoto.PLs.push(this.interactPhoto.PLPoints);
-            console.log(this.interactPhoto.PLs);
-            let pl = new PLLine(this.interactPhoto.PLPoints.flat(), this.interactPhoto.numPL, this.interactPhoto.canvas);
+            this.interactPhoto.globalPLPointsCoord.push(this.interactPhoto.PLPointsCoord);
+            console.log(this.interactPhoto.globalPLPointsCoord);
+            let pl = new PLLine(this.interactPhoto.PLPointsCoord.flat(), this.interactPhoto.numPL, this.interactPhoto.canvas);
             this.interactPhoto.globalPLs.push(pl);
-            this.interactPhoto.PLPoints=[];
+            this.interactPhoto.PLPointsCoord=[];
         }
     }
 }

@@ -74,15 +74,15 @@ class PLpoint extends ShapeObject {
         this.interactPhoto.movingPLPointID = this.id;
 
         if(this.interactPhoto.numPLPoint%2==0){
-            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16.5;
-            this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16.5;
-            // console.log(this.interactPhoto.PLs[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
+            this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16.5;
+            this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16.5;
+            // console.log(this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
         }
         else{
-            this.interactPhoto.PLPoints[0]=this.point.left+16.5;
-            this.interactPhoto.PLPoints[1]=this.point.top+16.5;
-            this.interactPhoto.PLPoints=[this.interactPhoto.PLPoints];
-            // console.log(this.interactPhoto.PLPoints);
+            this.interactPhoto.PLPointsCoord[0]=this.point.left+16.5;
+            this.interactPhoto.PLPointsCoord[1]=this.point.top+16.5;
+            this.interactPhoto.PLPointsCoord=[this.interactPhoto.PLPointsCoord];
+            // console.log(this.interactPhoto.PLPointsCoord);
         }
     }
 
@@ -111,7 +111,7 @@ class LineObject {
     }
 }
 
-// 铅垂线类
+// 端点线类
 class PLLine extends LineObject {
     constructor(coordinates, id, canvas) {
         super(coordinates, id, canvas, '#35dc96');

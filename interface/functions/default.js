@@ -62,10 +62,10 @@ class DefaultButtonFonctioner{
         // 铅垂线跟随
         if (this.interactPhoto.numPL>0 && this.interactPhoto.movingPLPointID){
             this.interactPhoto.globalPLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)].line.set({
-                x1: this.interactPhoto.PLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][0][0],
-                y1: this.interactPhoto.PLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][0][1],
-                x2: this.interactPhoto.PLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][1][0],
-                y2: this.interactPhoto.PLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][1][1]
+                x1: this.interactPhoto.globalPLPointsCoord[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][0][0],
+                y1: this.interactPhoto.globalPLPointsCoord[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][0][1],
+                x2: this.interactPhoto.globalPLPointsCoord[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][1][0],
+                y2: this.interactPhoto.globalPLPointsCoord[Math.ceil(this.interactPhoto.movingPLPointID/2-1)][1][1]
             });
             this.interactPhoto.globalPLs[Math.ceil(this.interactPhoto.movingPLPointID/2-1)].line.setCoords(); // 更新线的位置
             this.interactPhoto.canvas.renderAll(); // 刷新画布以显示更改

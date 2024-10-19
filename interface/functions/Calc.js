@@ -111,7 +111,30 @@ class Calc extends DefaultButtonFonctioner{
         if(this.mapMarker){
             map.removeLayer(this.mapMarker);
         }
-        // 添加新的标记
+		// 先申请国内
+		let address = document.getElementById('address');
+        fetch(
+			`https://api.kertennet.com/geography/locationInfo?lat=${geoEstimate[0]}&lng=${geoEstimate[1]}`,
+			{method: 'GET'})
+		.then(response => response.json())
+		.then(data => {
+			if(data.data.address != ''){
+				address.innerText = data.data.address;
+			}else{
+				// 申请国外（此处为镜像，原域名附右）https://nominatim.openstreetmap.org/
+				fetch(
+					`https://map.mapscdn.com/nominatim/reverse?format=json&lat=${geoEstimate[0]}&lon=${geoEstimate[1]}&zoom=18&addressdetails=0`,
+					{method: 'GET'})
+				.then(response => response.json())
+				.then(data => {
+					if(data.display_name != undefined)
+						address.innerText = data.display_name;
+				})
+				.catch(error => {});
+			}
+		})
+		.catch(error => {}); // 捕获错误
+		// 添加新的标记
         let marker = L.marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
         this.mapMarker = marker;
         map.setView([geoEstimate[0], geoEstimate[1]], 3);

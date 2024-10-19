@@ -58,7 +58,7 @@ class ShapeObject {
 // 星体类
 class CelestialBody extends ShapeObject {
     constructor(x, y, id, canvas) {
-        super(x, y, id, canvas, '#FFD248', 'xxx');
+        super(x, y, id, canvas, '#FFD248', `${id}`);
     }
 
     addToTable() {

@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from '../functions/default.js';
+import { DefaultButtonFonctioner } from '../functions/Default.js';
 
 
 // 照片与其可交互信息的类

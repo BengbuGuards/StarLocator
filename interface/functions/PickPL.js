@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from './default.js';
+import { DefaultButtonFonctioner } from './Default.js';
 import { PLpoint, PLLine } from '../classes/elements.js';
 
 

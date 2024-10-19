@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from './default.js';
+import { DefaultButtonFonctioner } from './Default.js';
 
 
 // 图片更换功能类

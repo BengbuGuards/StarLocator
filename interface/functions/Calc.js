@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from './default.js';
+import { DefaultButtonFonctioner } from './Default.js';
 import { getVPoint } from '../../core/algorithm/VPoint.js'
 import { getZ } from '../../core/getZ.js';
 import { calc } from '../../core/calc.js';

@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from './default.js';
+import { DefaultButtonFonctioner } from './Default.js';
 import { CelestialBody } from '../classes/elements.js';
 
 

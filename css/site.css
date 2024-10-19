@@ -1,4 +1,7 @@
-﻿
+﻿html {
+	font-size: 16px;
+}
+
 body {
 	background-color: #1c355d;
 	color: #dfdfdf;
@@ -6,29 +9,29 @@ body {
 
 th {
 	background-color: #1d2430;
-	height: 25px;
+	height: 1.6rem;
 }
 td {
 	text-align: center;
-	height: 25px;
+	height: 1.6rem;
 	background-color: #1d2d46;
 }
 td:hover {
 	background-color: #1d2430;
 }
 h1 {
-	font-size: 24px;
-	padding-left: 12px;
+	font-size: 1.5rem;
+	padding-left: 0.75rem;
 }
 
 h2 {
-	font-size: 18px;
-	margin-top: 0px;
+	font-size: 1.1rem;
+	margin-top: 0rem;
 }
 input.table {
 	text-align: center;
 	background-color: #1d2d46;
-	border: 0px;
+	border: 0rem;
 	color: white
 }
 input[type='date'], [type='time']{
@@ -49,8 +52,8 @@ a:visited {
 	cursor: move;
 }
 .outputColumn{
-	margin-top: 15px;
-	margin-bottom: 15px;
+	margin-top: 0.94rem;
+	margin-bottom: 0.94rem;
 }
 .removeLine{
 	background: none;
@@ -65,13 +68,13 @@ a:visited {
 
 .actionButton{
 	color: white;
-	border: 2px solid #189c65;
-	border-radius: 5px;
-	width: 85px;
-	height: 48px;
+	border: 0.13rem solid #189c65;
+	border-radius: 0.31rem;
+	width: 5.31rem;
+	height: 3rem;
 	cursor: pointer;
 	background-color: #187C54;
-	margin-bottom:12px;
+	margin-bottom:0.75rem;
 }
 .actionButton:hover{
 	background-color: #189c65;
@@ -81,13 +84,13 @@ a:visited {
 }
 .calculButton{
 	color: black;
-	border: 2px solid #e44f0d;
-	border-radius: 5px;
+	border: 0.13rem solid #e44f0d;
+	border-radius: 0.31rem;
 	width: 100%;
 	height: 100%;
 	cursor: pointer;
 	background-color: #b54914;
-	font-size: 36px;
+	font-size: 2.25rem;
 }
 .calculButton:hover{
 	background-color: #e44f0d;
@@ -108,7 +111,7 @@ a:visited {
 }
 .formatedInput{
     display: flex;
-    padding-right: 5px;
+    padding-right: 0.31rem;
 }
 .hourAngle{
 	margin-left: 4%;
@@ -129,8 +132,8 @@ a:visited {
 	display: none; /* 默认隐藏 */
 	position: absolute; /* 使用绝对定位 */
 	background-color: #7f7f7f; /* 背景颜色 */
-	border: 1px solid #ccc; /* 边框 */
-	padding: 10px; /* 内边距 */
+	border: 0.06 solid #ccc; /* 边框 */
+	padding: 0.63rem; /* 内边距 */
 	z-index: 1000; /* 确保浮动 div 在上层 */
 }
 .row {
@@ -142,14 +145,14 @@ a:visited {
 
 .header {
 	background-color: #161f2c;
-	padding: 5px;
-	margin-bottom: 15px;
+	padding: 0.31rem;
+	margin-bottom: 0.94rem;
 }
 
 .col-toolbar, .col-measure, .col-result {
 	position:relative;
-	padding-right:15px;
-	padding-left:15px
+	padding-right: 0.88rem;
+	padding-left: 0.88rem;
 }
 
 .col-toolbar {
@@ -172,15 +175,15 @@ a:visited {
 	-ms-flex:0 0 75%;
 	flex:0 0 75%;
 	max-width: 75%;
-	margin-left:-1px
+	margin-left: -0.06rem;
 }
 .col-calcul {
 	-ms-flex:0 0 23%;
 	flex:0 0 23%;
 	max-width: 23%;
-	padding-left:15px;
-	padding-top:2px;
-	padding-bottom:2px
+	padding-left: 0.94rem;
+	padding-top: 0.13rem;
+	padding-bottom: 0.13rem;
 }
 .col-acknow {
 	-ms-flex:0 0 70%;

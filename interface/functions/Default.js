@@ -11,9 +11,9 @@ class DefaultButtonFonctioner{
     }
 
     // 按钮事件处理
-    // 重置标注
+    // 重置标注数据
     clearData() {
-        // TODO
+        
     }
     
     // 选择重置缩放事件

@@ -3,8 +3,9 @@ import { DefaultButtonFonctioner } from './Default.js';
 
 // 图片更换功能类
 class ImageChange extends DefaultButtonFonctioner{
-    constructor(interactPhoto){
+    constructor(interactPhoto, clearAllData){
         super(interactPhoto);
+        this.clearAllData = clearAllData;
     }
     
     onClick(e) {
@@ -16,8 +17,8 @@ class ImageChange extends DefaultButtonFonctioner{
                 let width = img.width, height = img.height;
                 // 移除先前图片
                 if (this.interactPhoto.rect != undefined){
+                    this.clearAllData();
                     this.interactPhoto.canvas.remove(this.interactPhoto.rect);
-                    this.interactPhoto.clearData();
                 }
                 // 创建图片Rect
                 let pattern = new fabric.Pattern({

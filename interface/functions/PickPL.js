@@ -1,5 +1,5 @@
 import { DefaultButtonFonctioner } from './Default.js';
-import { PLpoint, PLLine } from '../classes/elements.js';
+import { PLLine } from '../classes/elements.js';
 
 
 // 选择铅垂线按钮功能类
@@ -21,6 +21,15 @@ class PickPL extends DefaultButtonFonctioner{
         } else {
             this.interactPhoto.resetButtonFonctioner();
         }
+    }
+
+    clearData() {
+        this.isPickingPL = false;
+        for (let pl of this.interactPhoto.globalPLs) {
+            pl.remove();
+        }
+        this.interactPhoto.globalPLs = [];
+        this.interactPhoto.numPL = 0;
     }
 
     handleMouseUp(e) {

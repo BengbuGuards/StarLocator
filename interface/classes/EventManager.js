@@ -12,7 +12,7 @@ class EventManager{
         
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
-        this.imageChange = new ImageChange(this.interactPhoto);
+        this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));
         this.calc = new Calc(this.interactPhoto);
         this.celeCoord = new CeleCoord(this.interactPhoto);
 
@@ -23,6 +23,13 @@ class EventManager{
             initializeEvents(this);
             initializeMap(this.interactPhoto);
         }.bind(this);
+    }
+
+    // 重置所有标注数据
+    clearAllData() {
+        this.interactPhoto.buttonFonctioner = this.interactPhoto.defaultButtonFonctioner;
+        this.pickCele.clearData();
+        this.pickPL.clearData();
     }
 
     // 鼠标事件处理

@@ -61,9 +61,9 @@ class CelestialBody extends ShapeObject {
         super(x, y, id, canvas, '#FFD248', 'xxx');
     }
 
-    addToTable() {
-        document.getElementById(`coordX${this.id}`).value = this.x;
-        document.getElementById(`coordY${this.id}`).value = this.y;
+    addToTable(x = this.x, y = this.y) {
+        document.getElementById(`coordX${this.id}`).value = x;
+        document.getElementById(`coordY${this.id}`).value = y;
     }
 
 	onMove() {
@@ -108,6 +108,10 @@ class LineObject {
         });
 
         this.canvas.add(this.line);
+    }
+
+    remove() {
+        this.canvas.remove(this.line);
     }
 }
 
@@ -156,6 +160,13 @@ class PLLine {
         });
         line.setCoords();  // 更新线的位置
         this.interactPhoto.canvas.renderAll();  // 刷新画布以显示更改
+    }
+
+    remove() {
+        this.points.forEach(point => point.remove());
+        if (this.lineObject != null) {
+            this.lineObject.remove();
+        }
     }
 }
 

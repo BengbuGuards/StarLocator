@@ -29,7 +29,6 @@ class InteractPhoto {
         this.globalPLPointsCoord = []; // 所有铅垂线的端点坐标
         this.numPL = 0; // 铅垂线数量
         this.numPLPoint = 0; // 铅垂线端点数量
-        this.movingPLPointID = 0; // 正在选择铅垂线端点的ID
         this.globalPLs = []; // 全局铅垂线对象
 
         // 鼠标事件变量

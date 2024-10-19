@@ -75,7 +75,6 @@ class PLpoint extends ShapeObject {
 
     onMove() {
         super.onMove();
-        this.interactPhoto.movingPLPointID = this.id;
 
         if(this.interactPhoto.numPLPoint%2==0){
             this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16.5;
@@ -88,10 +87,6 @@ class PLpoint extends ShapeObject {
             this.interactPhoto.PLPointsCoord=[this.interactPhoto.PLPointsCoord];
             // console.log(this.interactPhoto.PLPointsCoord);
         }
-    }
-
-    onMouseUp() {
-        this.interactPhoto.movingPLPointID = 0;
     }
 }
 

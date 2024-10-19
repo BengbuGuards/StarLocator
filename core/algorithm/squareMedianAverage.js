@@ -1,6 +1,5 @@
 import { rad2Deg, calculateMedian } from "../math.js";
 
-
 /**
  * 平方倒数加权平均
  * @param {Array<Array<number>>} crudePositions 粗数据，每个元素有两组经纬度（角度制）
@@ -11,6 +10,7 @@ import { rad2Deg, calculateMedian } from "../math.js";
  * 该值越大，这个位置越正确
  * 返回正确的位置的平均值
 */
+
 function squareMedianAverage(crudePositions, stars, zenithAngles) {
     /**
      * 评估一个位置是否正确
@@ -32,7 +32,7 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
         }
         return 1 / sum;
     }
-
+    
     // 评估，保留正确的位置和评估值
     let positions = [];
     for (let pair of crudePositions) {

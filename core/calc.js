@@ -1,6 +1,7 @@
 import {rad2Deg} from "./math.js";
 import {getElevationAngle} from "./getZ.js";
 import {squareMedianAverage} from "./algorithm/squareMedianAverage.js";
+import {calculateLocationPseudoinverse} from "./algorithm/calculateLocationPseudoinverse.js";
 
 const sin = Math.sin;
 const cos = Math.cos;
@@ -108,6 +109,8 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     if (isFixGravity) {
         avgLat = avgLat + (0.00032712 * sin(avgLat) ** 2 - 0.00000368 * sin(avgLat) - 0.099161) * sin(avgLat * 2);
     }
+
+    console.log("坐标是",avgLat, avgLon);
 
     return [avgLat, avgLon];
 }

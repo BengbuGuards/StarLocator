@@ -7,6 +7,7 @@ class PickPL extends DefaultButtonFonctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.isPickingPL = false;   // 是否正在选择铅垂线
+        this.alonePLPoint = null;   // 临时的单个铅垂线端点
     }
 
     onClick() {
@@ -36,33 +37,37 @@ class PickPL extends DefaultButtonFonctioner{
             else {
                 // 加入
                 let p = this.interactPhoto.canvas.getPointer(e.e);
-                this.addPLEndpoint(p.x, p.y);              
+                this.addPLEndpoint(p.x, p.y);
+                this.addPL();
+                this.isPickingPL = false;
+                this.interactPhoto.resetButtonFonctioner();
+                this.interactPhoto.tips.innerHTML = '';
+                this.interactPhoto.setCanvasCursor('grab');
             }
-            this.addPL();
-            this.isPickingPL = false;
-            this.interactPhoto.resetButtonFonctioner();
-            this.interactPhoto.tips.innerHTML = '';
-            this.interactPhoto.setCanvasCursor('grab');
         } 
     }
 
     // 添加铅垂线端点的函数
     addPLEndpoint(x, y) {
         this.interactPhoto.numPLPoint++;
-        let plpoint = new PLpoint(x, y, this.interactPhoto);
-        this.interactPhoto.PLPoints.push([x,y]);
-        console.log(this.interactPhoto.PLPoints);
+        if (this.interactPhoto.PLPointsCoord.length==0) {
+            this.alonePLPoint = new PLpoint([x, y], this.interactPhoto, this.interactPhoto.numPLPoint, '#35dc96');
+        }
+        this.interactPhoto.PLPointsCoord.push([x,y]);
+        console.log(this.interactPhoto.PLPointsCoord);
     }
 
     // 添加铅垂线的函数
     addPL(){
-        if (this.interactPhoto.PLPoints.length==2){
+        if (this.interactPhoto.PLPointsCoord.length==2){
+            this.alonePLPoint.remove();
+            this.alonePLPoint = null;
             this.interactPhoto.numPL++;
-            this.interactPhoto.PLs.push(this.interactPhoto.PLPoints);
-            console.log(this.interactPhoto.PLs);
-            let pl = new PLLine(this.interactPhoto.PLPoints.flat(), this.interactPhoto.numPL, this.interactPhoto.canvas);
+            this.interactPhoto.globalPLPointsCoord.push(this.interactPhoto.PLPointsCoord);
+            console.log(this.interactPhoto.globalPLPointsCoord);
+            let pl = new PLLine(this.interactPhoto.PLPointsCoord.flat(), this.interactPhoto);
             this.interactPhoto.globalPLs.push(pl);
-            this.interactPhoto.PLPoints=[];
+            this.interactPhoto.PLPointsCoord=[];
         }
     }
 }

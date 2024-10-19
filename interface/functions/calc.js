@@ -17,11 +17,11 @@ class Calc extends DefaultButtonFonctioner{
         if (!this.interactPhoto.movable) return;
         
         // 读取数据
-        let globalPLs = this.interactPhoto.PLs;
+        let globalPLsPointsCoord = this.interactPhoto.globalPLPointsCoord;
         let originalStars = this.getOriginalStars();
         
         // 检查数据
-        if(globalPLs.length<2){
+        if(globalPLsPointsCoord.length<2){
             this.interactPhoto.tips.innerHTML = `请至少选择两条铅垂线`;
             return;
         } else if(originalStars.length<3){
@@ -35,7 +35,7 @@ class Calc extends DefaultButtonFonctioner{
         
         try {
             // 计算灭点，注意检查数量
-            let zenith = getVPoint(globalPLs);
+            let zenith = getVPoint(globalPLsPointsCoord);
             this.addZenithtoTable(zenith);
             
             // 计算焦距

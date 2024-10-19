@@ -25,12 +25,12 @@ class InteractPhoto {
         this.numOfPts = 0;      // 星星数量
 
         // 铅垂线变量
-        this.PLPoints = []; // 一条铅垂线的端点
-        this.PLs = []; // 铅垂线
+        this.PLPointsCoord = []; // 一条铅垂线的端点坐标
+        this.globalPLPointsCoord = []; // 所有铅垂线的端点坐标
         this.numPL = 0; // 铅垂线数量
         this.numPLPoint = 0; // 铅垂线端点数量
-        this.movingPLPointID = 0; // 是否正在选择铅垂线端点
-        this.globalPLs = []; // 全局铅垂线
+        this.movingPLPointID = 0; // 正在选择铅垂线端点的ID
+        this.globalPLs = []; // 全局铅垂线对象
 
         // 鼠标事件变量
         this.lmbDown = false; // 鼠标左键是否按下

@@ -66,10 +66,8 @@ class PickCele extends DefaultButtonFonctioner{
 
         let star = new CelestialBody(x, y, this.interactPhoto.numOfPts, this.interactPhoto.canvas);
         star.addToTable();
-        this.interactPhoto.points.push(star.point);
-        this.interactPhoto.ptLabels.push(star.label);
+        this.interactPhoto.starObjs.push(star);
     }
 }
-
 
 export { PickCele };

@@ -19,9 +19,8 @@ class InteractPhoto {
         this.time = null;       // 时间
         this.timeZone = null;   // 时区
 
-        // 星体变量
-        this.points = [];       // 星星点
-        this.ptLabels = [];     // 星星标签
+        // 画布对象池
+        this.starObjs = [];       // 星星点
         this.numOfPts = 0;      // 星星数量
 
         // 铅垂线变量

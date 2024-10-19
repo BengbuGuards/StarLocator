@@ -73,6 +73,8 @@ function initializeMap(interactPhoto) {
         attribution: '球面墨卡托投影 <span aria-hidden="true">|</span> &copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
     }).addTo(interactPhoto.map);
 
+	L.control.scale({ metric: true, imperial: false }).addTo(interactPhoto.map);
+
     document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0].title = '一个交互式地图 JavaScript 库';
     document.getElementsByClassName('leaflet-control-zoom-in')[0].title = '放大';
     document.getElementsByClassName('leaflet-control-zoom-out')[0].title = '缩小';

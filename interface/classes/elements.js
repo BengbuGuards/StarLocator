@@ -20,7 +20,7 @@ class ShapeObject {
             left: x + 16.5,
             top: y - 10.5,
             fontSize: 16,
-            fontFamily: '微软雅黑',
+            fontFamily: 'Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif',
             fill: this.color,
             selectable: false,
             hoverCursor: 'grab'
@@ -31,11 +31,23 @@ class ShapeObject {
         this.canvas.add(this.label);
     }
 
+	setRealXY(x, y){
+		this.x = x - 16.5, this.y = y - 16.5;
+	}
+
+	getRealXY(){
+		return new fabric.Point(this.x + 16.5, this.y + 16.5)
+	}
+
     onMove() {
         this.label.left = this.point.left + 33;
         this.label.top = this.point.top + 6;
         this.label.setCoords();
     }
+
+	onZoom(){
+
+	}
 
     remove() {
         this.canvas.remove(this.point);
@@ -127,6 +139,7 @@ class PLLine {
 
     onMovePoint(PLpoint) {
         PLpoint.onMove();
+		// TODO: 在这里执行点的更新工作
         let line = this.lineObject.line;
         line.set({
             x1: this.interactPhoto.globalPLPointsCoord[Math.ceil(PLpoint.id / 2 - 1)][0][0],

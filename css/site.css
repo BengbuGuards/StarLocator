@@ -31,6 +31,9 @@ input.table {
 	border: 0px;
 	color: white
 }
+input[type='date'], [type='time']{
+	font-family: sans-serif;
+}
 input.table:hover {
 	background-color: #1d2430;
 }

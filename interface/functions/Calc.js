@@ -17,7 +17,7 @@ class Calc extends DefaultButtonFonctioner{
         if (!this.interactPhoto.movable) return;
         
         // 读取数据
-        let globalPLsPointsCoord = this.interactPhoto.globalPLPointsCoord;
+        let globalPLsPointsCoord = this.getGlobalPLPointsCoord();
         let originalStars = this.getOriginalStars();
         
         // 检查数据
@@ -70,6 +70,20 @@ class Calc extends DefaultButtonFonctioner{
     addZenithtoTable(zenith){
         document.getElementById('zenX').value = Math.round(zenith[0] * 100) / 100;
         document.getElementById('zenY').value = Math.round(zenith[1] * 100) / 100;
+    }
+
+    // 获取铅垂线端点坐标
+    getGlobalPLPointsCoord(){
+        let globalPLPointsCoord = [];
+        for(let i = 0; i < this.interactPhoto.numPL; i++){
+            let pl = this.interactPhoto.globalPLs[i];
+            let points = [];
+            for(let j = 0; j < pl.points.length; j++){
+                points.push(pl.points[j].coordinate);
+            }
+            globalPLPointsCoord.push(points);
+        }
+        return globalPLPointsCoord;
     }
 
     // 获取原始星星数据

@@ -61,9 +61,9 @@ class CelestialBody extends ShapeObject {
         super(x, y, id, canvas, '#FFD248', `${id}`);
     }
 
-    addToTable() {
-        document.getElementById(`coordX${this.id}`).value = this.x;
-        document.getElementById(`coordY${this.id}`).value = this.y;
+    addToTable(x = this.x, y = this.y) {
+        document.getElementById(`coordX${this.id}`).value = x;
+        document.getElementById(`coordY${this.id}`).value = y;
     }
 
 	onMove() {
@@ -79,26 +79,15 @@ class CelestialBody extends ShapeObject {
 
 // 线端点类
 class PLpoint extends ShapeObject {
-    constructor(coordinates, interactPhoto, id, color) {
-        super(coordinates[0], coordinates[1], id, interactPhoto.canvas, color, '');
-        this.coordinate = coordinates;
+    constructor(coordinate, interactPhoto, id, color) {
+        super(coordinate[0], coordinate[1], id, interactPhoto.canvas, color, '');
+        this.coordinate = coordinate;
         this.interactPhoto = interactPhoto;
     }
 
     onMove() {
         super.onMove();
-
-        if(this.interactPhoto.numPLPoint%2==0){
-            this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][0]=this.point.left+16.5;
-            this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0][1]=this.point.top+16.5;
-            // console.log(this.interactPhoto.globalPLPointsCoord[Math.ceil(this.id/2)-1][this.id % 2 == 0 ? 1 : 0]);
-        }
-        else{
-            this.interactPhoto.PLPointsCoord[0]=this.point.left+16.5;
-            this.interactPhoto.PLPointsCoord[1]=this.point.top+16.5;
-            this.interactPhoto.PLPointsCoord=[this.interactPhoto.PLPointsCoord];
-            // console.log(this.interactPhoto.PLPointsCoord);
-        }
+        this.coordinate = [this.point.left + 16.5, this.point.top + 16.5];
     }
 }
 
@@ -120,21 +109,43 @@ class LineObject {
 
         this.canvas.add(this.line);
     }
+
+    remove() {
+        this.canvas.remove(this.line);
+    }
 }
 
 // 端点线类
 class PLLine {
-    constructor(coordinates, interactPhoto) {
+    constructor(interactPhoto) {
         this.interactPhoto = interactPhoto;
-        this.lineObject = new LineObject(coordinates, interactPhoto, '#35dc96');
-        this.point1 = new PLpoint(coordinates.slice(0, 2), interactPhoto, interactPhoto.numPLPoint - 1, '#35dc96');
-        this.point2 = new PLpoint(coordinates.slice(2, 4), interactPhoto, interactPhoto.numPLPoint, '#35dc96');
+        this.points = [];
+        this.lineObject = null;
+    }
 
-        this.point1.point.off('moving');
-        this.point2.point.off('moving');
+    addPoint(coordinate) {
+        let id = this.interactPhoto.numPL * 2 + this.points.length;
+        let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
+        this.points.push(point);
+        
+        if(this.points.length == 2){
+            let lineCoord = [
+                this.points[0].coordinate,
+                this.points[1].coordinate
+            ].flat();
+            this.lineObject = new LineObject(lineCoord, this.interactPhoto, '#35dc96');
+            this.addMoveLineEvent();
+            this.interactPhoto.numPL++;
+        } else if (this.points.length > 2) {
+            console.error('Too many points in a line.');
+        }
+    }
 
-        this.point1.point.on('moving', this.onMovePoint.bind(this, this.point1));
-        this.point2.point.on('moving', this.onMovePoint.bind(this, this.point2));
+    addMoveLineEvent() {
+        this.points[0].point.off('moving');
+        this.points[1].point.off('moving');
+        this.points[0].point.on('moving', this.onMovePoint.bind(this, this.points[0]));
+        this.points[1].point.on('moving', this.onMovePoint.bind(this, this.points[1]));
     }
 
     onMovePoint(PLpoint) {
@@ -142,13 +153,20 @@ class PLLine {
 		// TODO: 在这里执行点的更新工作
         let line = this.lineObject.line;
         line.set({
-            x1: this.interactPhoto.globalPLPointsCoord[Math.ceil(PLpoint.id / 2 - 1)][0][0],
-            y1: this.interactPhoto.globalPLPointsCoord[Math.ceil(PLpoint.id / 2 - 1)][0][1],
-            x2: this.interactPhoto.globalPLPointsCoord[Math.ceil(PLpoint.id / 2 - 1)][1][0],
-            y2: this.interactPhoto.globalPLPointsCoord[Math.ceil(PLpoint.id / 2 - 1)][1][1]
+            x1: this.points[0].coordinate[0],
+            y1: this.points[0].coordinate[1],
+            x2: this.points[1].coordinate[0],
+            y2: this.points[1].coordinate[1]
         });
         line.setCoords();  // 更新线的位置
         this.interactPhoto.canvas.renderAll();  // 刷新画布以显示更改
+    }
+
+    remove() {
+        this.points.forEach(point => point.remove());
+        if (this.lineObject != null) {
+            this.lineObject.remove();
+        }
     }
 }
 

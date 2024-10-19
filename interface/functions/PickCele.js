@@ -23,6 +23,16 @@ class PickCele extends DefaultButtonFonctioner{
         }
     }
 
+    clearData() {
+        this.isPickingCele = false;
+        for (let point of this.interactPhoto.starObjs) {
+            point.addToTable(null, null);
+            point.remove();
+        }
+        this.interactPhoto.starObjs = [];
+        this.interactPhoto.numOfPts = 0;
+    }
+
     handleMouseUp(e) {
         super.handleMouseUp(e);
         if (!this.interactPhoto.movable) return;

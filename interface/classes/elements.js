@@ -75,7 +75,19 @@ class CelestialBody extends ShapeObject {
         nameDiv.onfocus = this.onNameDivOnFocus.bind(this);
     }
 
+    /**
+     * 四舍五入到指定位数
+     * @param num {number} 原始数据
+     * @param digits {number} 小数点后的位数
+     * @returns {number} 四舍五入后的结果
+     */
+    round(num, digits = 0) {
+        let tmp = 10 ** digits;
+        return Math.round(num * tmp) / tmp;
+    }
+
     addToTable(x = this.x, y = this.y) {
+        console.log(x, y);
         document.getElementById(`coordX${this.id}`).value = x;
         document.getElementById(`coordY${this.id}`).value = y;
     }
@@ -86,8 +98,10 @@ class CelestialBody extends ShapeObject {
         this.label.setCoords();
 
         // 修改表格内容（貌似性能不是很好）
-        document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16.5) * 100) / 100;
-        document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16.5) * 100) / 100;
+        this.addToTable(
+            this.round(this.point.left + 16.5, 2),
+            this.round(this.point.top + 16.5, 2)
+        )
     }
 
     /**

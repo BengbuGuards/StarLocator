@@ -113,6 +113,11 @@ a:visited {
     display: flex;
     padding-right: 0.31rem;
 }
+.formatedInput div{
+	width: 2.5rem;
+	overflow: hidden;
+	white-space: nowrap;
+}
 .hourAngle{
 	margin-left: 4%;
 	margin-right:4%;

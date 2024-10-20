@@ -1,5 +1,5 @@
 // 默认按钮功能类，所有按钮功能类的父类
-class DefaultButtonFonctioner{
+class DefaultbuttonFunctioner{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;
         this.panning = false;   // 是否正在移动画布
@@ -28,7 +28,7 @@ class DefaultButtonFonctioner{
         
         if (!this.interactPhoto.movable) return;
         // 画布缩放移动
-        if (this.interactPhoto.buttonFonctioner === this.interactPhoto.defaultButtonFonctioner
+        if (this.interactPhoto.buttonFunctioner === this.interactPhoto.defaultbuttonFunctioner
             && this.interactPhoto.canvas.getActiveObject() === undefined) {
             if (!this.panning) {
                 this.interactPhoto.setCanvasCursor('grabbing');
@@ -44,7 +44,7 @@ class DefaultButtonFonctioner{
         
         if (!this.interactPhoto.movable) return;
         // 画布移动
-        if (this.interactPhoto.buttonFonctioner === this.interactPhoto.defaultButtonFonctioner
+        if (this.interactPhoto.buttonFunctioner === this.interactPhoto.defaultbuttonFunctioner
             && this.interactPhoto.canvas.getActiveObject() === undefined) {
             this.panning = false;
             this.interactPhoto.canvas.selection = true;
@@ -55,7 +55,7 @@ class DefaultButtonFonctioner{
     // 处理鼠标移动事件
     handleMouseMove(e) {
         // 星体及铅垂线取消选择
-        if (this.interactPhoto.buttonFonctioner != this.interactPhoto.defaultButtonFonctioner) {
+        if (this.interactPhoto.buttonFunctioner != this.interactPhoto.defaultbuttonFunctioner) {
             this.CancelPicking(e);
         }
 
@@ -124,4 +124,4 @@ class DefaultButtonFonctioner{
     }
 }
 
-export { DefaultButtonFonctioner };
+export { DefaultbuttonFunctioner };

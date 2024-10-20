@@ -1,9 +1,9 @@
-import { DefaultButtonFonctioner } from './Default.js';
+import { DefaultbuttonFunctioner } from './Default.js';
 import { PLLine } from '../classes/elements.js';
 
 
 // 选择铅垂线按钮功能类
-class PickPL extends DefaultButtonFonctioner{
+class PickPL extends DefaultbuttonFunctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.isPickingPL = false;   // 是否正在选择铅垂线
@@ -17,9 +17,9 @@ class PickPL extends DefaultButtonFonctioner{
         this.interactPhoto.tips.innerHTML = `${this.isPickingPL ? '单击添加铅垂线端点。' : ''}`;
 
         if (this.isPickingPL) {
-            this.interactPhoto.buttonFonctioner = this;
+            this.interactPhoto.buttonFunctioner = this;
         } else {
-            this.interactPhoto.resetButtonFonctioner();
+            this.interactPhoto.resetbuttonFunctioner();
         }
     }
 
@@ -47,7 +47,7 @@ class PickPL extends DefaultButtonFonctioner{
                 let p = this.interactPhoto.canvas.getPointer(e.e);
                 this.addPL([p.x, p.y]);
                 this.isPickingPL = false;
-                this.interactPhoto.resetButtonFonctioner();
+                this.interactPhoto.resetbuttonFunctioner();
                 this.interactPhoto.tips.innerHTML = '';
                 this.interactPhoto.setCanvasCursor('grab');
             }

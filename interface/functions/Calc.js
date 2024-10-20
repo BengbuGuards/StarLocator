@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from './Default.js';
+import { DefaultbuttonFunctioner } from './Default.js';
 import { getVPoint } from '../../core/algorithm/VPoint.js'
 import { getZ } from '../../core/getZ.js';
 import { calc } from '../../core/calc.js';
@@ -6,7 +6,7 @@ import { markStars } from '../../core/mark.js';
 
 
 // 选择天体按钮功能类
-class Calc extends DefaultButtonFonctioner{
+class Calc extends DefaultbuttonFunctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.mapMarker = null;
@@ -30,7 +30,7 @@ class Calc extends DefaultButtonFonctioner{
         }
         
         // 开始计算
-        this.interactPhoto.buttonFonctioner = this;
+        this.interactPhoto.buttonFunctioner = this;
         this.interactPhoto.tips.innerHTML = `计算中...`;
         
         try {
@@ -62,7 +62,7 @@ class Calc extends DefaultButtonFonctioner{
         } catch (e) {
             this.interactPhoto.tips.innerHTML = `计算失败：${e.message}，请检查数据`;
         } finally {
-            this.interactPhoto.resetButtonFonctioner();
+            this.interactPhoto.resetbuttonFunctioner();
         }
     }
 

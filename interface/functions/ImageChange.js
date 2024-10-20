@@ -1,8 +1,8 @@
-import { DefaultButtonFonctioner } from './Default.js';
+import { DefaultbuttonFunctioner } from './Default.js';
 
 
 // 图片更换功能类
-class ImageChange extends DefaultButtonFonctioner{
+class ImageChange extends DefaultbuttonFunctioner{
     constructor(interactPhoto, clearAllData){
         super(interactPhoto);
         this.clearAllData = clearAllData;

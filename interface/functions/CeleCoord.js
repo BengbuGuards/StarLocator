@@ -1,9 +1,9 @@
-import { DefaultButtonFonctioner } from './Default.js';
+import { DefaultbuttonFunctioner } from './Default.js';
 import { AstroCalculator } from '../../core/AstroCoord/calc.js';
 
 
 // 选择天体按钮功能类
-class CeleCoord extends DefaultButtonFonctioner{
+class CeleCoord extends DefaultbuttonFunctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.astroCalculator = new AstroCalculator();

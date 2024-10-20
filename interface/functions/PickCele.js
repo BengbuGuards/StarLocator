@@ -1,9 +1,9 @@
-import { DefaultButtonFonctioner } from './Default.js';
+import { DefaultbuttonFunctioner } from './Default.js';
 import { CelestialBody } from '../classes/elements.js';
 
 
 // 选择天体按钮功能类
-class PickCele extends DefaultButtonFonctioner{
+class PickCele extends DefaultbuttonFunctioner{
     constructor(interactPhoto){
         super(interactPhoto);
         this.isPickingCele = false; // 是否正在选择天体
@@ -17,9 +17,9 @@ class PickCele extends DefaultButtonFonctioner{
         this.interactPhoto.tips.innerHTML = `${this.isPickingCele ? '单击要选择的天体。' : ''}`;
         
         if (this.isPickingCele) {
-            this.interactPhoto.buttonFonctioner = this;
+            this.interactPhoto.buttonFunctioner = this;
         } else {
-            this.interactPhoto.resetButtonFonctioner();
+            this.interactPhoto.resetbuttonFunctioner();
         }
     }
 
@@ -49,7 +49,7 @@ class PickCele extends DefaultButtonFonctioner{
         this.interactPhoto.tips.innerHTML = '';
         this.interactPhoto.setCanvasCursor('grab');
 
-        this.interactPhoto.buttonFonctioner = this.interactPhoto.defaultButtonFonctioner;
+        this.interactPhoto.buttonFunctioner = this.interactPhoto.defaultbuttonFunctioner;
     }
 
     // 添加星星点的函数

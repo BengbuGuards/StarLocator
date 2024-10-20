@@ -1,4 +1,4 @@
-import { DefaultButtonFonctioner } from '../functions/Default.js';
+import { DefaultbuttonFunctioner } from '../functions/Default.js';
 
 
 // 照片与其可交互信息的类
@@ -32,8 +32,8 @@ class InteractPhoto {
         this.cancelOp = false; // 是否取消选择星体or铅垂线的操作
 
         // 按钮功能状态变量
-        this.defaultButtonFonctioner = new DefaultButtonFonctioner(this);
-        this.buttonFonctioner = this.defaultButtonFonctioner; // 当前按钮事件对象
+        this.defaultbuttonFunctioner = new DefaultbuttonFunctioner(this);
+        this.buttonFunctioner = this.defaultbuttonFunctioner; // 当前按钮事件对象
     }
 
     // 调整画布的缩放和视图位置
@@ -53,8 +53,8 @@ class InteractPhoto {
     }
 
     // 重置按钮功能状态
-    resetButtonFonctioner() {
-        this.buttonFonctioner = this.defaultButtonFonctioner;
+    resetbuttonFunctioner() {
+        this.buttonFunctioner = this.defaultbuttonFunctioner;
     }
 
     // 获取当前日期时间时区的Date对象

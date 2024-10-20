@@ -59,11 +59,20 @@ class ShapeObject {
 class CelestialBody extends ShapeObject {
     constructor(x, y, id, canvas) {
         super(x, y, id, canvas, '#FFD248', `${id}`);
+        this.bindEvents()
+    }
+
+    /**
+     * 绑定与该星星相关的事件
+     */
+    bindEvents() {
         // 绑定名字 div 文本变化事件
-        let nameDiv = document.getElementById(`name${id}`);
+        let nameDiv = document.getElementById(`name${this.id}`);
         nameDiv.oninput = this.onRename.bind(this); // 一定要指定 this！！！
-        // 初始为两位数序号
+        // 初始化图上名字
         this.onRename();
+        // 绑定名字 div 获取焦点
+        nameDiv.onfocus = this.onNameDivOnFocus.bind(this);
     }
 
     addToTable(x = this.x, y = this.y) {
@@ -87,10 +96,21 @@ class CelestialBody extends ShapeObject {
     onRename() {
         // 获取填写的名称
         let name = document.getElementById(`name${this.id}`).innerText;  // this.id 为字符串 name数字
-        // 添加两位数序号并修改图上文本
-        let labelText = `${this.id.toString().padStart(2, '0')} ${name}`;
+        // 若没填写名字，显示两位数编号
+        if (name === '') {
+            name = this.id.toString().padStart(2, '0')
+        }
         // 必须使用 set() 方法并刷新画布，否则文本更改不会显示
-        this.label.set('text', labelText);
+        this.label.set('text', name);
+        this.canvas.renderAll();
+    }
+
+    /**
+     * 当对应的名字的 div 获取焦点时，在图上高亮显示自己
+     */
+    onNameDivOnFocus() {
+        // 将图上对应的点设置为选中
+        this.canvas.setActiveObject(this.point);
         this.canvas.renderAll();
     }
 }

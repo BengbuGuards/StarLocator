@@ -62,6 +62,8 @@ class CelestialBody extends ShapeObject {
         // 绑定名字 div 文本变化事件
         let nameDiv = document.getElementById(`name${id}`);
         nameDiv.oninput = this.onRename.bind(this); // 一定要指定 this！！！
+        // 初始为两位数序号
+        this.onRename();
     }
 
     addToTable(x = this.x, y = this.y) {

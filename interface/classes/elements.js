@@ -87,7 +87,6 @@ class CelestialBody extends ShapeObject {
     }
 
     addToTable(x = this.x, y = this.y) {
-        console.log(x, y);
         document.getElementById(`coordX${this.id}`).value = x;
         document.getElementById(`coordY${this.id}`).value = y;
     }

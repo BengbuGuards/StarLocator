@@ -2,12 +2,13 @@
 <html lang="zh-CN">
 
 <head>
-	<meta charset="utf-8">
 	<title>照片测星定位beta</title>
+	<meta charset="utf-8">
 	<link rel="stylesheet" href="css/site.css" />
 	<link rel="stylesheet" href="leaflet/dist/leaflet.css" />
 	<script src="core/astronomy.browser.js"></script>
 	<script src="fabric/dist/index.min.js"></script>
+	<script src="core/jquery-3.4.1.min.js"></script>
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" crossorigin="">
 	<script src="leaflet/dist/leaflet.js"></script>
 	<script type="module" src="interface/ui.js"></script>
@@ -15,53 +16,60 @@
 
 <body>
 <div class="header">
-	<h1>照片测星定位</h1>
+	<h1>
+		<img src="img\icon\starLocator-2.png" style="margin-bottom:-10px" alt="StarLocator" width="36" height="36"/>
+		StarLocator 照片测星定位
+		<a href="https://github.com/BengbuGuards/StarLocator"><img src="img\icon\gitcat.png" href="https://github.com/BengbuGuards/StarLocator" style="float: right; margin-bottom:-10px;  margin-right: 10px" alt="StarLocator" width="36" height="36"/>
+		</a>
+	</h1>
 </div>
 <div class="row">
 	<div class="col-toolbar">
+			<h2>工具</h2>
 			<button type="button" class="actionButton" id="resetPick" title="重置标注">
 				<img src="img\icon\resetPick.png" alt="重置标注" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
-			</button><br />
+					style="margin-left:-4px; margin-top:-3px">
+			</button>
 			<button type="button" class="actionButton" id="celePick" title="天体选择">
 				<img src="img\icon\celePick.png" alt="天体选择" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
-			</button><br />
+					style="margin-left:-4px; margin-top:-3px">
+			</button>
 			<button type="button" class="actionButton" id="vaniZen" title="消失点定位">
 				<img src="img\icon\vaniZen.png" alt="消失点定位" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
-			</button><br />
+					style="margin-left:-4px; margin-top:-3px">
+			</button>
 			<button type="button" class="actionButton" id="horiZen" title="地平线定位">
 				<img src="img\icon\horiZen.png" alt="地平线定位" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
+					style="margin-left:-4px; margin-top:-3px">
 			</button>
 			<button type="button" class="actionButton" id="moonTime" title="标月定时">
 				<img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
+					style="margin-left:-4px; margin-top:-3px">
 			</button>
 			<button type="button" class="actionButton" id="manualTime" title="根据时间获取天体坐标">
 				<img src="img\icon\manualTime.png" alt="根据时间获取天体坐标" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
+					style="margin-left:-4px; margin-top:-3px">
 			</button>
 			<button type="button" class="actionButton" id="howToUse" title="怎么用啊">
 				<img src="img\icon\emojiThinking.png" alt="怎么用啊" width="48" height="48"
-					style="margin-left:-0.25rem; margin-top:-0.19rem">
+					style="margin-left:-4px; margin-top:-3px">
 			</button>
 	</div>
 	<div class="col-measure">
+		<h2>测量</h2>
 		<input type="file" id="srcFile" accept="image/*" />
 		<button type="button" id="resetZoom" style="float: right;">重置缩放</button>
-		<div id="box" style="min-width: 28.13rem; height: 37.5rem; width:100%">
+		<div id="box" style="min-width:450px; height: 600px; width:100%">
 			<canvas id="canvas"></canvas>
 		</div>
-		<div style="margin-bottom: 0.94rem;">
+		<div style="margin-bottom: 30px;">
 			<div id="picInfo" style="float: left;"></div>
 			<div id="canvasStatus" style="float: left;"></div>
 			<div id="cursorCrd" style="float: right;"></div>
 		</div>
-		<div style="margin-top: 1.875rem;">
+		<div style="margin-top: 15px;">
 			<div class="row">
-				<div class="col-input">
+			<div class="col-input">
 			<table class="inputTable" id="inputTable">
 				<tr>
 					<th style="width: 8%">天体</th>
@@ -70,6 +78,7 @@
 					<th style="width: 20%">赤纬</th>
 					<th style="width: 12%">x</th>
 					<th style="width: 12%">y</th>
+					<th style="width: 3%; display: none;"></th>
 				</tr>
 				<tr>
 					<td class="zenith">0</td>
@@ -81,118 +90,120 @@
 				</tr>
 				<tr>
 					<td>1</td>
-					<td><div contenteditable="true" style="flex: 1;" id="name1"></div></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="name1"></div></td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="hAngleH1"></div> h 
-							<div contenteditable="true" style="flex: 1;" id="hAngleM1"></div> m 
-							<div contenteditable="true" style="flex: 1;" id="hAngleS1"></div> s 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleH1"></div> h 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleM1"></div> m 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleS1"></div> s 
 						</div>
 					</td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="declinD1"></div> °
-							<div contenteditable="true" style="flex: 1;" id="declinM1"></div> ′ 
-							<div contenteditable="true" style="flex: 1;" id="declinS1"></div> ″ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinD1"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinM1"></div> ′ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinS1"></div> ″ 
 						</div>
 					</td>
-					<td><input type="number" class="coordsInput table" id="coordX1"></td>
-					<td><input type="number" class="coordsInput table" id="coordY1"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordX1"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordY1"></td>
+					<td class="removeLine">–</td>
 				</tr>
 				<tr>
 					<td>2</td>
-					<td><div contenteditable="true" style="flex: 1;" id="name2"></div></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="name2"></div></td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="hAngleH2"></div> h 
-							<div contenteditable="true" style="flex: 1;" id="hAngleM2"></div> m 
-							<div contenteditable="true" style="flex: 1;" id="hAngleS2"></div> s 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleH2"></div> h 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleM2"></div> m 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleS2"></div> s 
 						</div>
 					</td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="declinD2"></div> °
-							<div contenteditable="true" style="flex: 1;" id="declinM2"></div> ′ 
-							<div contenteditable="true" style="flex: 1;" id="declinS2"></div> ″ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinD2"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinM2"></div> ′ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinS2"></div> ″ 
 						</div>
 					</td>
-					<td><input type="number" class="coordsInput table" id="coordX2"></td>
-					<td><input type="number" class="coordsInput table" id="coordY2"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordX2"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordY2"></td>
 				</tr>
 				<tr>
 					<td>3</td>
-					<td><div contenteditable="true" style="flex: 1;" id="name3"></div></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="name3"></div></td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="hAngleH3"></div> h 
-							<div contenteditable="true" style="flex: 1;" id="hAngleM3"></div> m 
-							<div contenteditable="true" style="flex: 1;" id="hAngleS3"></div> s 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleH3"></div> h 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleM3"></div> m 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleS3"></div> s 
 						</div>
 					</td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="declinD3"></div> °
-							<div contenteditable="true" style="flex: 1;" id="declinM3"></div> ′ 
-							<div contenteditable="true" style="flex: 1;" id="declinS3"></div> ″ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinD3"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinM3"></div> ′ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinS3"></div> ″ 
 						</div>
 					</td>
-					<td><input type="number" class="coordsInput table" id="coordX3"></td>
-					<td><input type="number" class="coordsInput table" id="coordY3"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordX3"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordY3"></td>
 				</tr>
 				<tr>
 					<td>4</td>
-					<td><div contenteditable="true" style="flex: 1;" id="name4"></div></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="name4"></div></td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="hAngleH4"></div>h 
-							<div contenteditable="true" style="flex: 1;" id="hAngleM4"></div>m 
-							<div contenteditable="true" style="flex: 1;" id="hAngleS4"></div>s 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleH4"></div>h 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleM4"></div>m 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleS4"></div>s 
 						</div>
 					</td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="declinD4"></div> °
-							<div contenteditable="true" style="flex: 1;" id="declinM4"></div>′ 
-							<div contenteditable="true" style="flex: 1;" id="declinS4"></div>″ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinD4"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinM4"></div>′ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinS4"></div>″ 
 						</div>
 					</td>
-					<td><input type="number" class="coordsInput table" id="coordX4"></td>
-					<td><input type="number" class="coordsInput table" id="coordY4"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordX4"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordY4"></td>
 				</tr>
 				<tr>
 					<td>5</td>
-					<td><div contenteditable="true" style="flex: 1;" id="name5"></div></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="name5"></div></td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="hAngleH5"></div> h 
-							<div contenteditable="true" style="flex: 1;" id="hAngleM5"></div> m 
-							<div contenteditable="true" style="flex: 1;" id="hAngleS5"></div> s 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleH5"></div> h 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleM5"></div> m 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="hAngleS5"></div> s 
 						</div>
 					</td>
 					<td>
 						<div class="formatedInput">
-							<div contenteditable="true" style="flex: 1;" id="declinD5"></div> °
-							<div contenteditable="true" style="flex: 1;" id="declinM5"></div> ′ 
-							<div contenteditable="true" style="flex: 1;" id="declinS5"></div> ″ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinD5"></div> °
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinM5"></div> ′ 
+							<div contenteditable="plaintext-only" style="flex: 1;" id="declinS5"></div> ″ 
 						</div>
 					</td>
-					<td><input type="number" class="coordsInput table" id="coordX5"></td>
-					<td><input type="number" class="coordsInput table" id="coordY5"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordX5"></td>
+					<td><div contenteditable="plaintext-only" style="flex: 1;" id="coordY5"></td>
 				</tr>
 			</table>
 				</div>
 				<div class="col-calcul">
-					<button type="button" class="calculButton" id="actionCalcul" title="开始计算">
-					给我算！
+					<button type="button" class="calculButton" id="actionCalcul" title="计算">
+					计<br />算
 					</button><br />
 				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-result">
+<h2>设置</h2>
 		<div>
 			<div>
-				<h2>设置</h2>
+				
 				<input type="checkbox" id="check1" checked />
 				<label for="check1">大气折射修正</label><br />
 				<input type="checkbox" id="check2" checked />
@@ -210,7 +221,7 @@
 				<br />
 				<label for="set2">时间偏差 </label><input id="setTimeDev" type="number" style="width: 65%">
 			</div>
-			<table style="width: 100%; margin-top: 0.94rem;">
+			<table style="width: 100%; margin-top: 10px;">
 				<tr>
 					<th>像素焦距z</th><th>35mm焦距</th><th>经度</th><th>纬度</th>
 				</tr>
@@ -222,11 +233,10 @@
 				</tr>
 			</table>
 		</div>
-		<div style="margin-top:1.88rem">
-			<div id="address"></div>
-			<div id="map" style="min-width: 22.5rem; height: 22.5rem; margin-left:0rem"></div>
+		<div style="margin-top:10px">
+			<div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
 		</div>
-		<div style="margin-top:1.88rem">
+		<div style="margin-top: 82px">
 			<h2>关于</h2>
 			<!--TODO: 这里填README相同的注意事项-->
 			<div class="row">
@@ -247,6 +257,7 @@
 		</div>
 	</div>
 </div>
+<div class="input-helper" id="hourAngleInput">格式要求：h m s</div>
 <!-- No longer used
 			<table style="width: 100%">
 				<tr>

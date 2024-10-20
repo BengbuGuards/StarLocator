@@ -1,41 +1,39 @@
-﻿html {
-	font-size: 16px;
-}
-
-body {
+﻿body {
 	background-color: #1c355d;
 	color: #dfdfdf;
 }
 
 th {
 	background-color: #1d2430;
-	height: 1.6rem;
+	height: 25px;
 }
 td {
 	text-align: center;
-	height: 1.6rem;
+	height: 25px;
 	background-color: #1d2d46;
 }
 td:hover {
 	background-color: #1d2430;
 }
 h1 {
-	font-size: 1.5rem;
-	padding-left: 0.75rem;
+	font-size: 24px;
+	padding-left: 5px;
+	padding-top: 5px;
 }
 
 h2 {
-	font-size: 1.1rem;
-	margin-top: 0rem;
+	background-color: #202c46;
+	font-size: 18px;
+	padding-left: 5px;
+	padding-right: 5px;
+	margin-top: 0px;
+	margin-bottom: 10px;
 }
 input.table {
 	text-align: center;
 	background-color: #1d2d46;
-	border: 0rem;
+	border: 0px;
 	color: white
-}
-input[type='date'], [type='time']{
-	font-family: sans-serif;
 }
 input.table:hover {
 	background-color: #1d2430;
@@ -46,14 +44,48 @@ a:link {
 a:visited {
 	color: #189c65;
 }
+@media (min-width:480px){
+	.col-toolbar{
+		position:relative;
+		width: 100%;
+	}
+	.col-result {
+		position:relative;
+		padding-left: 5px;
+		width: 900px;
+	}
+}
+@media (min-width:1020px){
+	.col-toolbar{
+		position:relative;
+		width: 85px;
+		padding-right: 5px;
+	}
+	.col-result {
+		position:relative;
+		padding-top: 10px;
+		margin-left: 97px;
+		width: 904px;
+	}
+}
+@media (min-width:1562px){
+	.col-result {
+		position:relative;
+		-ms-flex:0 0 34%;
+		flex:0 0 34%;
+		max-width: 34%;
+		padding-top: 0px;
+		margin-left: 0px;
+	}
+}
 #canvas {
 	margin: 0 auto;
 	background: #000;
 	cursor: move;
 }
 .outputColumn{
-	margin-top: 0.94rem;
-	margin-bottom: 0.94rem;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 .removeLine{
 	background: none;
@@ -68,13 +100,13 @@ a:visited {
 
 .actionButton{
 	color: white;
-	border: 0.13rem solid #189c65;
-	border-radius: 0.31rem;
-	width: 5.31rem;
-	height: 3rem;
+	border: 2px solid #189c65;
+	border-radius: 5px;
+	width: 85px;
+	height: 48px;
 	cursor: pointer;
 	background-color: #187C54;
-	margin-bottom:0.75rem;
+	margin-bottom: 5px;
 }
 .actionButton:hover{
 	background-color: #189c65;
@@ -84,13 +116,13 @@ a:visited {
 }
 .calculButton{
 	color: black;
-	border: 0.13rem solid #e44f0d;
-	border-radius: 0.31rem;
+	border: 2px solid #e44f0d;
+	border-radius: 10px;
 	width: 100%;
 	height: 100%;
 	cursor: pointer;
 	background-color: #b54914;
-	font-size: 2.25rem;
+	font-size: 36px;
 }
 .calculButton:hover{
 	background-color: #e44f0d;
@@ -111,7 +143,7 @@ a:visited {
 }
 .formatedInput{
     display: flex;
-    padding-right: 0.31rem;
+    padding-right: 5px;
 }
 .formatedInput div{
 	width: 2.5rem;
@@ -137,8 +169,8 @@ a:visited {
 	display: none; /* 默认隐藏 */
 	position: absolute; /* 使用绝对定位 */
 	background-color: #7f7f7f; /* 背景颜色 */
-	border: 0.06 solid #ccc; /* 边框 */
-	padding: 0.63rem; /* 内边距 */
+	border: 1px solid #ccc; /* 边框 */
+	padding: 10px; /* 内边距 */
 	z-index: 1000; /* 确保浮动 div 在上层 */
 }
 .row {
@@ -150,46 +182,32 @@ a:visited {
 
 .header {
 	background-color: #161f2c;
-	padding: 0.31rem;
-	margin-bottom: 0.94rem;
-}
-
-.col-toolbar, .col-measure, .col-result {
-	position:relative;
-	padding-right: 0.88rem;
-	padding-left: 0.88rem;
-}
-
-.col-toolbar {
-	-ms-flex:0 0 5%;
-	flex:0 0 5%;
-	max-width: 5%;
+	height: 45px;
+	margin: -16px -8px 10px -8px;
 }
 
 .col-measure {
-	-ms-flex:0 0 54%;
-	flex:0 0 54%;
-	max-width: 54%
-}
-.col-result {
-	-ms-flex:0 0 35%;
-	flex:0 0 35%;
-	max-width: 35%;
+//	-ms-flex:0 0 54%;
+//	flex:0 0 54%;
+//	max-width: 54%;
+	position:relative;
+	width: 900px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 .col-input{
-	-ms-flex:0 0 75%;
-	flex:0 0 75%;
-	max-width: 75%;
-	margin-left: -0.06rem;
+	-ms-flex:0 0 90%;
+	flex:0 0 90%;
+	max-width: 90%;
+	margin-left:-1px
 }
 .col-calcul {
-	-ms-flex:0 0 23%;
-	flex:0 0 23%;
-	max-width: 23%;
-	padding-left: 0.94rem;
-	padding-top: 0.13rem;
-	padding-bottom: 0.13rem;
+	-ms-flex:0 0 10%;
+	flex:0 0 10%;
+	max-width: 10%;
+	margin: 0px
 }
+
 .col-acknow {
 	-ms-flex:0 0 70%;
 	flex:0 0 70%;

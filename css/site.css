@@ -7,14 +7,17 @@ th {
 	background-color: #1d2430;
 	height: 25px;
 }
+
 td {
 	text-align: center;
 	height: 25px;
 	background-color: #1d2d46;
 }
+
 td:hover {
 	background-color: #1d2430;
 }
+
 h1 {
 	font-size: 24px;
 	padding-left: 5px;
@@ -29,76 +32,93 @@ h2 {
 	margin-top: 0px;
 	margin-bottom: 10px;
 }
+
 input.table {
 	text-align: center;
 	background-color: #1d2d46;
 	border: 0px;
 	color: white
 }
+
 input.table:hover {
 	background-color: #1d2430;
 }
+
+input[type=date],
+[type=time] {
+	font-family: sans-serif;
+}
+
 a:link {
 	color: #4074db;
 }
+
 a:visited {
 	color: #189c65;
 }
-@media (min-width:480px){
-	.col-toolbar{
-		position:relative;
+
+@media (min-width:480px) {
+	.col-toolbar {
+		position: relative;
 		width: 100%;
 	}
+
 	.col-result {
-		position:relative;
+		position: relative;
 		padding-left: 5px;
 		width: 900px;
 	}
 }
-@media (min-width:1020px){
-	.col-toolbar{
-		position:relative;
+
+@media (min-width:1020px) {
+	.col-toolbar {
+		position: relative;
 		width: 85px;
 		padding-right: 5px;
 	}
+
 	.col-result {
-		position:relative;
+		position: relative;
 		padding-top: 10px;
 		margin-left: 97px;
 		width: 904px;
 	}
 }
-@media (min-width:1562px){
+
+@media (min-width:1562px) {
 	.col-result {
-		position:relative;
-		-ms-flex:0 0 34%;
-		flex:0 0 34%;
+		position: relative;
+		-ms-flex: 0 0 34%;
+		flex: 0 0 34%;
 		max-width: 34%;
 		padding-top: 0px;
 		margin-left: 0px;
 	}
 }
+
 #canvas {
 	margin: 0 auto;
 	background: #000;
 	cursor: move;
 }
-.outputColumn{
+
+.outputColumn {
 	margin-top: 15px;
 	margin-bottom: 15px;
 }
-.removeLine{
+
+.removeLine {
 	background: none;
 	width: 60%;
-    height: 60%;
-    background-color: #e44f0d60;
-    border-radius: 50%;
+	height: 60%;
+	background-color: #e44f0d60;
+	border-radius: 50%;
 	color: #e44f0d;
 	-webkit-user-select: none;
 	user-select: none;
 }
 
-.actionButton{
+.actionButton {
 	color: white;
 	border: 2px solid #189c65;
 	border-radius: 5px;
@@ -108,13 +128,16 @@ a:visited {
 	background-color: #187C54;
 	margin-bottom: 5px;
 }
-.actionButton:hover{
+
+.actionButton:hover {
 	background-color: #189c65;
 }
-.actionButton:active{
+
+.actionButton:active {
 	background-color: #194837;
 }
-.calculButton{
+
+.calculButton {
 	color: black;
 	border: 2px solid #e44f0d;
 	border-radius: 10px;
@@ -124,55 +147,72 @@ a:visited {
 	background-color: #b54914;
 	font-size: 36px;
 }
-.calculButton:hover{
+
+.calculButton:hover {
 	background-color: #e44f0d;
 }
-.calculButton:active{
+
+.calculButton:active {
 	background-color: #422a1c;
 }
-.zenith{
+
+.zenith {
 	color: #e44f0d;
 }
-.result{
+
+.result {
 	color: #189c65;
 }
-.celesName{
+
+.celesName {
 	margin-left: 5%;
 	margin-right: 5%;
 	width: 90%;
 }
-.formatedInput{
-    display: flex;
-    padding-right: 5px;
+
+.formatedInput {
+	display: flex;
+	padding-right: 5px;
 }
-.hourAngle{
+
+.hourAngle {
 	margin-left: 4%;
-	margin-right:4%;
+	margin-right: 4%;
 	width: 92%;
 }
-.declination{
+
+.declination {
 	margin-left: 5%;
 	margin-right: 5%;
 	width: 90%;
 }
-.coordsInput{
+
+.coordsInput {
 	margin-left: 7.5%;
 	margin-right: 7.5%;
 	width: 85%;
 }
+
 .input-helper {
-	display: none; /* 默认隐藏 */
-	position: absolute; /* 使用绝对定位 */
-	background-color: #7f7f7f; /* 背景颜色 */
-	border: 1px solid #ccc; /* 边框 */
-	padding: 10px; /* 内边距 */
-	z-index: 1000; /* 确保浮动 div 在上层 */
+	display: none;
+	/* 默认隐藏 */
+	position: absolute;
+	/* 使用绝对定位 */
+	background-color: #7f7f7f;
+	/* 背景颜色 */
+	border: 1px solid #ccc;
+	/* 边框 */
+	padding: 10px;
+	/* 内边距 */
+	z-index: 1000;
+	/* 确保浮动 div 在上层 */
 }
+
 .row {
-	display:-ms-flexbox;
-	display:flex;
-	-ms-flex-wrap:wrap;
-	flex-wrap:wrap;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
 }
 
 .header {
@@ -182,34 +222,37 @@ a:visited {
 }
 
 .col-measure {
-//	-ms-flex:0 0 54%;
-//	flex:0 0 54%;
-//	max-width: 54%;
-	position:relative;
+	/* -ms-flex:0 0 54%; */
+	/* flex:0 0 54%; */
+	/* max-width: 54%; */
+	position: relative;
 	width: 900px;
 	padding-left: 5px;
 	padding-right: 5px;
 }
-.col-input{
-	-ms-flex:0 0 90%;
-	flex:0 0 90%;
+
+.col-input {
+	-ms-flex: 0 0 90%;
+	flex: 0 0 90%;
 	max-width: 90%;
-	margin-left:-1px
+	margin-left: -1px
 }
+
 .col-calcul {
-	-ms-flex:0 0 10%;
-	flex:0 0 10%;
+	-ms-flex: 0 0 10%;
+	flex: 0 0 10%;
 	max-width: 10%;
 	margin: 0px
 }
 
 .col-acknow {
-	-ms-flex:0 0 70%;
-	flex:0 0 70%;
+	-ms-flex: 0 0 70%;
+	flex: 0 0 70%;
 	max-width: 70%;
 }
+
 .col-logo {
-	-ms-flex:0 0 28%;
-	flex:0 0 28%;
+	-ms-flex: 0 0 28%;
+	flex: 0 0 28%;
 	max-width: 28%;
 }

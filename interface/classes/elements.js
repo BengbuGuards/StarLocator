@@ -73,6 +73,12 @@ class CelestialBody extends ShapeObject {
         this.onRename();
         // 绑定名字 div 获取焦点
         nameDiv.onfocus = this.onNameDivOnFocus.bind(this);
+
+        // 绑定坐标值变动事件
+        let coordX = document.getElementById(`coordX${this.id}`);
+        let coordY = document.getElementById(`coordY${this.id}`);
+        coordX.oninput = this.onValueChange.bind(this);
+        coordY.oninput = this.onValueChange.bind(this);
     }
 
     /**
@@ -124,6 +130,21 @@ class CelestialBody extends ShapeObject {
     onNameDivOnFocus() {
         // 将图上对应的点设置为选中
         this.canvas.setActiveObject(this.point);
+        this.canvas.renderAll();
+    }
+
+    /**
+     * 当坐标值变动时，更新图上的点
+     */
+    onValueChange() {
+        let x = parseFloat(document.getElementById(`coordX${this.id}`).value);
+        let y = parseFloat(document.getElementById(`coordY${this.id}`).value);
+        this.point.left = x - 16.5;
+        this.point.top = y - 16.5;
+        this.label.left = x + 16.5;
+        this.label.top = y - 10.5;
+        this.point.setCoords();
+        this.label.setCoords();
         this.canvas.renderAll();
     }
 }

@@ -31,13 +31,13 @@ class ShapeObject {
         this.canvas.add(this.label);
     }
 
-	setRealXY(x, y){
-		this.x = x - 16.5, this.y = y - 16.5;
-	}
+    setRealXY(x, y) {
+        this.x = x - 16.5, this.y = y - 16.5;
+    }
 
-	getRealXY(){
-		return new fabric.Point(this.x + 16.5, this.y + 16.5)
-	}
+    getRealXY() {
+        return new fabric.Point(this.x + 16.5, this.y + 16.5)
+    }
 
     onMove() {
         this.label.left = this.point.left + 33;
@@ -45,9 +45,9 @@ class ShapeObject {
         this.label.setCoords();
     }
 
-	onZoom(){
+    onZoom() {
 
-	}
+    }
 
     remove() {
         this.canvas.remove(this.point);
@@ -59,6 +59,9 @@ class ShapeObject {
 class CelestialBody extends ShapeObject {
     constructor(x, y, id, canvas) {
         super(x, y, id, canvas, '#FFD248', `${id}`);
+        // 绑定名字 div 文本变化事件
+        let nameDiv = document.getElementById(`name${id}`);
+        nameDiv.oninput = this.onRename.bind(this); // 一定要指定 this！！！
     }
 
     addToTable(x = this.x, y = this.y) {
@@ -66,14 +69,27 @@ class CelestialBody extends ShapeObject {
         document.getElementById(`coordY${this.id}`).value = y;
     }
 
-	onMove() {
+    onMove() {
         this.label.left = this.point.left + 32;
         this.label.top = this.point.top + 6;
         this.label.setCoords();
 
- 		// 修改表格内容（貌似性能不是很好）
-		document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16.5) * 100) / 100;
- 		document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16.5) * 100) / 100;
+        // 修改表格内容（貌似性能不是很好）
+        document.getElementById(`coordX${this.id}`).value = Math.round((this.point.left + 16.5) * 100) / 100;
+        document.getElementById(`coordY${this.id}`).value = Math.round((this.point.top + 16.5) * 100) / 100;
+    }
+
+    /**
+     * 当表格内星星名字变动时，在图上重命名
+     */
+    onRename() {
+        // 获取填写的名称
+        let name = document.getElementById(`name${this.id}`).innerText;  // this.id 为字符串 name数字
+        // 添加两位数序号并修改图上文本
+        let labelText = `${this.id.toString().padStart(2, '0')} ${name}`;
+        // 必须使用 set() 方法并刷新画布，否则文本更改不会显示
+        this.label.set('text', labelText);
+        this.canvas.renderAll();
     }
 }
 
@@ -127,8 +143,8 @@ class PLLine {
         let id = this.interactPhoto.numPL * 2 + this.points.length;
         let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
         this.points.push(point);
-        
-        if(this.points.length == 2){
+
+        if (this.points.length == 2) {
             let lineCoord = [
                 this.points[0].coordinate,
                 this.points[1].coordinate
@@ -150,7 +166,7 @@ class PLLine {
 
     onMovePoint(PLpoint) {
         PLpoint.onMove();
-		// TODO: 在这里执行点的更新工作
+        // TODO: 在这里执行点的更新工作
         let line = this.lineObject.line;
         line.set({
             x1: this.points[0].coordinate[0],
@@ -170,4 +186,4 @@ class PLLine {
     }
 }
 
-export { CelestialBody, PLpoint, PLLine };
+export {CelestialBody, PLpoint, PLLine};

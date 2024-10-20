@@ -118,8 +118,8 @@ class Calc extends DefaultButtonFonctioner{
         if (geoEstimate[1] > 180) {
             geoEstimate[1] -= 360;
         }
-        document.getElementById('outputLong').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + "°";
-        document.getElementById('outputLat').textContent = Math.round(geoEstimate[1] * 10000 ) / 10000 + "°";
+        document.getElementById('outputLat').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + "°";
+        document.getElementById('outputLong').textContent = Math.round(geoEstimate[1] * 10000 ) / 10000 + "°";
         let map = this.interactPhoto.map;
         // 清除之前的标记
         if(this.mapMarker){

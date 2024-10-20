@@ -1,4 +1,4 @@
-import {rad2Deg} from "./math.js";
+import {rad2Deg, deg2Rad} from "./math.js";
 import {getElevationAngle} from "./getZ.js";
 import {squareMedianAverage} from "./algorithm/squareMedianAverage.js";
 
@@ -106,7 +106,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
      * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
      */
     if (isFixGravity) {
-        avgLat = avgLat + (0.00032712 * sin(avgLat) ** 2 - 0.00000368 * sin(avgLat) - 0.099161) * sin(avgLat * 2);
+        avgLat = avgLat + (0.00032712 * sin(deg2Rad(avgLat)) ** 2 - 0.00000368 * sin(deg2Rad(avgLat)) - 0.099161) * sin(deg2Rad(avgLat) * 2);
     }
 
     return [avgLat, avgLon];

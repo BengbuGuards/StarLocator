@@ -32,11 +32,9 @@ class ShapeObject {
     }
 
     setRealXY(x, y) {
-        this.x = x - 16.5, this.y = y - 16.5;
-    }
-
-    getRealXY() {
-        return new fabric.Point(this.x + 16.5, this.y + 16.5)
+        this.x = x, this.y = y;
+		this.point.left = x - 16.5, this.point.top = y - 16.5;
+		this.onMove();
     }
 
     onMove() {
@@ -116,7 +114,7 @@ class CelestialBody extends ShapeObject {
         // 获取填写的名称
         let name = document.getElementById(`name${this.id}`).innerText;  // this.id 为字符串 name数字
         // 若没填写名字，显示两位数编号
-        if (name === '') {
+        if (name === '' || name === '\n') {
             name = this.id.toString().padStart(2, '0')
         }
         // 必须使用 set() 方法并刷新画布，否则文本更改不会显示
@@ -139,10 +137,7 @@ class CelestialBody extends ShapeObject {
     onValueChange() {
         let x = parseFloat(document.getElementById(`coordX${this.id}`).value);
         let y = parseFloat(document.getElementById(`coordY${this.id}`).value);
-        this.point.left = x - 16.5;
-        this.point.top = y - 16.5;
-        this.label.left = x + 16.5;
-        this.label.top = y - 10.5;
+		this.setRealXY(x, y);
         this.point.setCoords();
         this.label.setCoords();
         this.canvas.renderAll();

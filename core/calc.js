@@ -1,4 +1,4 @@
-import {rad2Deg} from "./math.js";
+import {rad2Deg, deg2Rad} from "./math.js";
 import {getElevationAngle} from "./getZ.js";
 import {squareMedianAverage} from "./algorithm/squareMedianAverage.js";
 

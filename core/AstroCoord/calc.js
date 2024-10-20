@@ -51,7 +51,7 @@ class AstroCalculator {
      */
     async loadStarZH2EN() {
         try {
-            const response = await fetch('/core/AstroCoord/starZH2EN.json');
+            const response = await fetch('core/AstroCoord/starZH2EN.json');
             if (!response.ok) {
                 throw new Error('网络响应不是正常的状态');
             }

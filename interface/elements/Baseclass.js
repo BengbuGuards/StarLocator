@@ -77,4 +77,35 @@ class LineObject {
     }
 }
 
-export { ShapeObject, LineObject };
+// 数据结构基类
+class markerArray{
+    constructor(){
+        this.array=[];
+        this.num=0;
+    }
+
+    add(obj){
+        this.array.push(obj);
+        this.num++;
+    }
+
+    remove(id){
+        this.array[id].remove();
+        this.array.splice(id, 1);
+        this.num--;
+    }
+
+    get(id){
+        return this.array[id];
+    }
+
+    clear(){
+        for(let i of this.array){
+            i.remove();
+        }
+        this.array=[];
+        this.num=0;
+    }
+}
+
+export { ShapeObject, LineObject , markerArray};

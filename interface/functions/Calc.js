@@ -89,7 +89,7 @@ class Calc extends DefaultbuttonFunctioner{
     // 获取原始星星数据
     getOriginalStars(){
         let stars = [];
-        for(let i = 1; i <= this.interactPhoto.numOfPts; i++){
+        for(let i = 1; i <= this.interactPhoto.CeleArray.num; i++){
             let star = [
                 parseFloat(document.getElementById(`coordX${i}`).value),
                 parseFloat(document.getElementById(`coordY${i}`).value),

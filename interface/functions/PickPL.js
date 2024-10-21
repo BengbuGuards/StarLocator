@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { PLLine } from '../classes/elements.js';
+import { PLLine } from '../elements/PlumbLine.js';
 
 
 // 选择铅垂线按钮功能类

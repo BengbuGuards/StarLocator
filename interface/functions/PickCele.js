@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { CelestialBody } from '../classes/elements.js';
+import { CelestialBody } from '../elements/CelestialBody.js';
 
 
 // 选择天体按钮功能类

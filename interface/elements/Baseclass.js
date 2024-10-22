@@ -26,9 +26,24 @@ class ShapeObject {
             hoverCursor: 'grab'
         });
 
+        this.deleter = new fabric.Text('×', {
+            left: x - 28,
+            top: y - 24,
+            fontSize: 20,
+            fill: "#CF0000",
+            selectable: true,
+            hasControls: false,
+            hoverCursor:'pointer',
+            lockMovementX: true,
+            lockMovementY: true,
+        });
+
         this.point.on('moving', this.onMove.bind(this));
         this.canvas.add(this.point);
         this.canvas.add(this.label);
+        this.point.on('selected', this.displayDeleter.bind(this));
+        this.point.on('deselected', this.hideDeleter.bind(this));
+        this.deleter.on('selected', this.remove.bind(this));
     }
 
     setRealXY(x, y) {
@@ -50,6 +65,16 @@ class ShapeObject {
     remove() {
         this.canvas.remove(this.point);
         this.canvas.remove(this.label);
+    }
+
+    displayDeleter() {
+        this.canvas.add(this.deleter);
+        this.canvas.renderAll();
+    }
+
+    hideDeleter() {
+        this.canvas.remove(this.deleter);
+        this.canvas.renderAll();
     }
 }
 

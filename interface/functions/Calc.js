@@ -56,6 +56,7 @@ class Calc extends DefaultbuttonFunctioner{
 
             // 显示结果
             this.showGeoEstimate(geoEstimate);
+            this.show35mmZ(z);
 
             // 结束计算
             this.interactPhoto.tips.innerHTML = '';
@@ -152,6 +153,15 @@ class Calc extends DefaultbuttonFunctioner{
         let marker = L.marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
         this.mapMarker = marker;
         map.setView([geoEstimate[0], geoEstimate[1]], 3);
+    }
+
+    // 显示35mm等效焦距
+    show35mmZ(z) {
+        let width = this.interactPhoto.img.width;
+        let height = this.interactPhoto.img.height;
+        let tri_long = Math.sqrt(width * width + height * height);
+        let z35 = z * 43.27 / tri_long;
+        document.getElementById('focLenMm').textContent = Math.round(z35);
     }
 }
 

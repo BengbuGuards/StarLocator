@@ -59,22 +59,22 @@ a:visited {
 
 .tooltip .tooltiptext {
 	visibility: hidden;
-	  width: 150px;
-	  background-color: white;
-	  color: #3c3c3c;
-	  font-size: 12px;
-	  font-weight: normal;
-	  text-align: center;
-	  padding: 4px;
-	  margin-top: 18px;
-	  border: solid;
-	  border-width: 1px;
-	  position: absolute;
-	  z-index: 1;
+	width: 150px;
+	background-color: white;
+	color: #3c3c3c;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: center;
+	padding: 4px;
+	margin-top: 18px;
+	border: solid;
+	border-width: 1px;
+	position: absolute;
+	z-index: 1;
 }
 
-tooltip:hover .tooltiptext {
-	  visibility: visible;
+.tooltip:hover .tooltiptext {
+	visibility: visible;
 }
 
 @media (min-width:480px) {

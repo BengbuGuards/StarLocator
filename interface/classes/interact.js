@@ -1,6 +1,6 @@
 import { markStars } from '../../core/mark.js';
 import { DefaultbuttonFunctioner } from '../functions/Default.js';
-import { markerArray } from '../elements/Baseclass.js';
+import { CeleArray} from '../elements/CelestialBody.js';
 
 
 // 照片与其可交互信息的类
@@ -22,7 +22,7 @@ class InteractPhoto {
         this.timeZone = null;   // 时区
 
         // 画布对象池
-        this.CeleArray=new markerArray(); // 星星对象数组
+        this.CeleArray=new CeleArray(); // 星星对象数组
 
         // 铅垂线变量
         this.globalPLs = []; // 全局铅垂线对象

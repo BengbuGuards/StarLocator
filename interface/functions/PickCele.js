@@ -24,7 +24,7 @@ class PickCele extends DefaultbuttonFunctioner{
 
     clearData() {
         this.isPickingCele = false;
-        this.CeleArray.clear();
+        this.interactPhoto.CeleArray.clear();
     }
 
     handleMouseUp(e) {

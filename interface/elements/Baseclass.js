@@ -90,9 +90,6 @@ class markerArray{
     }
 
     remove(id){
-        this.array[id].remove();
-        this.array.splice(id, 1);
-        this.num--;
     }
 
     get(id){

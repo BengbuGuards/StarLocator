@@ -1,4 +1,4 @@
-import { ShapeObject } from './Baseclass.js';
+import { ShapeObject, markerArray } from './Baseclass.js';
 
 // 星体类
 class CelestialBody extends ShapeObject {
@@ -91,4 +91,22 @@ class CelestialBody extends ShapeObject {
     }
 }
 
-export { CelestialBody };
+class CeleArray extends markerArray {
+    constructor() {
+        super();
+    }
+
+    clear() {
+        for (let i =1;i<this.num+1;i++) {
+            document.getElementById(`coordX${i}`).value = '';
+            document.getElementById(`coordY${i}`).value = '';
+        }
+        for(let i of this.array){
+            i.remove();
+        }
+        this.array=[];
+        this.num=0;
+    }
+}
+
+export { CelestialBody , CeleArray};

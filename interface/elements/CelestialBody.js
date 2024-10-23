@@ -106,11 +106,6 @@ class CeleArray extends markerArray {
             }
             if(i.id>id){
                 i.id--;
-                i.label.set('text', i.id.toString().padStart(2, '0'));
-                i.label.setCoords();
-                i.point.set('id', i.id);
-                i.point.setCoords();
-                i.addToTable();
             }
         }
         this.num--;

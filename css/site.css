@@ -153,6 +153,25 @@ a:visited {
 	user-select: none;
 }
 
+.resetButton {
+	color: white;
+	border: 2px solid #c93a20;
+	border-radius: 5px;
+	width: 85px;
+	height: 48px;
+	cursor: pointer;
+	background-color: #9c3521;
+	margin-bottom: 5px;
+}
+
+.resetButton:hover {
+	background-color: #c93a20;
+}
+
+.resetButton:active {
+	background-color: #522a22;
+}
+
 .actionButton {
 	color: white;
 	border: 2px solid #189c65;
@@ -170,6 +189,25 @@ a:visited {
 
 .actionButton:active {
 	background-color: #194837;
+}
+
+.helpButton {
+	color: white;
+	border: 2px solid #2150B7;
+	border-radius: 5px;
+	width: 85px;
+	height: 48px;
+	cursor: pointer;
+	background-color: #204898;
+	margin-bottom: 5px;
+}
+
+.helpButton:hover {
+	background-color: #2150B7;
+}
+
+.helpButton:active {
+	background-color: #1d2d46;
 }
 
 .calculButton {

@@ -38,7 +38,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 2. Click the shining shuriken icon to start to pick stars (totally 5 stars are needed). The picked stars are better
    distributed horizontally, or if you know what exactly I'm talking, don't form too small an angle relative to the
    zenith.
-3. Enter excact time and standard name of celestial bodies in the bottom table, and click the clock button to acquire
+3. Enter exact time and standard name of celestial bodies in the bottom table, and click the clock button to acquire
    reference hour angles and declinations.
 4. Click the long limb alien(Enderman or sth) icon to draw lines along plumb lines on the image. More is better.
 5. **SMASH** the “给我算！” button and you'll see the result in result column on the right.

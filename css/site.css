@@ -191,6 +191,27 @@ a:visited {
 	background-color: #422a1c;
 }
 
+.calculButton:hover .calculIcon{
+	visibility: hidden;	
+}
+
+.calculButton:hover .calculAnim{
+	visibility: visible;
+}
+
+.calculButton:active .calculIcon{
+	visibility: visible;	
+}
+
+.calculButton:active .calculAnim{
+	visibility: hidden;
+}
+
+.calculAnim{
+	visibility: hidden;
+	position: absolute;
+}
+
 .zenith {
 	color: #e44f0d;
 }

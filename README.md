@@ -23,6 +23,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 4. 点击那个看起来像翘屁末影人的按钮开始绘制铅垂线。越多越好。
 5. **猛猛拍打**“计算”按钮然后就能在右侧的结果栏中看到结果了。
 
+<br>
 
 1. Click “选择文件”, import your image. The image should follow these requirements:
     - It is a real image of night sky;

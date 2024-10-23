@@ -36,6 +36,14 @@ class DefaultbuttonFunctioner{
             this.panning = true;
             this.interactPhoto.canvas.selection = false;
         }
+
+        // 单删星体
+        for(let i of this.interactPhoto.CeleArray.array){
+                i.deleter.on('selected', ()=>{
+                    console.log(i.id);
+                    this.interactPhoto.CeleArray.remove(i.id);
+                });
+        }
     }
 
     // 处理鼠标抬起事件

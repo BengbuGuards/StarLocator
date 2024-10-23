@@ -96,6 +96,26 @@ class CeleArray extends markerArray {
         super();
     }
 
+    remove(id){
+        for(let i of this.array){
+            if(i.id==id){
+                i.remove();
+                document.getElementById(`coordX${i.id}`).value = '';
+                document.getElementById(`coordY${i.id}`).value = '';
+                this.array.splice(this.array.indexOf(i),1);
+            }
+            if(i.id>id){
+                i.id--;
+                i.label.set('text', i.id.toString().padStart(2, '0'));
+                i.label.setCoords();
+                i.point.set('id', i.id);
+                i.point.setCoords();
+                i.addToTable();
+            }
+        }
+        this.num--;
+    }
+
     clear() {
         for (let i =1;i<this.num+1;i++) {
             document.getElementById(`coordX${i}`).value = '';

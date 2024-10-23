@@ -66,9 +66,23 @@ class DefaultbuttonFunctioner{
         }
 
         // 处理画布移动
-        if (this.panning && e && e.e) {
-            var delta = new fabric.Point(e.e.movementX, e.e.movementY);
-            this.interactPhoto.canvas.relativePan(delta);
+        if (this.panning && e) {
+            let isTouch = e.e.targetTouches !== undefined;
+            if (!isTouch || e.e.targetTouches.length ==1) {
+                var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+                this.interactPhoto.canvas.relativePan(delta);
+            } else if (e.e.targetTouches.length == 2) {
+                if (e.e.scale === undefined) return;
+                let zoom = this.interactPhoto.canvas.getZoom();
+                zoom *= e.e.scale;
+                if (zoom > 20) zoom = 20;
+                if (zoom < 0.01) zoom = 0.1;
+                this.interactPhoto.canvas.zoomToPoint({
+                    x: (e.e.targetTouches[0].pageX + e.e.targetTouches[1].pageX) / 2,
+                    y: (e.e.targetTouches[0].pageY + e.e.targetTouches[1].pageY) / 2
+                }, 
+                zoom);
+            }
         }
     }
 
@@ -90,8 +104,8 @@ class DefaultbuttonFunctioner{
         let zoom = this.interactPhoto.canvas.getZoom(); // 使用 canvas 直接引用
         zoom *= 0.999 ** delta;
     
-        if (zoom > 20)              zoom = 20;
-        if (zoom < 0.01)                zoom = 0.1;
+        if (zoom > 20) zoom = 20;
+        if (zoom < 0.01) zoom = 0.1;
     
         this.interactPhoto.canvas.zoomToPoint({
             x: opt.e.offsetX,

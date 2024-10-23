@@ -27,7 +27,7 @@
 <div class="row">
     <div class="col-toolbar">
         <h2>工具</h2>
-        <button type="button" class="actionButton" id="resetPick" title="重置标注">
+        <button type="button" class="resetButton" id="resetPick" title="重置标注">
             <img src="img\icon\resetPick.png" alt="重置标注" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button>
@@ -51,6 +51,12 @@
             <img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button> -->
+        <a href="https://stellarium-web.org/" target="_blank">
+            <button type="button" class="helpButton" id="stellariumWeb" title="Stellarium在线星图">
+                <img src="img\icon\stellariumweb.svg" alt="Stellarium" width="46" height="46"
+                    style="margin-left:-4px; margin-top:-3px">
+            </button>
+        </a>
         <a href="help.html" target="_blank">
             <button type="button" class="actionButton" id="howToUse" title="怎么用啊">
                 <img src="img\icon\emojiThinking.png" alt="怎么用啊" width="48" height="48"
@@ -265,7 +271,7 @@
                 <input id="setTimeDev" type="number" style="width: 65%"> -->
             </div>
         </div>
-        <div style="margin-top:10px">
+        <div style="margin-top:65px">
             <h2>结果</h2>
             <table style="width: 100%; margin-top: 10px; margin-bottom: 36px">
                 <tr>
@@ -283,7 +289,7 @@
             </table>
             <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
         </div>
-        <div style="margin-top: 24px">
+        <div style="margin-top: 30px">
             <h2>关于</h2>
             <!--TODO: 这里填README相同的注意事项-->
             <div class="row">

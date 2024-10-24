@@ -2,8 +2,8 @@ import {ShapeObject, LineObject, markerArray} from './Baseclass.js';
 
 // 线端点类
 class PLpoint extends ShapeObject {
-    constructor(coordinate, interactPhoto, id, color) {
-        super(coordinate[0], coordinate[1], id, interactPhoto.canvas, color, '');
+    constructor(coordinate, interactPhoto,canvas, id, color) {
+        super(coordinate[0], coordinate[1], id, canvas, color, '');
         this.coordinate = coordinate;
         this.interactPhoto = interactPhoto;
     }
@@ -22,22 +22,22 @@ class PLLine {
         this.lineObject = null;
     }
 
-    addPoint(coordinate) {
-        let id = this.interactPhoto.PLArray.num() * 2 + this.points.length;
-        let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
-        this.points.push(point);
+    // addPoint(coordinate) {
+    //     let id = this.interactPhoto.PLArray.num() * 2 + this.points.length;
+    //     let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
+    //     this.points.push(point);
 
-        if (this.points.length == 2) {
-            let lineCoord = [
-                this.points[0].coordinate,
-                this.points[1].coordinate
-            ].flat();
-            this.lineObject = new LineObject(lineCoord, this.interactPhoto, '#35dc96');
-            this.addMoveLineEvent();
-        } else if (this.points.length > 2) {
-            console.error('Too many points in a line.');
-        }
-    }
+    //     if (this.points.length == 2) {
+    //         let lineCoord = [
+    //             this.points[0].coordinate,
+    //             this.points[1].coordinate
+    //         ].flat();
+    //         this.lineObject = new LineObject(lineCoord, this.interactPhoto, '#35dc96');
+    //         this.addMoveLineEvent();
+    //     } else if (this.points.length > 2) {
+    //         console.error('Too many points in a line.');
+    //     }
+    // }
 
     addMoveLineEvent() {
         this.points[0].point.off('moving');
@@ -60,10 +60,10 @@ class PLLine {
         this.interactPhoto.canvas.renderAll();  // 刷新画布以显示更改
     }
 
-    clear() {
-        this.points.forEach(point => point.clear());
+    remove() {
+        this.points.forEach(point => point.remove());
         if (this.lineObject != null) {
-            this.lineObject.clear();
+            this.lineObject.remove();
         }
     }
 }
@@ -73,6 +73,42 @@ class PLArray extends markerArray{
         super(interactPhoto);
     }
     
+    add(coordinate){
+        if (this.array.length == 0 || this.array.slice(-1)[0].points.length == 2){
+            let pl = new PLLine(this.interactPhoto);
+            this.array.push(pl);
+        }
+        
+        let id = this.num() * 2 + this.array.slice(-1)[0].points.length-2;
+        let point = new PLpoint(coordinate, this.interactPhoto,this.interactPhoto.canvas, id, '#35dc96');
+        this.array.slice(-1)[0].points.push(point);
+
+        if (this.array.slice(-1)[0].points.length == 2) {
+            let lineCoord = [
+                this.array.slice(-1)[0].points[0].coordinate,
+                this.array.slice(-1)[0].points[1].coordinate
+            ].flat();
+            this.array.slice(-1)[0].lineObject = new LineObject(lineCoord, this.interactPhoto.canvas, '#35dc96');
+            this.array.slice(-1)[0].addMoveLineEvent();
+        } else if (this.array.slice(-1)[0].points.length > 2) {
+            console.error('Too many points in a line.');
+        }
+
+        point.deleter.on('mousedown', () => {
+            this.remove(point.id);
+        }).bind(this);
+    }
+
+    remove(id) {
+        let deletedId = Math.floor(id);
+        if(this.array.slice(-1)[0].points.length == 2){
+            this.array[deletedId-1].remove();
+        }
+        else{
+            this.array[deletedId].points[0].remove();
+            this.array.splice(deletedId, 1);
+        }
+    }
 }
 
 export {PLpoint, PLLine, PLArray};

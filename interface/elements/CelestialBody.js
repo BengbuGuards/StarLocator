@@ -112,8 +112,8 @@ class CelestialBody extends ShapeObject {
 }
 
 class CeleArray extends markerArray {
-    constructor(interPhoto) {
-        super(interPhoto);
+    constructor(interactPhoto) {
+        super(interactPhoto);
     }
 
     add (x, y) {
@@ -138,7 +138,7 @@ class CeleArray extends markerArray {
             }
         }
         // 创建新的星星对象
-        let star = new CelestialBody(x, y, this.num() + 1, this.interPhoto.canvas);
+        let star = new CelestialBody(x, y, this.num() + 1, this.interactPhoto.canvas);
         this.array.push(star);
         // 为新添加的星星绑定与CeleArray相关的删除事件
         star.deleter.on('mousedown', () => {

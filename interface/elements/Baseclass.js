@@ -81,10 +81,9 @@ class ShapeObject {
 
 // 线基类
 class LineObject {
-    constructor(coordinates, interactPhoto, color) {
+    constructor(coordinates, canvas, color) {
         this.coordinates = coordinates;
-        this.canvas = interactPhoto.canvas;
-        this.id = interactPhoto.numPL;
+        this.canvas = canvas;
         this.color = color;
 
         this.line = new fabric.Line(this.coordinates, {
@@ -105,9 +104,9 @@ class LineObject {
 
 // 数据结构基类
 class markerArray{
-    constructor(interPhoto){
+    constructor(interactPhoto){
         this.array = [];
-        this.interPhoto = interPhoto;
+        this.interactPhoto = interactPhoto;
     }
 
     num() {

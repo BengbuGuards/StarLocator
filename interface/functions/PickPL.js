@@ -26,7 +26,7 @@ class PickPL extends DefaultbuttonFunctioner{
     clearData() {
         this.isPickingPL = false;
         for (let pl of this.interactPhoto.PLArray.array) {
-            pl.clear();
+            pl.remove();
         }
         this.interactPhoto.PLArray.array = [];
     }
@@ -55,11 +55,7 @@ class PickPL extends DefaultbuttonFunctioner{
 
     // 添加铅垂线的函数
     addPL(coordinate){
-        if (this.interactPhoto.PLArray.array.length == 0 || this.interactPhoto.PLArray.array.slice(-1)[0].points.length == 2){
-            let pl = new PLLine(this.interactPhoto);
-            this.interactPhoto.PLArray.array.push(pl);
-        }
-        this.interactPhoto.PLArray.array.slice(-1)[0].addPoint(coordinate);
+        this.interactPhoto.PLArray.add(coordinate);
     }
 }
 

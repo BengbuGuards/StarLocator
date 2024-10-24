@@ -100,14 +100,14 @@ class PLArray extends markerArray{
     }
 
     remove(id) {
-        let deletedId = Math.floor(id);
-        if(this.array.slice(-1)[0].points.length == 2){
-            this.array[deletedId-1].remove();
-            this.array.splice(deletedId-1, 1);
-        }
-        else{
+        let deletedId = Math.floor(id/2);
+        if(this.array.slice(-1)[0].points.length != 2 && this.array.slice(-1)[0].points[0].id == id){
             console.log(deletedId)
             this.array[deletedId].points[0].remove();
+            this.array.splice(deletedId, 1);
+        }
+        else{
+            this.array[deletedId].remove();
             this.array.splice(deletedId, 1);
         }
     }

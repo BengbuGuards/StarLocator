@@ -1,4 +1,4 @@
-import {ShapeObject, LineObject} from './Baseclass.js';
+import {ShapeObject, LineObject, markerArray} from './Baseclass.js';
 
 // 线端点类
 class PLpoint extends ShapeObject {
@@ -69,4 +69,10 @@ class PLLine {
     }
 }
 
-export {PLpoint, PLLine};
+class PLArray extends markerArray{
+    constructor(interactPhoto){
+        super(interactPhoto);
+    }
+}
+
+export {PLpoint, PLLine, PLArray};

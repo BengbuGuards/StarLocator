@@ -76,8 +76,8 @@ class Calc extends DefaultbuttonFunctioner{
     // 获取铅垂线端点坐标
     getGlobalPLPointsCoord(){
         let globalPLPointsCoord = [];
-        for(let i = 0; i < this.interactPhoto.numPL; i++){
-            let pl = this.interactPhoto.globalPLs[i];
+        for(let i = 0; i < this.interactPhoto.PLArray.num; i++){
+            let pl = this.interactPhoto.PLArray.array[i];
             let points = [];
             for(let j = 0; j < pl.points.length; j++){
                 points.push(pl.points[j].coordinate);

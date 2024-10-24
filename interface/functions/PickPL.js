@@ -25,11 +25,11 @@ class PickPL extends DefaultbuttonFunctioner{
 
     clearData() {
         this.isPickingPL = false;
-        for (let pl of this.interactPhoto.globalPLs) {
+        for (let pl of this.interactPhoto.PLArray.array) {
             pl.remove();
         }
-        this.interactPhoto.globalPLs = [];
-        this.interactPhoto.numPL = 0;
+        this.interactPhoto.PLArray.array = [];
+        this.interactPhoto.PLArray.num = 0;
     }
 
     handleMouseUp(e) {
@@ -56,11 +56,11 @@ class PickPL extends DefaultbuttonFunctioner{
 
     // 添加铅垂线的函数
     addPL(coordinate){
-        if (this.interactPhoto.globalPLs.length == 0 || this.interactPhoto.globalPLs.slice(-1)[0].points.length == 2){
+        if (this.interactPhoto.PLArray.array.length == 0 || this.interactPhoto.PLArray.array.slice(-1)[0].points.length == 2){
             let pl = new PLLine(this.interactPhoto);
-            this.interactPhoto.globalPLs.push(pl);
+            this.interactPhoto.PLArray.array.push(pl);
         }
-        this.interactPhoto.globalPLs.slice(-1)[0].addPoint(coordinate);
+        this.interactPhoto.PLArray.array.slice(-1)[0].addPoint(coordinate);
     }
 }
 

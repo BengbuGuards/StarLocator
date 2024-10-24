@@ -81,11 +81,11 @@ a:visited {
 	.col-toolbar {
 		position: relative;
 		width: 100%;
+		max-width: 900px;
 	}
 
 	.col-result {
 		position: relative;
-		padding-left: 5px;
 		width: 900px;
 	}
 	.helpdiv {
@@ -95,7 +95,7 @@ a:visited {
 	}
 }
 
-@media (min-width:1020px) {
+@media (min-width:1035px) {
 	.col-toolbar {
 		position: relative;
 		width: 85px;
@@ -321,14 +321,14 @@ a:visited {
 	margin: -16px -8px 10px -8px;
 }
 
+.col-toolbar {
+	padding-right: 10px;
+}
+
 .col-measure {
-	/* -ms-flex:0 0 54%; */
-	/* flex:0 0 54%; */
-	/* max-width: 54%; */
 	position: relative;
 	width: 900px;
-	padding-left: 5px;
-	padding-right: 5px;
+	padding-right: 10px;
 }
 
 .col-input {
@@ -360,5 +360,5 @@ a:visited {
 .desc {
 	color:#9f9f9f;
 	margin-top:0px;
-	margin-bottom:0px
+	margin-bottom:0px;
 }

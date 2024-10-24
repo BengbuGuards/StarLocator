@@ -69,8 +69,14 @@ class PickCele extends DefaultbuttonFunctioner{
             // 第二颗星星的行，用于 HTML 模板
             // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
             for (let i = 0; i <= 5; ++i) {
-                newRow.insertCell(i).innerHTML    // 将第二行 HTML 抄过来并替换数字
-                    = secondStarRow.cells[i].innerHTML.replace('2', `${this.interactPhoto.numOfPts}`);
+                let newcell = newRow.insertCell(i)    // 将第二行 HTML 抄过来并替换数字
+                if (i == 0) {
+                    newcell.innerHTML = this.num() + 1;
+                } else {
+                    newcell.innerHTML = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
+                        return `id="${p1}${this.num() + 1}"`;
+                    });
+                }
             }
         }
 

@@ -23,7 +23,7 @@ class InteractPhoto {
         this.timeZone = null;   // 时区
 
         // 画布对象池
-        this.CeleArray=new CeleArray(); // 星星对象数组
+        this.CeleArray = new CeleArray(); // 星星对象数组
 
         // 铅垂线变量
         this.globalPLs = []; // 全局铅垂线对象

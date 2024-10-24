@@ -54,20 +54,20 @@ class PickCele extends DefaultbuttonFunctioner{
 
         // 判断星星数量是否已超过表格行数
         let inputTable = document.getElementById('inputTable');
-        if (this.interactPhoto.CeleArray.num+1 > inputTable.rows.length - 2) {    // 减掉一行标题与一行天顶
+        if (this.interactPhoto.CeleArray.num() + 1 > inputTable.rows.length - 2) {    // 减掉一行标题与一行天顶
             // 添加一行
-            let newRow = inputTable.insertRow(this.interactPhoto.CeleArray.num + 2);
+            let newRow = inputTable.insertRow(this.interactPhoto.CeleArray.num() + 2);
             // 添加单元格
             let secondStarRow = inputTable.rows[3];
             // 第二颗星星的行，用于 HTML 模板
             // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
             for (let i = 0; i <= 5; ++i) {
                 newRow.insertCell(i).innerHTML    // 将第二行 HTML 抄过来并替换数字
-                    = secondStarRow.cells[i].innerHTML.replace('2', `${this.interactPhoto.CeleArray.num+1}`);
+                    = secondStarRow.cells[i].innerHTML.replace('2', `${this.interactPhoto.CeleArray.num()+1}`);
             }
         }
 
-        let star = new CelestialBody(x, y, this.interactPhoto.CeleArray.num+1, this.interactPhoto.canvas);
+        let star = new CelestialBody(x, y, this.interactPhoto.CeleArray.num()+1, this.interactPhoto.canvas);
         star.addToTable();
         this.interactPhoto.CeleArray.add(star);
     }

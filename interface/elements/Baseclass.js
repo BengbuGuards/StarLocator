@@ -27,15 +27,12 @@ class ShapeObject {
         });
 
         this.deleter = new fabric.Text('×', {
-            left: x - 28,
-            top: y - 24,
+            left: x - 28.5,
+            top: y - 24.5,
             fontSize: 20,
             fill: "#CF0000",
-            selectable: true,
             hasControls: false,
             hoverCursor:'pointer',
-            lockMovementX: true,
-            lockMovementY: true,
         });
 
         this.point.on('moving', this.onMove.bind(this));
@@ -43,7 +40,7 @@ class ShapeObject {
         this.canvas.add(this.label);
         this.point.on('selected', this.displayDeleter.bind(this));
         this.point.on('deselected', this.hideDeleter.bind(this));
-        this.deleter.on('selected', this.remove.bind(this));
+        this.deleter.on('mousedown', this.remove.bind(this));
     }
 
     setRealXY(x, y) {
@@ -56,6 +53,9 @@ class ShapeObject {
         this.label.left = this.point.left + 33;
         this.label.top = this.point.top + 6;
         this.label.setCoords();
+        this.deleter.left = this.point.left - 12;
+        this.deleter.top = this.point.top - 8;
+        this.deleter.setCoords();
     }
 
     onZoom() {
@@ -65,6 +65,7 @@ class ShapeObject {
     remove() {
         this.canvas.remove(this.point);
         this.canvas.remove(this.label);
+        this.canvas.remove(this.deleter);
     }
 
     displayDeleter() {
@@ -106,27 +107,29 @@ class LineObject {
 class markerArray{
     constructor(){
         this.array=[];
-        this.num=0;
     }
 
-    add(obj){
+    num() {
+        return this.array.length;
+    }
+
+    add(obj) {
         this.array.push(obj);
-        this.num++;
     }
 
-    remove(id){
+    remove(id) {
+
     }
 
-    get(id){
+    get(id) {
         return this.array[id];
     }
 
-    clear(){
+    clear() {
         for(let i of this.array){
             i.remove();
         }
         this.array=[];
-        this.num=0;
     }
 }
 

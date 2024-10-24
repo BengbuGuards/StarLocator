@@ -71,10 +71,10 @@ class PickCele extends DefaultbuttonFunctioner{
             for (let i = 0; i <= 5; ++i) {
                 let newcell = newRow.insertCell(i)    // 将第二行 HTML 抄过来并替换数字
                 if (i == 0) {
-                    newcell.innerHTML = this.num() + 1;
+                    newcell.innerHTML = this.interactPhoto.numOfPts;
                 } else {
                     newcell.innerHTML = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
-                        return `id="${p1}${this.num() + 1}"`;
+                        return `id="${p1}${this.interactPhoto.numOfPts}"`;
                     });
                 }
             }

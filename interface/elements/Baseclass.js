@@ -105,8 +105,9 @@ class LineObject {
 
 // 数据结构基类
 class markerArray{
-    constructor(){
-        this.array=[];
+    constructor(interPhoto){
+        this.array = [];
+        this.interPhoto = interPhoto;
     }
 
     num() {

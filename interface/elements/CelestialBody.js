@@ -4,6 +4,11 @@ import { ShapeObject, markerArray } from './Baseclass.js';
 class CelestialBody extends ShapeObject {
     constructor(x, y, id, canvas) {
         super(x, y, id, canvas, '#FFD248', `${id}`);
+        // 初始化图上名字
+        this.onRename();
+        // 初始化图上坐标
+        this.addToTable();
+        // 绑定事件
         this.bindEvents()
     }
 
@@ -14,11 +19,8 @@ class CelestialBody extends ShapeObject {
         // 绑定名字 div 文本变化事件
         let nameDiv = document.getElementById(`name${this.id}`);
         nameDiv.oninput = this.onRename.bind(this); // 一定要指定 this！！！
-        // 初始化图上名字
-        this.onRename();
         // 绑定名字 div 获取焦点
         nameDiv.onfocus = this.onNameDivOnFocus.bind(this);
-
         // 绑定坐标值变动事件
         let coordX = document.getElementById(`coordX${this.id}`);
         let coordY = document.getElementById(`coordY${this.id}`);
@@ -108,15 +110,34 @@ class CelestialBody extends ShapeObject {
 }
 
 class CeleArray extends markerArray {
-    constructor() {
-        super();
+    constructor(interPhoto) {
+        super(interPhoto);
     }
 
-    add (obj) {
-        super.add(obj);
+    add (x, y) {
+        // 判断星星数量是否已超过表格行数
+        let inputTable = document.getElementById('inputTable');
+        if (this.num() + 1 > inputTable.rows.length - 2) {    // 减掉一行标题与一行天顶
+            // 添加一行
+            let newRow = inputTable.insertRow(this.num() + 2);
+            // 添加单元格
+            let secondStarRow = inputTable.rows[3];
+            // 第二颗星星的行，用于 HTML 模板
+            // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
+            for (let i = 0; i <= 5; ++i) {
+                newRow.insertCell(i).innerHTML    // 将第二行 HTML 抄过来并替换数字
+                    = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
+                            return `id="${p1}${this.num() + 1}"`;
+                        }
+                    );
+            }
+        }
+        // 创建新的星星对象
+        let star = new CelestialBody(x, y, this.num() + 1, this.interPhoto.canvas);
+        this.array.push(star);
         // 为新添加的星星绑定与CeleArray相关的删除事件
-        obj.deleter.on('mousedown', () => {
-            this.remove(obj.id);
+        star.deleter.on('mousedown', () => {
+            this.remove(star.id);
         }).bind(this);
     }
 

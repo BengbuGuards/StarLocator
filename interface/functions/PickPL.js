@@ -26,10 +26,9 @@ class PickPL extends DefaultbuttonFunctioner{
     clearData() {
         this.isPickingPL = false;
         for (let pl of this.interactPhoto.PLArray.array) {
-            pl.remove();
+            pl.clear();
         }
         this.interactPhoto.PLArray.array = [];
-        this.interactPhoto.PLArray.num = 0;
     }
 
     handleMouseUp(e) {

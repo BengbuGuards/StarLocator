@@ -23,7 +23,7 @@ class PLLine {
     }
 
     addPoint(coordinate) {
-        let id = this.interactPhoto.numPL * 2 + this.points.length;
+        let id = this.interactPhoto.PLArray.num() * 2 + this.points.length;
         let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
         this.points.push(point);
 
@@ -34,7 +34,6 @@ class PLLine {
             ].flat();
             this.lineObject = new LineObject(lineCoord, this.interactPhoto, '#35dc96');
             this.addMoveLineEvent();
-            this.interactPhoto.numPL++;
         } else if (this.points.length > 2) {
             console.error('Too many points in a line.');
         }
@@ -61,10 +60,10 @@ class PLLine {
         this.interactPhoto.canvas.renderAll();  // 刷新画布以显示更改
     }
 
-    remove() {
-        this.points.forEach(point => point.remove());
+    clear() {
+        this.points.forEach(point => point.clear());
         if (this.lineObject != null) {
-            this.lineObject.remove();
+            this.lineObject.clear();
         }
     }
 }
@@ -73,6 +72,7 @@ class PLArray extends markerArray{
     constructor(interactPhoto){
         super(interactPhoto);
     }
+    
 }
 
 export {PLpoint, PLLine, PLArray};

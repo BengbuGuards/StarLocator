@@ -103,8 +103,10 @@ class PLArray extends markerArray{
         let deletedId = Math.floor(id);
         if(this.array.slice(-1)[0].points.length == 2){
             this.array[deletedId-1].remove();
+            this.array.splice(deletedId-1, 1);
         }
         else{
+            console.log(deletedId)
             this.array[deletedId].points[0].remove();
             this.array.splice(deletedId, 1);
         }

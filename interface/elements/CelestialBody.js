@@ -91,9 +91,7 @@ class CelestialBody extends ShapeObject {
     }
 
     remove() {
-        this.canvas.remove(this.point);
-        this.canvas.remove(this.label);
-        this.canvas.remove(this.deleter);
+        super.remove();
     }
 
     removeTableData() {
@@ -106,6 +104,10 @@ class CelestialBody extends ShapeObject {
         document.getElementById(`declinS${this.id}`).textContent = '';
         document.getElementById(`coordX${this.id}`).value = '';
         document.getElementById(`coordY${this.id}`).value = '';
+        document.getElementById(`name${this.id}`).oninput = null;
+        document.getElementById(`name${this.id}`).onfocus = null;
+        document.getElementById(`coordX${this.id}`).oninput = null;
+        document.getElementById(`coordY${this.id}`).oninput = null;
     }
 }
 
@@ -125,11 +127,14 @@ class CeleArray extends markerArray {
             // 第二颗星星的行，用于 HTML 模板
             // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
             for (let i = 0; i <= 5; ++i) {
-                newRow.insertCell(i).innerHTML    // 将第二行 HTML 抄过来并替换数字
-                    = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
-                            return `id="${p1}${this.num() + 1}"`;
-                        }
-                    );
+                let newcell = newRow.insertCell(i)    // 将第二行 HTML 抄过来并替换数字
+                if (i == 0) {
+                    newcell.innerHTML = this.num() + 1;
+                } else {
+                    newcell.innerHTML = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
+                        return `id="${p1}${this.num() + 1}"`;
+                    });
+                }
             }
         }
         // 创建新的星星对象
@@ -161,6 +166,10 @@ class CeleArray extends markerArray {
                 document.getElementById(`declinS${celeBody.id-1}`).textContent = document.getElementById(`declinS${celeBody.id}`).textContent;
                 document.getElementById(`coordX${celeBody.id-1}`).value = document.getElementById(`coordX${celeBody.id}`).value;
                 document.getElementById(`coordY${celeBody.id-1}`).value = document.getElementById(`coordY${celeBody.id}`).value;
+                document.getElementById(`name${celeBody.id-1}`).oninput = document.getElementById(`name${celeBody.id}`).oninput;
+                document.getElementById(`name${celeBody.id-1}`).onfocus = document.getElementById(`name${celeBody.id}`).onfocus;
+                document.getElementById(`coordX${celeBody.id-1}`).oninput = document.getElementById(`coordX${celeBody.id}`).oninput;
+                document.getElementById(`coordY${celeBody.id-1}`).oninput = document.getElementById(`coordY${celeBody.id}`).oninput;
                 celeBody.removeTableData();
                 celeBody.id--;
                 celeBody.onRename();

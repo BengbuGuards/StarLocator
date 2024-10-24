@@ -49,6 +49,13 @@ function initializeEvents(eventManager) {
     interactPhoto.canvas.on('mouse:out', e => eventManager.handleMouseOut.call(eventManager, e));
     interactPhoto.canvas.on('mouse:wheel', opt => eventManager.handleMouseWheel.call(eventManager, opt));
 
+    // 兼容手机端事件绑定
+    let touchEventAdapter = eventManager.touchEventAdapter.adapter.bind(eventManager.touchEventAdapter);
+    interactPhoto.canvasInst.addEventListener('touchstart', e => eventManager.handleMouseDown.call(eventManager, touchEventAdapter(e)));
+    interactPhoto.canvasInst.addEventListener('touchend', e => eventManager.handleMouseUp.call(eventManager, touchEventAdapter(e)));
+    interactPhoto.canvasInst.addEventListener('touchmove', e => eventManager.handleMouseMove.call(eventManager, touchEventAdapter(e)));
+    interactPhoto.canvasInst.addEventListener('touchcancel', e => eventManager.handleMouseOut.call(eventManager, touchEventAdapter(e)));
+
     // 窗口事件绑定
     window.onresize = eventManager.handleResize.call(eventManager);
     

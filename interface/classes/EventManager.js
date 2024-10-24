@@ -1,4 +1,5 @@
 import { initializeElements, initializeCanvas, initializeEvents, initializeMap } from '../init.js';
+import { TouchEventAdapter } from './TouchEventAdapter.js';
 import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
 import { ImageChange } from '../functions/ImageChange.js';
@@ -9,7 +10,9 @@ import { CeleCoord } from '../functions/CeleCoord.js';
 class EventManager{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;
+        this.touchEventAdapter = new TouchEventAdapter();
         
+        // 按钮事件处理类
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));

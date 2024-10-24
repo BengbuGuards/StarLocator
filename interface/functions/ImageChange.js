@@ -13,6 +13,7 @@ class ImageChange extends DefaultbuttonFunctioner{
         let reader = new FileReader();
         reader.onload = function (e) {
             let img = new Image();
+            this.interactPhoto.img = img;
             img.onload = function () {
                 let width = img.width, height = img.height;
                 // 移除先前图片

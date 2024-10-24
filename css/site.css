@@ -57,6 +57,26 @@ a:visited {
 	color: #189c65;
 }
 
+.tooltip .tooltiptext {
+	visibility: hidden;
+	width: 150px;
+	background-color: white;
+	color: #3c3c3c;
+	font-size: 12px;
+	font-weight: normal;
+	text-align: center;
+	padding: 4px;
+	margin-top: 18px;
+	border: solid;
+	border-width: 1px;
+	position: absolute;
+	z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+	visibility: visible;
+}
+
 @media (min-width:480px) {
 	.col-toolbar {
 		position: relative;
@@ -67,6 +87,11 @@ a:visited {
 		position: relative;
 		padding-left: 5px;
 		width: 900px;
+	}
+	.helpdiv {
+		margin-left: auto;
+		margin-right: auto;
+		width:100%;
 	}
 }
 
@@ -83,6 +108,11 @@ a:visited {
 		margin-left: 97px;
 		width: 904px;
 	}
+	.helpdiv {
+		margin-left: auto;
+		margin-right: auto;
+		width:927px;
+	}
 }
 
 @media (min-width:1562px) {
@@ -93,6 +123,11 @@ a:visited {
 		max-width: 34%;
 		padding-top: 0px;
 		margin-left: 0px;
+	}
+	.helpdiv {
+		margin-left: auto;
+		margin-right: auto;
+		width:60%;
 	}
 }
 
@@ -118,6 +153,25 @@ a:visited {
 	user-select: none;
 }
 
+.resetButton {
+	color: white;
+	border: 2px solid #c93a20;
+	border-radius: 5px;
+	width: 85px;
+	height: 48px;
+	cursor: pointer;
+	background-color: #9c3521;
+	margin-bottom: 5px;
+}
+
+.resetButton:hover {
+	background-color: #c93a20;
+}
+
+.resetButton:active {
+	background-color: #522a22;
+}
+
 .actionButton {
 	color: white;
 	border: 2px solid #189c65;
@@ -137,6 +191,25 @@ a:visited {
 	background-color: #194837;
 }
 
+.helpButton {
+	color: white;
+	border: 2px solid #2150B7;
+	border-radius: 5px;
+	width: 85px;
+	height: 48px;
+	cursor: pointer;
+	background-color: #204898;
+	margin-bottom: 5px;
+}
+
+.helpButton:hover {
+	background-color: #2150B7;
+}
+
+.helpButton:active {
+	background-color: #1d2d46;
+}
+
 .calculButton {
 	color: black;
 	border: 2px solid #e44f0d;
@@ -154,6 +227,27 @@ a:visited {
 
 .calculButton:active {
 	background-color: #422a1c;
+}
+
+.calculButton:hover .calculIcon{
+	visibility: hidden;	
+}
+
+.calculButton:hover .calculAnim{
+	visibility: visible;
+}
+
+.calculButton:active .calculIcon{
+	visibility: visible;	
+}
+
+.calculButton:active .calculAnim{
+	visibility: hidden;
+}
+
+.calculAnim{
+	visibility: hidden;
+	position: absolute;
 }
 
 .zenith {
@@ -261,4 +355,10 @@ a:visited {
 	-ms-flex: 0 0 28%;
 	flex: 0 0 28%;
 	max-width: 28%;
+}
+
+.desc {
+	color:#9f9f9f;
+	margin-top:0px;
+	margin-bottom:0px
 }

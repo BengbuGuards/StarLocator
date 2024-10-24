@@ -7,6 +7,7 @@ import { CeleArray} from '../elements/CelestialBody.js';
 class InteractPhoto {
     constructor() {
         // 页面各元素变量
+        this.img = null;        // 照片
         this.container = null;  // 容器
         this.canvas = null;     // 画布
         this.canvasInst = null; // 画布实例

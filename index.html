@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>照片测星定位beta</title>
+    <title>照片测星定位</title>
     <link rel="stylesheet" href="css/site.css"/>
     <link rel="stylesheet" href="leaflet/dist/leaflet.css"/>
     <script src="core/astronomy.browser.js"></script>
@@ -18,16 +18,16 @@
     <h1>
         <img src="img\icon\starLocator-2.png" style="margin-bottom:-10px; user-select: none;" alt="StarLocator"
              width="36" height="36"/>
-        StarLocator 照片测星定位
+        StarLocator 照片测星定位 <a href="https://qm.qq.com/q/nlFqV4jVfO">点击加入交流群</a>
         <a href="https://github.com/BengbuGuards/StarLocator" title="项目地址">
-            <img src="img\icon\gitcat.png" href="https://github.com/BengbuGuards/StarLocator" style="float: right; margin-bottom:-10px;  margin-right: 10px" width="36" height="36"/>
+            <img src="img\icon\gitcat.png" style="float: right; margin-bottom:-10px;  margin-right: 10px" width="36" height="36"/>
         </a>
     </h1>
 </div>
 <div class="row">
     <div class="col-toolbar">
         <h2>工具</h2>
-        <button type="button" class="actionButton" id="resetPick" title="重置标注">
+        <button type="button" class="resetButton" id="resetPick" title="重置标注">
             <img src="img\icon\resetPick.png" alt="重置标注" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button>
@@ -35,26 +35,34 @@
             <img src="img\icon\celePick.png" alt="天体选择" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button>
-        <button type="button" class="actionButton" id="vaniZen" title="消失点定位">
-            <img src="img\icon\vaniZen.png" alt="消失点定位" width="48" height="48"
+        <button type="button" class="actionButton" id="manualTime" title="获取天体坐标">
+            <img src="img\icon\manualTime.png" alt="获取天体坐标" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button>
-        <button type="button" class="actionButton" id="horiZen" title="地平线定位">
-            <img src="img\icon\horiZen.png" alt="地平线定位" width="48" height="48"
+        <button type="button" class="actionButton" id="vaniZen" title="铅垂线标记">
+            <img src="img\icon\vaniZen.png" alt="铅垂线标记" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <!-- <button type="button" class="actionButton" id="horiZen" title="地平线标记">
+            <img src="img\icon\horiZen.png" alt="地平线标记" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
         </button>
         <button type="button" class="actionButton" id="moonTime" title="标月定时">
             <img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
-        </button>
-        <button type="button" class="actionButton" id="manualTime" title="根据时间获取天体坐标">
-            <img src="img\icon\manualTime.png" alt="根据时间获取天体坐标" width="48" height="48"
-                 style="margin-left:-4px; margin-top:-3px">
-        </button>
-        <button type="button" class="actionButton" id="howToUse" title="怎么用啊">
-            <img src="img\icon\emojiThinking.png" alt="怎么用啊" width="48" height="48"
-                 style="margin-left:-4px; margin-top:-3px">
-        </button>
+        </button> -->
+        <a href="https://stellarium-web.org/" target="_blank">
+            <button type="button" class="helpButton" id="stellariumWeb" title="Stellarium在线星图">
+                <img src="img\icon\stellariumweb.svg" alt="Stellarium" width="46" height="46"
+                    style="margin-left:-4px; margin-top:-3px">
+            </button>
+        </a>
+        <a href="help.html" target="_blank">
+            <button type="button" class="helpButton" id="howToUse" title="怎么用啊">
+                <img src="img\icon\emojiThinking.png" alt="怎么用啊" width="48" height="48"
+                    style="margin-left:-4px; margin-top:-3px">
+            </button>
+        </a>
     </div>
     <div class="col-measure">
         <h2>测量</h2>
@@ -73,12 +81,12 @@
                 <div class="col-input">
                     <table class="inputTable" id="inputTable">
                         <tr>
-                            <th style="width: 8%">天体</th>
-                            <th style="width: 20%">名称</th>
-                            <th style="width: 25%">参考时角</th>
-                            <th style="width: 20%">赤纬</th>
-                            <th style="width: 12%">x</th>
-                            <th style="width: 12%">y</th>
+                            <th style="width: 8%" class="tooltip">序号<span class="tooltiptext">天体的序号</span></th>
+                            <th style="width: 20%" class="tooltip">天体名称<span class="tooltiptext">天体的名称，中英文皆可；中文在星座名和希腊字母之间需要加上空格</span></th>
+                            <th style="width: 25%" class="tooltip">参考时角<span class="tooltiptext">在0°经线读取的天体时角，可以用于计算GP点经度</span></th>
+                            <th style="width: 20%" class="tooltip">赤纬<span class="tooltiptext">天体的赤纬，即GP点的纬度</span></th>
+                            <th style="width: 12%" class="tooltip">x<span class="tooltiptext">天体在照片中的横坐标</span></th>
+                            <th style="width: 12%" class="tooltip">y<span class="tooltiptext">天体在照片中的纵坐标</span></th>
                         </tr>
                         <tr>
                             <td class="zenith">0</td>
@@ -234,7 +242,10 @@
                 </div>
                 <div class="col-calcul">
                     <button type="button" class="calculButton" id="actionCalcul" title="计算">
-                        计<br/>算
+                        <img src="img\icon\calcu1.png" alt="计算" width="48" height="96"
+                    style="margin-left:-4px; margin-top:-3px" class="calculIcon">
+                        <img src="img\icon\calcu2.gif" alt="计算" width="48" height="96"
+                    style="margin-left:-48px; margin-top:-3px" class="calculAnim">
                     </button>
                     <br/>
                 </div>
@@ -245,41 +256,40 @@
         <h2>设置</h2>
         <div>
             <div>
-
                 <input type="checkbox" id="check1" checked/>
-                <label for="check1">大气折射修正</label><br/>
+                <label for="check1" class="tooltip">大气折射修正<span class="tooltiptext">是否考虑大气折射对各天体地平高度角的影响</span></label><br/>
                 <input type="checkbox" id="check2" checked/>
-                <label for="check2">重力方向修正</label><br/>
-                <input type="checkbox" id="check3" checked/>
-                <label for="check3">显示为角度</label><br/>
-                <input type="checkbox" id="check4"/>
-                <label for="check4">时间未定</label><br/>
-                <label for="setDate">拍摄时间 </label>
+                <label for="check2" class="tooltip">重力方向修正<span class="tooltiptext">是否考虑当地的重力方向与天顶方向不重合的影响</span></label><br/>
+                <!-- <input type="checkbox" id="check4"/>
+                <label for="check4" class="tooltip">时间未定<span class="tooltiptext">时间未定定位结果将显示整个纬线圈</span></label><br/> -->
+                <label for="setDate" class="tooltip">拍摄时间<span class="tooltiptext">时间若无法精确到秒，可以填入30作为尾数</span></label>
                 <input id="setDate" type="date" style="width: 25%">
                 <input id="setTime" type="time" step="1" style="width: 20%" aria-label="时间"/>
-                <label for="setTimeZone">时区</label>
-                <input id="setTimeZone" type="number" min="-12" max="12" step="1" style="width: 10%"/><br/>
-                <label for="setTimeDev">时间偏差 </label><input id="setTimeDev" type="number" style="width: 65%">
+                <label for="setTimeZone" class="tooltip">时区<span class="tooltiptext">北京时间为UTC+8</span></label>
+                <input id="setTimeZone" type="number" min="-12" max="12" step="0.5" style="width: 10%"/><br/>
+                <!-- <label for="setTimeDev" class="tooltip">时间偏差 <span class="tooltiptext">时间的不确定程度，决定经度误差线的长度</span></label>
+                <input id="setTimeDev" type="number" style="width: 65%"> -->
             </div>
-            <table style="width: 100%; margin-top: 10px;">
+        </div>
+        <div style="margin-top:65px">
+            <h2>结果</h2>
+            <table style="width: 100%; margin-top: 10px; margin-bottom: 36px">
                 <tr>
-                    <th>像素焦距z</th>
-                    <th>35mm焦距</th>
-                    <th>经度</th>
-                    <th>纬度</th>
+                    <th class="tooltip">像素焦距z<span class="tooltiptext">焦平面到光心的像素距离</span></th>
+                    <th class="tooltip">35mm焦距<span class="tooltiptext">根据照片的分辨率换算得到的等效焦距</span></th>
+                    <th class="tooltip">经度<span class="tooltiptext">定位点的经度；正值为东经，负值为西经</span></th>
+                    <th class="tooltip"><span class="tooltiptext">定位点的纬度；正值为北纬，负值为南纬</span>纬度</th>
                 </tr>
                 <tr>
-                    <td id="focLenPix" class="result">800.008</td>
-                    <td id="focLenMm" class="result">30mm</td>
-                    <td id="outputLong" class="result">114.5140°</td>
-                    <td id="outputLat" class="result">19.1918°</td>
+                    <td id="focLenPix" class="result">0.00</td>
+                    <td id="focLenMm" class="result">0mm</td>
+                    <td id="outputLong" class="result">0.0000°</td>
+                    <td id="outputLat" class="result">0.0000°</td>
                 </tr>
             </table>
-        </div>
-        <div style="margin-top:10px">
             <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
         </div>
-        <div style="margin-top: 82px">
+        <div style="margin-top: 30px">
             <h2>关于</h2>
             <!--TODO: 这里填README相同的注意事项-->
             <div class="row">
@@ -301,40 +311,6 @@
             </div>
         </div>
     </div>
-    <!-- No longer used
-        <table style="width: 100%">
-            <tr>
-                <th>天体</td>
-                <th>仰角</td>
-                <th>数据质量</td>
-            </tr>
-            <tr class="result">
-                <td id="celeBody1">placeholder</td>
-                <td id="elev1">1.14514</td>
-                <td id="dataQuali1">19.19810</td>
-            </tr>
-            <tr class="result">
-                <td id="celeBody2">placeholder</td>
-                <td id="elev2">1.14514</td>
-                <td id="dataQuali2">19.19810</td>
-            </tr>
-            <tr class="result">
-                <td id="celeBody3">placeholder</td>
-                <td id="elev3">1.14514</td>
-                <td id="dataQuali3">19.19810</td>
-            </tr>
-            <tr class="result">
-                <td id="celeBody4">placeholder</td>
-                <td id="elev4">1.14514</td>
-                <td id="dataQuali4">19.19810</td>
-            </tr>
-            <tr class="result">
-                <td id="celeBody5">placeholder</td>
-                <td id="elev5">1.14514</td>
-                <td id="dataQuali5">19.19810</td>
-            </tr>
-        </table>
--->
 </div>
 </body>
 

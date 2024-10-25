@@ -127,14 +127,18 @@ class Calc extends DefaultbuttonFunctioner{
             map.removeLayer(this.mapMarker);
         }
         // 先申请国内
-        let address = document.getElementById('address');
+        let addressDiv = document.getElementById('address');
         fetch(
-            `https://api.kertennet.com/geography/locationInfo?lat=${geoEstimate[0]}&lng=${geoEstimate[1]}`,
+            `https://geocode.xyz/${geoEstimate[0]},${geoEstimate[1]}?json=1`,
             {method: 'GET'})
         .then(response => response.json())
         .then(data => {
-            if(data.data.address != ''){
-                address.innerText = data.data.address;
+            if(!data.geocode.startsWith('Throttled')){
+                function info2str(info){
+                    return (typeof info == 'string') ? (info + ", ") : '';
+                }
+                let address = `${info2str(data.staddress)+info2str(data.city)+info2str(data.region)+info2str(data.state)+info2str(data.country)}`;
+                addressDiv.innerText = address.slice(0, -2);
             }else{
                 // 申请国外（此处为镜像，原域名附右）https://nominatim.openstreetmap.org/
                 fetch(
@@ -143,7 +147,7 @@ class Calc extends DefaultbuttonFunctioner{
                 .then(response => response.json())
                 .then(data => {
                     if(data.display_name != undefined)
-                        address.innerText = data.display_name;
+                        addressDiv.innerText = data.display_name;
                 })
                 .catch(error => {});
             }

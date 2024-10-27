@@ -81,10 +81,15 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     let zenithVector = new Astronomy.Vector(zenith[0], zenith[1], z, 0)
     // 存放粗的数据，每个元素有两组经纬度
     let crudePositions = []
-    // 两两计算
+    // 两两计算，注意不相交的情况已忽略
     for (let i = 0; i < stars.length; ++i) {
         for (let j = i + 1; j < stars.length; ++j) {
-            crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
+            try {
+                crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
+            } catch (e) {
+                // 抛异常
+                console.error("存在两星平面不相交", stars[i], stars[j]);
+            }
         }
     }
 

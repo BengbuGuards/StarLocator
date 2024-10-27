@@ -2,21 +2,22 @@ import { rad2Deg, calculateMedian } from "../math.js";
 
 
 /**
- * 平方倒数加权平均
+ * 平方倒&中位数法
  * @param {Array<Array<number>>} crudePositions 粗数据，每个元素有两组经纬度（角度制）
  * @param {Array<Star>} stars 星星数组
  * @param {Array<number>} zenithAngles 理论天顶角（角度制）
  * @returns {Array<number>} 平均经纬度（角度制）
- * @description 评估一个位置是否正确，计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
- * 该值越大，这个位置越正确
- * 返回正确的位置的平均值
+ * @description 从所有粗数据中评估出正确的坐标。
+ * 
+ * 首先计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数，据此权重选择一对粗位置中的正确位置；
+ * 然后计算这些正确位置的中位数，会先消除经纬度的周期性，防止中位数计算错误；
 */
 function squareMedianAverage(crudePositions, stars, zenithAngles) {
     /**
-     * 评估一个位置是否正确
-     * 计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数
      * @param {Array<number>} pos 经纬度（角度制）
      * @returns 该值越大，这个位置越正确
+     * @description 评估一对解中的某个位置是否正确
+     * 计算该位置上与各 GP 之间的夹角与理论夹角的平方和的倒数，返回该值作为权重
      */
     function evaluate(pos) {
         let sum = 0;
@@ -33,7 +34,7 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
         return 1 / sum;
     }
 
-    // 评估，保留正确的位置和评估值
+    // 评估，保留一对解中的正确的位置和评估值
     let positions = [];
     for (let pair of crudePositions) {
         let s1 = evaluate(pair[0]);
@@ -51,14 +52,14 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
     }
     let avgPosition = Astronomy.SphereFromVector(new Astronomy.Vector(sum_x, sum_y, sum_z, 0));
 
-    // 根据平均值消除经纬度的周期性，防止中位数计算错误
+    // 根据平均值消除经纬度的周期性，防止中位数在0经线附近计算错误
     let positions2 = positions.map(p => {
         let lat = adjustAngle(p[0], avgPosition.lat);
         let lon = adjustAngle(p[1], avgPosition.lon);
         return [lat, lon];
     });
 
-    // 求positions中位数
+    // 求positions中位数，相比于平均值，中位数鲁棒性更好
     let latList = positions2.map(p => p[0]);
     let lonList = positions2.map(p => p[1]);
     let medianLat = calculateMedian(latList);

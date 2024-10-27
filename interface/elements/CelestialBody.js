@@ -152,7 +152,7 @@ class CeleArray extends markerArray {
      * @param {Number} id 
      */
     remove(id){
-        // 先清楚表格数据
+        // 先清除表格数据
         this.array[id - 1].removeTableData();
         // 对后面的星星进行 id 更新
         for(let celeBody of this.array){

@@ -24,8 +24,6 @@ class InteractPhoto {
 
         // 画布对象池
         this.CeleArray = new CeleArray(this); // 星星对象数组
-
-        // 铅垂线变量
         this.PLArray = new PLArray(this); // 铅垂线对象数组
 
         // 鼠标事件变量

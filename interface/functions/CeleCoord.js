@@ -32,7 +32,7 @@ class CeleCoord extends DefaultbuttonFunctioner{
 
     getStarNames() {
         let starNames = [];
-        for(let i = 1; i <= this.interactPhoto.numOfPts; i++){
+        for(let i = 1; i <= this.interactPhoto.CeleArray.num(); i++){
             starNames.push(document.getElementById(`name${i}`).textContent);
         }
         return starNames;

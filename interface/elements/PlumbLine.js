@@ -22,23 +22,6 @@ class PLLine {
         this.lineObject = null;
     }
 
-    // addPoint(coordinate) {
-    //     let id = this.interactPhoto.PLArray.num() * 2 + this.points.length;
-    //     let point = new PLpoint(coordinate, this.interactPhoto, id, '#35dc96');
-    //     this.points.push(point);
-
-    //     if (this.points.length == 2) {
-    //         let lineCoord = [
-    //             this.points[0].coordinate,
-    //             this.points[1].coordinate
-    //         ].flat();
-    //         this.lineObject = new LineObject(lineCoord, this.interactPhoto, '#35dc96');
-    //         this.addMoveLineEvent();
-    //     } else if (this.points.length > 2) {
-    //         console.error('Too many points in a line.');
-    //     }
-    // }
-
     // 添加线段移动事件，通常是在添加第二个点后调用
     addMoveLineEvent() {
         this.points[0].point.off('moving');

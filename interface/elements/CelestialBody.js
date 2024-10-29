@@ -180,10 +180,12 @@ class CeleArray extends markerArray {
     }
 
     clear() {
+        // 清空表格数据
         for (let i = 1;i <= this.num(); i++) {
             document.getElementById(`coordX${i}`).value = '';
             document.getElementById(`coordY${i}`).value = '';
         }
+        // 清空星星及其数组
         for(let i of this.array){
             i.remove();
         }

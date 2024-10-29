@@ -38,6 +38,7 @@ class PickCele extends DefaultbuttonFunctioner{
             let p = this.interactPhoto.canvas.getPointer(e.e);
             this.addStarAtPoint(p.x, p.y);
         }
+        // 结束此次操作
         this.isPickingCele = false;
         this.interactPhoto.tips.innerHTML = '';
         this.interactPhoto.setCanvasCursor('grab');

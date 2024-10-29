@@ -41,9 +41,10 @@ class PickPL extends DefaultbuttonFunctioner{
                 // 取消操作
             }
             else {
-                // 加入
+                // 加入一个端点
                 let p = this.interactPhoto.canvas.getPointer(e.e);
                 this.addPL([p.x, p.y]);
+                // 结束此次操作
                 this.isPickingPL = false;
                 this.interactPhoto.resetbuttonFunctioner();
                 this.interactPhoto.tips.innerHTML = '';

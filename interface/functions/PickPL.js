@@ -1,5 +1,4 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { PLLine } from '../classes/elements.js';
 
 
 // 选择铅垂线按钮功能类
@@ -25,11 +24,10 @@ class PickPL extends DefaultbuttonFunctioner{
 
     clearData() {
         this.isPickingPL = false;
-        for (let pl of this.interactPhoto.globalPLs) {
+        for (let pl of this.interactPhoto.PLArray.array) {
             pl.remove();
         }
-        this.interactPhoto.globalPLs = [];
-        this.interactPhoto.numPL = 0;
+        this.interactPhoto.PLArray.array = [];
     }
 
     handleMouseUp(e) {
@@ -43,9 +41,10 @@ class PickPL extends DefaultbuttonFunctioner{
                 // 取消操作
             }
             else {
-                // 加入
+                // 加入一个端点
                 let p = this.interactPhoto.canvas.getPointer(e.e);
                 this.addPL([p.x, p.y]);
+                // 结束此次操作
                 this.isPickingPL = false;
                 this.interactPhoto.resetbuttonFunctioner();
                 this.interactPhoto.tips.innerHTML = '';
@@ -56,11 +55,7 @@ class PickPL extends DefaultbuttonFunctioner{
 
     // 添加铅垂线的函数
     addPL(coordinate){
-        if (this.interactPhoto.globalPLs.length == 0 || this.interactPhoto.globalPLs.slice(-1)[0].points.length == 2){
-            let pl = new PLLine(this.interactPhoto);
-            this.interactPhoto.globalPLs.push(pl);
-        }
-        this.interactPhoto.globalPLs.slice(-1)[0].addPoint(coordinate);
+        this.interactPhoto.PLArray.add(coordinate);
     }
 }
 

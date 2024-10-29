@@ -76,8 +76,8 @@ class Calc extends DefaultbuttonFunctioner{
     // 获取铅垂线端点坐标
     getGlobalPLPointsCoord(){
         let globalPLPointsCoord = [];
-        for(let i = 0; i < this.interactPhoto.numPL; i++){
-            let pl = this.interactPhoto.globalPLs[i];
+        for(let i = 0; i < this.interactPhoto.PLArray.num(); i++){
+            let pl = this.interactPhoto.PLArray.array[i];
             let points = [];
             for(let j = 0; j < pl.points.length; j++){
                 points.push(pl.points[j].coordinate);
@@ -90,7 +90,7 @@ class Calc extends DefaultbuttonFunctioner{
     // 获取原始星星数据
     getOriginalStars(){
         let stars = [];
-        for(let i = 1; i <= this.interactPhoto.numOfPts; i++){
+        for(let i = 1; i <= this.interactPhoto.CeleArray.num(); i++){
             let star = [
                 parseFloat(document.getElementById(`coordX${i}`).value),
                 parseFloat(document.getElementById(`coordY${i}`).value),

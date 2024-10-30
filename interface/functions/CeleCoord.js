@@ -18,13 +18,13 @@ class CeleCoord extends DefaultbuttonFunctioner{
 
         this.astroCalculator.getHaDecbyNames(starNames, date).then(results => {
             let starNames = this.getStarNames();
+            this.interactPhoto.tips.innerHTML = `自动计算天体坐标成功`;
             for (let i = 0; i < starNames.length; i++) {
                 let [ha, dec] = results.get(starNames[i]);
                 if (isNaN(ha) || isNaN(dec)) {
                     this.interactPhoto.tips.innerHTML = `无法自动计算${starNames[i]}坐标，请检查天体名称是否正确`;
                 } else {
                     this.setHADE(i+1, ha, dec);
-                    this.interactPhoto.tips.innerHTML = `自动计算天体坐标成功`;
                 }
             }
         });

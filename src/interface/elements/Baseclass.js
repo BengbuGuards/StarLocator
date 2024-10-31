@@ -1,3 +1,4 @@
+import { fabric } from 'fabric';
 // 点基类
 class ShapeObject {
     constructor(x, y, id, canvas, color, label) {

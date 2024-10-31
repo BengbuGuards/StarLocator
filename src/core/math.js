@@ -1,3 +1,4 @@
+import Astronomy from "astronomy-engine";
 /**
  * 向量加法
  * @param {Vector} v1

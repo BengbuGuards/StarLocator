@@ -1,3 +1,4 @@
+import L from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
 import { getVPoint } from '../../core/algorithm/VPoint.js'
 import { getZ } from '../../core/getZ.js';

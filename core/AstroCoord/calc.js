@@ -1,4 +1,5 @@
 import { getRaDecbyNames } from './fetch.js';
+import { starZH2EN } from './starZH2EN.js';
 
 const solarBodies = ['sun', 'moon', 'mercury', 'venus', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune', 'pluto'];
 
@@ -43,22 +44,6 @@ function getHaDecinSolar(starName, date) {
 */
 class AstroCalculator {
     constructor() {
-        this.starZH2EN = null;
-    }
-
-    /**
-     * 异步加载星表的汉英对照表
-     */
-    async loadStarZH2EN() {
-        try {
-            const response = await fetch('core/AstroCoord/starZH2EN.json');
-            if (!response.ok) {
-                throw new Error('网络响应不是正常的状态');
-            }
-            this.starZH2EN = await response.json();
-        } catch (error) {
-            console.error('加载JSON数据时出错:', error);
-        }
     }
 
     /**
@@ -68,16 +53,13 @@ class AstroCalculator {
      * @returns {Promise<Map<string, [number, number]>>} 返回一个Promise对象，包含时角和赤纬
      */
     async getHaDecbyNames(starNames, date) {
-        if (!this.starZH2EN) {
-            await this.loadStarZH2EN();
-        }
         let fixedStarNames = new Map();  // 太阳系外要查询的恒星名（查询名: 操作名）
         let solarStarNames = new Map();  // 太阳系内要查询的天体名（查询名: 操作名）
         for (let starName of starNames) {
             let operateName = starName;
             // 如果匹配到汉英对照星表，则转换为英文名
-            if (this.starZH2EN[operateName]) {
-                operateName = this.starZH2EN[operateName];
+            if (starZH2EN[operateName]) {
+                operateName = starZH2EN[operateName];
             }
             operateName = operateName.toLowerCase();
             if (solarBodies.includes(operateName)) {

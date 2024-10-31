@@ -94,7 +94,7 @@ class Calc extends DefaultbuttonFunctioner{
             let star = [
                 parseFloat(document.getElementById(`coordX${i}`).value),
                 parseFloat(document.getElementById(`coordY${i}`).value),
-                document.getElementById(`name${i}`).textContent,
+                document.getElementById(`name${i}`).value,
                 document.getElementById(`hAngleH${i}`).textContent + 'h' +
                 document.getElementById(`hAngleM${i}`).textContent + 'm' +
                 document.getElementById(`hAngleS${i}`).textContent + 's',

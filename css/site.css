@@ -48,6 +48,12 @@ input[type=date],
 [type=time] {
 	font-family: sans-serif;
 }
+input[type=text] {
+	text-align: center;
+	background-color: #1d2d46;
+	border: 0px;
+	color: white
+}
 
 a:link {
 	color: #4074db;
@@ -75,6 +81,42 @@ a:visited {
 
 .tooltip:hover .tooltiptext {
 	visibility: visible;
+}
+
+.autocomplete {
+    position: relative;
+    display: inline-block;
+}
+
+.autocomplete-items {
+    position: relative;
+    border-top: none;
+    z-index: 99;
+    top: 0%;
+    left: -1%;
+    right: 0%;
+	width: 102%;
+	/* 0高度确保不会增加表格行高 */
+    height: 0;
+  }
+  
+  .autocomplete-items div {
+    padding: 4px;
+    cursor: pointer;
+    background-color: #3363af;
+	  color: white;
+    border: none;
+  }
+  
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+    background-color: #3363af;
+  }
+  
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+    background-color: DodgerBlue !important; 
+    color: #ffffff; 
 }
 
 @media (min-width:480px) {

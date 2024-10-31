@@ -68,7 +68,7 @@ class CelestialBody extends ShapeObject {
      */
     onRename() {
         // 获取填写的名称
-        let name = document.getElementById(`name${this.id}`).innerText;  // this.id 为字符串 name数字
+        let name = document.getElementById(`name${this.id}`).value;  // this.id 为字符串 name数字
         // 若没填写名字，显示两位数编号
         if (name === '' || name === '\n') {
             name = this.id.toString().padStart(2, '0')

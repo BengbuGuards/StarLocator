@@ -1,3 +1,5 @@
+import { autoCompleteStarName } from './functions/AutoComplete.js';
+
 // 初始化页面元素
 function initializeElements(interactPhoto) {
     interactPhoto.container = document.getElementById('box');
@@ -67,6 +69,11 @@ function initializeEvents(eventManager) {
     document.getElementById("srcFile").addEventListener('change', e => eventManager.imageChange.onClick.call(eventManager.imageChange, e));
     document.getElementById('actionCalcul').addEventListener('click', eventManager.calc.onClick.bind(eventManager.calc));
     document.getElementById('manualTime').addEventListener('click', eventManager.celeCoord.onClick.bind(eventManager.celeCoord));
+
+    //为星体名称输入框启用自动补全
+    for(let i = 1; i <= 5; i++){
+        autoCompleteStarName(document.getElementById(`name${i}`));
+    }
 }
 
 // 初始化地图

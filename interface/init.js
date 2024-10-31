@@ -95,7 +95,7 @@ function initializeMap(interactPhoto) {
     document.getElementsByClassName('leaflet-attribution-flag')[0].remove();
 
     // 加载边境线GeoJSON数据
-    fetch('leaflet/dist/CNP.json')
+    fetch('interface/CNP.json')
         .then(response => {
             if (!response.ok) {
                 throw new Error('网络响应不是正常的状态');

@@ -1,0 +1,12 @@
+{
+	"dependencies": {
+		"astronomy-engine": "^2.1.19",
+		"fabric": "^6.4.3",
+		"leaflet": "^1.9.4"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.13.0",
+		"eslint": "^9.13.0",
+		"globals": "^15.11.0"
+	}
+}

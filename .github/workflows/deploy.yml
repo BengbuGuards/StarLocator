@@ -13,6 +13,12 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
+      - name: Install pnpm 📦
+        uses: pnpm/action-setup@v4
+        with:
+          version: '9'
+          run_install: false
+
       - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
           pnpm install --frozen-lockfile --production

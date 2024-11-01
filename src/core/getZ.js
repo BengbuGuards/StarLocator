@@ -1,11 +1,8 @@
-import Astronomy from "astronomy-engine";
 import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize, minimize } from "./math.js";
+import {AngleBetween, VectorFromSphere, Spherical, Vector, RotationMatrix, RotateVector, InverseRefraction} from "astronomy-engine";
 
 const sin = Math.sin;
 const cos = Math.cos;
-const AngleBetween = Astronomy.AngleBetween;
-const VectorFromSphere = Astronomy.VectorFromSphere;
-const Spherical = Astronomy.Spherical;
 
 
 /**
@@ -82,7 +79,7 @@ function getAnalyticalZ(stars) {
  * @returns {number} 高度角（弧度）
  */
 function getElevationAngle(star, z, zenithVector) {
-    return Math.PI / 2 - deg2Rad(Astronomy.AngleBetween(new Astronomy.Vector(star.x, star.y, z, 0), zenithVector));
+    return Math.PI / 2 - deg2Rad(AngleBetween(new Vector(star.x, star.y, z, 0), zenithVector));
 }
 
 
@@ -110,24 +107,24 @@ function getZWithoutRefraction(stars, z0, zenith) {
         // 保证逆时针旋转
         angle = deg2Rad(-angle);
         // 罗德里格斯旋转公式
-        let rotationMatrix = new Astronomy.RotationMatrix([
+        let rotationMatrix = new RotationMatrix([
             [cos(angle) + axis.x ** 2 * (1 - cos(angle)), axis.x * axis.y * (1 - cos(angle)) - axis.z * sin(angle), axis.x * axis.z * (1 - cos(angle)) + axis.y * sin(angle)],
             [axis.y * axis.x * (1 - cos(angle)) + axis.z * sin(angle), cos(angle) + axis.y ** 2 * (1 - cos(angle)), axis.y * axis.z * (1 - cos(angle)) - axis.x * sin(angle)],
             [axis.z * axis.x * (1 - cos(angle)) - axis.y * sin(angle), axis.z * axis.y * (1 - cos(angle)) + axis.x * sin(angle), cos(angle) + axis.z ** 2 * (1 - cos(angle))]
         ])
-        return Astronomy.RotateVector(rotationMatrix, vector);
+        return RotateVector(rotationMatrix, vector);
     }
 
     // z的上下限10%
     let z_min = z0 * 0.9;
     let z_max = z0 * 1.1;
     // 计算各星的赤道向量
-    let starVectorEquator = stars.map(star => new Astronomy.VectorFromSphere(new Astronomy.Spherical(rad2Deg(star.lat), rad2Deg(star.lon), 1), 0));
+    let starVectorEquator = stars.map(star => new VectorFromSphere(new Spherical(rad2Deg(star.lat), rad2Deg(star.lon), 1), 0));
     // 计算各星理论夹角
     let angles = [];
     for (let i = 0; i < stars.length; ++i) {
         for (let j = i + 1; j < stars.length; ++j) {
-            angles.push(Astronomy.AngleBetween(
+            angles.push(AngleBetween(
                 starVectorEquator[i],
                 starVectorEquator[j]
             ));
@@ -136,13 +133,13 @@ function getZWithoutRefraction(stars, z0, zenith) {
     // 使用优化函数求解
     function z_error(z) {
         // 计算天顶的观测向量
-        let zenithVector = new Astronomy.Vector(zenith[0], zenith[1], z, 0);
+        let zenithVector = new Vector(zenith[0], zenith[1], z, 0);
         // 计算各星的观测向量
-        let starVectorObserver = stars.map(star => new Astronomy.Vector(star.x, star.y, z, 0));
+        let starVectorObserver = stars.map(star => new Vector(star.x, star.y, z, 0));
         // 计算各星高度角
         let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
         // 计算去折射高度角修正值（添加到zenithAngles上就是未折射时的高度角）
-        let starRefraction = starAngles.map(angle => Astronomy.InverseRefraction("normal", angle));
+        let starRefraction = starAngles.map(angle => InverseRefraction("normal", angle));
         // 计算去折射后的各星的观测向量
         let starVectorReal = [];
         for (let i = 0; i < stars.length; ++i) {
@@ -152,7 +149,7 @@ function getZWithoutRefraction(stars, z0, zenith) {
         let anglesReal = [];
         for (let i = 0; i < stars.length; ++i) {
             for (let j = i + 1; j < stars.length; ++j) {
-                anglesReal.push(Astronomy.AngleBetween(starVectorReal[i], starVectorReal[j]));
+                anglesReal.push(AngleBetween(starVectorReal[i], starVectorReal[j]));
             }
         }
         // 计算夹角总误差

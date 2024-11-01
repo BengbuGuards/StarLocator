@@ -1,5 +1,5 @@
 import { rad2Deg, calculateMedian } from "../math.js";
-
+import { AngleBetween, VectorFromSphere, SphereFromVector, Spherical, Vector } from "astronomy-engine";
 
 /**
  * 平方倒&中位数法
@@ -23,9 +23,9 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
         let sum = 0;
         for (let k = 0; k < stars.length; ++k) {
             // 计算该位置的实际天顶角
-            let angle = Astronomy.AngleBetween(
-                Astronomy.VectorFromSphere(new Astronomy.Spherical(pos[0], pos[1], 1), 0),
-                Astronomy.VectorFromSphere(new Astronomy.Spherical(rad2Deg(stars[k].lat), rad2Deg(stars[k].lon), 1), 0)
+            let angle = AngleBetween(
+                VectorFromSphere(new Spherical(pos[0], pos[1], 1), 0),
+                VectorFromSphere(new Spherical(rad2Deg(stars[k].lat), rad2Deg(stars[k].lon), 1), 0)
             );
             // 与理论天顶角比较
             let diff = angle - zenithAngles[k];
@@ -43,14 +43,14 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
     }
 
     // 计算3维向量的平均值，并转换为球坐标
-    let CrudePositionVectors = positions.map(p => Astronomy.VectorFromSphere(new Astronomy.Spherical(p[0], p[1], 1), 0));
+    let CrudePositionVectors = positions.map(p => VectorFromSphere(new Spherical(p[0], p[1], 1), 0));
     let sum_x = 0, sum_y = 0, sum_z = 0;
     for (let pos of CrudePositionVectors) {
         sum_x += pos.x;
         sum_y += pos.y;
         sum_z += pos.z;
     }
-    let avgPosition = Astronomy.SphereFromVector(new Astronomy.Vector(sum_x, sum_y, sum_z, 0));
+    let avgPosition = SphereFromVector(new Vector(sum_x, sum_y, sum_z, 0));
 
     // 根据平均值消除经纬度的周期性，防止中位数在0经线附近计算错误
     let positions2 = positions.map(p => {

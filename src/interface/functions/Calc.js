@@ -1,4 +1,4 @@
-import L from 'leaflet';
+import { marker } from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
 import { getVPoint } from '../../core/algorithm/VPoint.js'
 import { getZ } from '../../core/getZ.js';
@@ -155,8 +155,8 @@ class Calc extends DefaultbuttonFunctioner{
         })
         .catch(error => {}); // 捕获错误
         // 添加新的标记
-        let marker = L.marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
-        this.mapMarker = marker;
+        let newMarker = marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
+        this.mapMarker = newMarker;
         map.setView([geoEstimate[0], geoEstimate[1]], 3);
     }
 

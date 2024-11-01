@@ -1,3 +1,5 @@
+import { Point} from 'fabric'
+
 // 默认按钮功能类，所有按钮功能类的父类
 class DefaultbuttonFunctioner{
     constructor(interactPhoto){
@@ -69,7 +71,7 @@ class DefaultbuttonFunctioner{
         if (this.panning && e) {
             let isTouch = e.e.targetTouches !== undefined;
             if (!isTouch || e.e.targetTouches.length ==1) {
-                var delta = new fabric.Point(e.e.movementX, e.e.movementY);
+                var delta = new Point(e.e.movementX, e.e.movementY);
                 this.interactPhoto.canvas.relativePan(delta);
             } else if (e.e.targetTouches.length == 2) {
                 if (e.e.scale === undefined) return;

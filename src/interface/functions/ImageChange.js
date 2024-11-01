@@ -1,4 +1,4 @@
-import { fabric } from 'fabric';
+import { Pattern, Rect } from 'fabric';
 import { DefaultbuttonFunctioner } from './Default.js';
 
 
@@ -23,11 +23,11 @@ class ImageChange extends DefaultbuttonFunctioner{
                     this.interactPhoto.canvas.remove(this.interactPhoto.rect);
                 }
                 // 创建图片Rect
-                let pattern = new fabric.Pattern({
+                let pattern = new Pattern({
                     source: img,
                     repeat: 'repeat'
                 });
-                this.interactPhoto.rect = new fabric.Rect({
+                this.interactPhoto.rect = new Rect({
                     left: width / (-2),
                     top: height / (-2),
                     width: width,

@@ -1,4 +1,4 @@
-import { fabric } from 'fabric';
+import { Path, IText, Line } from 'fabric';
 // 点基类
 class ShapeObject {
     constructor(x, y, id, canvas, color, label) {
@@ -8,7 +8,7 @@ class ShapeObject {
         this.canvas = canvas;
         this.color = color;
 
-        this.point = new fabric.Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
+        this.point = new Path('M15 0 16 16 17 0ZM0 15 16 16 0 17ZM15 32 16 16 17 32ZM32 17 16 16 32 15Z', {
             left: x - 16.5,
             top: y - 16.5,
             width: 32,
@@ -17,7 +17,7 @@ class ShapeObject {
             hasControls: false
         });
 
-        this.label = new fabric.Text(label, {
+        this.label = new IText(label, {
             left: x + 16.5,
             top: y - 10.5,
             fontSize: 16,
@@ -27,7 +27,7 @@ class ShapeObject {
             hoverCursor: 'grab'
         });
 
-        this.deleter = new fabric.Text('×', {
+        this.deleter = new IText('×', {
             left: x - 28.5,
             top: y - 24.5,
             fontSize: 20,
@@ -87,7 +87,7 @@ class LineObject {
         this.canvas = canvas;
         this.color = color;
 
-        this.line = new fabric.Line(this.coordinates, {
+        this.line = new Line(this.coordinates, {
             fill: this.color,
             stroke: this.color,
             strokeWidth: 1,

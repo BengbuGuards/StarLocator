@@ -1,6 +1,7 @@
-import { fabric } from 'fabric';
-import L from 'leaflet';
+import { Canvas, IText } from 'fabric';
+import { map, tileLayer, control, geoJSON } from 'leaflet';
 import { autoCompleteStarName } from './functions/AutoComplete.js';
+import CNPData from './CNP.json';
 
 // 初始化页面元素
 function initializeElements(interactPhoto) {
@@ -20,14 +21,14 @@ function initializeElements(interactPhoto) {
 
 // 初始化画布
 function initializeCanvas(interactPhoto) {
-    interactPhoto.canvas = new fabric.Canvas("canvas", {
+    interactPhoto.canvas = new Canvas("canvas", {
         width: interactPhoto.container.clientWidth,
         height: interactPhoto.container.clientHeight,
         backgroundColor: 'black',
         selection: false
     });
 
-    interactPhoto.text = new fabric.IText('选择星空照片。', {
+    interactPhoto.text = new IText('选择星空照片。', {
         fill: '#8a6119',
         textAlign: 'center',
         fontSize: 40,
@@ -80,16 +81,16 @@ function initializeEvents(eventManager) {
 
 // 初始化地图
 function initializeMap(interactPhoto) {
-    interactPhoto.map = L.map('map').setView([32.0, 110.0], 3);
+    interactPhoto.map = map('map').setView([32.0, 110.0], 3);
 
-    L.tileLayer('https://{s}.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    tileLayer('https://{s}.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         minZoom: 2,
         maxZoom: 19,
         subdomains: ['services', 'server'],
         attribution: '球面墨卡托投影 <span aria-hidden="true">|</span> &copy; <a href="https://wiki.openstreetmap.org/wiki/Esri">ArcGIS: Esri World Imagery</a>'
     }).addTo(interactPhoto.map);
 
-    L.control.scale({ metric: true, imperial: false }).addTo(interactPhoto.map);
+    control.scale({ metric: true, imperial: false }).addTo(interactPhoto.map);
 
     document.getElementsByClassName('leaflet-control-attribution leaflet-control')[0].getElementsByTagName('a')[0].title = '一个交互式地图 JavaScript 库';
     document.getElementsByClassName('leaflet-control-zoom-in')[0].title = '放大';
@@ -97,29 +98,16 @@ function initializeMap(interactPhoto) {
     document.getElementsByClassName('leaflet-attribution-flag')[0].remove();
 
     // 加载边境线GeoJSON数据
-    fetch('interface/CNP.json')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('网络响应不是正常的状态');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // console.log(data);
-            L.geoJSON(data, {
-                style: function (feature) {
-                    return {
-                        color: feature.properties.level == 'province' ? '#FF0' : '#F00',
-                        weight: feature.properties.level == 'province' ? 1 : 2,
-                        opacity: 0.8,
-                        fill: false
-                    };
-                }
-            }).addTo(interactPhoto.map);
-        })
-        .catch(error => {
-            console.error('加载JSON数据时出错:', error);
-        });
+    geoJSON(CNPData, {
+        style: function (feature) {
+            return {
+                color: feature.properties.level == 'province' ? '#FF0' : '#F00',
+                weight: feature.properties.level == 'province' ? 1 : 2,
+                opacity: 0.8,
+                fill: false
+            };
+        }
+    }).addTo(interactPhoto.map);
 }
 
 

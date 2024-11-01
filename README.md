@@ -1,6 +1,6 @@
 # StarLocator
 
-StarLocator 是什么 | WHAT IS STARLOCATOR
+> StarLocator 是什么 | WHAT IS STARLOCATOR
 
 StarLocator是一款天文定位应用，主要基于一种已经应用了数个世纪的航海导航技术。该应用使用夜空照片及其精确拍摄时间为源数据，计算照片拍摄地在地球上的大致位置。该过程类似以相机对图中的天体高度角进行测量代替17世纪以来的水手使用六分仪的测量，与占星术、玄学和心灵感应无关。
 
@@ -10,7 +10,23 @@ calculate the rough position of the photo taker was on the earth. The process is
 sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is
 NOTHING to do with astrology, metaphysics and telepathy.
 
+## 特点 | FEATURES
+
+- **交互简单**：标星、标铅垂线、设置拍摄时间，然后就是点击按钮的事了，熟练掌握后整个过程不到**5分钟**。原本的耗时步骤，如查询天体天文数据，已被API和按钮所实现。
+- **隐私友好**：项目仅用前端技术实现，核心步骤均在本地运行，可自行部署。
+- **精度良好**：我们在各个模块中采用了十分鲁棒的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
+- **完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
+
+## 构建 | BUILD
+
+1. 安装Node.js和pnpm。
+2. 在项目根目录下运行`pnpm install`。
+3. 运行`pnpm build`。
+4. 在`dist`目录下找到生成的文件，点击`index.html`即可使用。
+
 ## 使用方法 | HOW TO USE
+
+*注：详细帮助请点击网页的问号按钮。*
 
 1. 点击“选择文件”导入图片。图片需要满足以下条件：
     - 是一张真实的夜空图片；
@@ -54,5 +70,3 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - 薛定谔的按钮
 - hanran
 - Charmian
-
-2024/10/21 还没写完 work in progress

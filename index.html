@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <title>照片测星定位</title>
+    <link rel="shortcut icon" href="53c67cc271f1ecaaeeb5.ico" type="image/x-icon" crossorigin="">
+<script defer src="main.js"></script></head>
+
+<body>
+<div class="header">
+    <h1>
+        <img src="ff6e0f6f18ca8162be72.png" style="margin-bottom:-10px; user-select: none;" alt="StarLocator"
+             width="36" height="36"/>
+        StarLocator 照片测星定位 <a href="https://qm.qq.com/q/nlFqV4jVfO">点击加入交流群</a>
+        <a href="https://github.com/BengbuGuards/StarLocator" title="项目地址">
+            <img src="dd113fe1f355cdbba7b5.png" style="float: right; margin-bottom:-10px;  margin-right: 10px" width="36" height="36"/>
+        </a>
+    </h1>
+</div>
+<div class="row">
+    <div class="col-toolbar">
+        <h2>工具</h2>
+        <button type="button" class="resetButton" id="resetPick" title="重置标注">
+            <img src="dc94d9caee6fcb219275.png" alt="重置标注" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <button type="button" class="actionButton" id="celePick" title="天体选择">
+            <img src="ed758b214fc53ffc9592.png" alt="天体选择" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <button type="button" class="actionButton" id="manualTime" title="获取天体坐标">
+            <img src="b21fd8606a9f19ea992a.png" alt="获取天体坐标" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <button type="button" class="actionButton" id="vaniZen" title="铅垂线标记">
+            <img src="b6f9e55a49de116666b1.png" alt="铅垂线标记" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <!-- <button type="button" class="actionButton" id="horiZen" title="地平线标记">
+            <img src="img\icon\horiZen.png" alt="地平线标记" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button>
+        <button type="button" class="actionButton" id="moonTime" title="标月定时">
+            <img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
+                 style="margin-left:-4px; margin-top:-3px">
+        </button> -->
+        <a href="https://stellarium-web.org/" target="_blank" style="text-decoration: none;">
+            <button type="button" class="helpButton" id="stellariumWeb" title="Stellarium在线星图">
+                <img src="059ab103aefaaae77b6c.svg" alt="Stellarium" width="46" height="46"
+                    style="margin-left:-4px; margin-top:-3px; margin-bottom: 2px">
+            </button>
+        </a>
+        <a href="help.html" target="_blank">
+            <button type="button" class="helpButton" id="howToUse" title="怎么用啊">
+                <img src="2d74dae3539d91a401d5.png" alt="怎么用啊" width="48" height="48"
+                    style="margin-left:-4px; margin-top:-3px">
+            </button>
+        </a>
+    </div>
+    <div class="col-measure">
+        <h2>测量</h2>
+        <input type="file" id="srcFile" accept="image/*" aria-label="上传文件"/>
+        <button type="button" id="resetZoom" style="float: right;">重置缩放</button>
+        <div id="box" style="min-width:450px; height: 600px; width:100%">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div style="margin-bottom: 30px;">
+            <div id="picInfo" style="float: left;"></div>
+            <div id="canvasStatus" style="float: left;"></div>
+            <div id="cursorCrd" style="float: right;"></div>
+        </div>
+        <div style="margin-top: 15px;">
+            <div class="row">
+                <div class="col-input">
+                    <table class="inputTable" id="inputTable">
+                        <tr>
+                            <th style="width: 8%" class="tooltip">序号<span class="tooltiptext">天体的序号</span></th>
+                            <th style="width: 20%" class="tooltip">天体名称<span class="tooltiptext">天体的名称，中英文皆可；中文在星座名和希腊字母之间需要加上空格</span></th>
+                            <th style="width: 25%" class="tooltip">参考时角<span class="tooltiptext">在0°经线读取的天体时角，可以用于计算GP点经度</span></th>
+                            <th style="width: 20%" class="tooltip">赤纬<span class="tooltiptext">天体的赤纬，即GP点的纬度</span></th>
+                            <th style="width: 12%" class="tooltip">x<span class="tooltiptext">天体在照片中的横坐标</span></th>
+                            <th style="width: 12%" class="tooltip">y<span class="tooltiptext">天体在照片中的纵坐标</span></th>
+                        </tr>
+                        <tr>
+                            <td class="zenith">0</td>
+                            <td class="zenith">天顶</td>
+                            <td class="zenith">N/A</td>
+                            <td class="zenith">N/A</td>
+                            <td><input type="number" class="coordsInput zenith table" id="zenX" aria-label="天顶x"/>
+                            </td>
+                            <td><input type="number" class="coordsInput zenith table" id="zenY" aria-label="天顶y"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <input type = "text" autocomplete="off" contenteditable="plaintext-only" style="flex: 1;" id="name1">
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="hAngleH1"></div>
+                                    h
+                                    <div contenteditable="true" id="hAngleM1"></div>
+                                    m
+                                    <div contenteditable="true" id="hAngleS1"></div>
+                                    s
+                                </div>
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="declinD1"></div>
+                                    °
+                                    <div contenteditable="true" id="declinM1"></div>
+                                    ′
+                                    <div contenteditable="true" id="declinS1"></div>
+                                    ″
+                                </div>
+                            </td>
+                            <td><input type="number" class="coordsInput table" id="coordX1" aria-label="x"/></td>
+                            <td><input type="number" class="coordsInput table" id="coordY1" aria-label="y"/></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <input type = "text" autocomplete="off" contenteditable="plaintext-only" style="flex: 1;" id="name2">
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="hAngleH2"></div>
+                                    h
+                                    <div contenteditable="true" id="hAngleM2"></div>
+                                    m
+                                    <div contenteditable="true" id="hAngleS2"></div>
+                                    s
+                                </div>
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="declinD2"></div>
+                                    °
+                                    <div contenteditable="true" id="declinM2"></div>
+                                    ′
+                                    <div contenteditable="true" id="declinS2"></div>
+                                    ″
+                                </div>
+                            </td>
+                            <td><input type="number" class="coordsInput table" id="coordX2" aria-label="x"/></td>
+                            <td><input type="number" class="coordsInput table" id="coordY2" aria-label="y"/></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <input type = "text" autocomplete="off" contenteditable="plaintext-only" style="flex: 1;" id="name3">
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="hAngleH3"></div>
+                                    h
+                                    <div contenteditable="true" id="hAngleM3"></div>
+                                    m
+                                    <div contenteditable="true" id="hAngleS3"></div>
+                                    s
+                                </div>
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="declinD3"></div>
+                                    °
+                                    <div contenteditable="true" id="declinM3"></div>
+                                    ′
+                                    <div contenteditable="true" id="declinS3"></div>
+                                    ″
+                                </div>
+                            </td>
+                            <td><input type="number" class="coordsInput table" id="coordX3" aria-label="x"/></td>
+                            <td><input type="number" class="coordsInput table" id="coordY3" aria-label="y"/></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <input type = "text" autocomplete="off" contenteditable="plaintext-only" style="flex: 1;" id="name4">
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="hAngleH4"></div>
+                                    h
+                                    <div contenteditable="true" id="hAngleM4"></div>
+                                    m
+                                    <div contenteditable="true" id="hAngleS4"></div>
+                                    s
+                                </div>
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="declinD4"></div>
+                                    °
+                                    <div contenteditable="true" id="declinM4"></div>
+                                    ′
+                                    <div contenteditable="true" id="declinS4"></div>
+                                    ″
+                                </div>
+                            </td>
+                            <td><input type="number" class="coordsInput table" id="coordX4" aria-label="x"/></td>
+                            <td><input type="number" class="coordsInput table" id="coordY4" aria-label="y"/></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <input type = "text" autocomplete="off" contenteditable="plaintext-only" style="flex: 1;" id="name5">
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="hAngleH5"></div>
+                                    h
+                                    <div contenteditable="true" id="hAngleM5"></div>
+                                    m
+                                    <div contenteditable="true" id="hAngleS5"></div>
+                                    s
+                                </div>
+                            </td>
+                            <td>
+                                <div class="formatedInput">
+                                    <div contenteditable="true" id="declinD5"></div>
+                                    °
+                                    <div contenteditable="true" id="declinM5"></div>
+                                    ′
+                                    <div contenteditable="true" id="declinS5"></div>
+                                    ″
+                                </div>
+                            </td>
+                            <td><input type="number" class="coordsInput table" id="coordX5" aria-label="x"/></td>
+                            <td><input type="number" class="coordsInput table" id="coordY5" aria-label="y"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-calcul">
+                    <button type="button" class="calculButton" id="actionCalcul" title="计算">
+                        <img src="9b610750b4bf2d3d0632.png" alt="计算" width="48" height="96"
+                    style="margin-left:-4px; margin-top:-3px" class="calculIcon">
+                        <img src="60ab0b32a7cf4b613cb4.gif" alt="计算" width="48" height="96"
+                    style="margin-left:-48px; margin-top:-3px" class="calculAnim">
+                    </button>
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-result">
+        <h2>设置</h2>
+        <div>
+            <div>
+                <input type="checkbox" id="check1" checked/>
+                <label for="check1" class="tooltip">大气折射修正<span class="tooltiptext">是否考虑大气折射对各天体地平高度角的影响</span></label><br/>
+                <input type="checkbox" id="check2" checked/>
+                <label for="check2" class="tooltip">重力方向修正<span class="tooltiptext">是否考虑当地的重力方向与天顶方向不重合的影响</span></label><br/>
+                <!-- <input type="checkbox" id="check4"/>
+                <label for="check4" class="tooltip">时间未定<span class="tooltiptext">时间未定定位结果将显示整个纬线圈</span></label><br/> -->
+                <label for="setDate" class="tooltip">拍摄时间<span class="tooltiptext">时间若无法精确到秒，可以填入30作为尾数</span></label>
+                <input id="setDate" type="date" style="width: 25%">
+                <input id="setTime" type="time" step="1" style="width: 20%" aria-label="时间"/>
+                <label for="setTimeZone" class="tooltip">时区<span class="tooltiptext">北京时间为UTC+8</span></label>
+                <input id="setTimeZone" type="number" min="-12" max="12" step="0.5" style="width: 10%"/><br/>
+                <!-- <label for="setTimeDev" class="tooltip">时间偏差 <span class="tooltiptext">时间的不确定程度，决定经度误差线的长度</span></label>
+                <input id="setTimeDev" type="number" style="width: 65%"> -->
+            </div>
+        </div>
+        <div style="margin-top:65px">
+            <h2>结果</h2>
+            <table style="width: 100%; margin-top: 10px; margin-bottom: 10px">
+                <tr>
+                    <th class="tooltip">像素焦距z<span class="tooltiptext">焦平面到光心的像素距离</span></th>
+                    <th class="tooltip">35mm焦距<span class="tooltiptext">根据照片的分辨率换算得到的等效焦距</span></th>
+                    <th class="tooltip">经度<span class="tooltiptext">定位点的经度；正值为东经，负值为西经</span></th>
+                    <th class="tooltip"><span class="tooltiptext">定位点的纬度；正值为北纬，负值为南纬</span>纬度</th>
+                </tr>
+                <tr>
+                    <td id="focLenPix" class="result">0.00</td>
+                    <td id="focLenMm" class="result">0mm</td>
+                    <td id="outputLong" class="result">0.0000°</td>
+                    <td id="outputLat" class="result">0.0000°</td>
+                </tr>
+            </table>
+            <div id="address" style="height:30px;"></div>
+            <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
+        </div>
+        <div style="margin-top: 30px">
+            <h2>关于</h2>
+            <!--TODO: 这里填README相同的注意事项-->
+            <div class="row">
+                <div class="col-acknow">
+                    感谢开源项目：
+                    <ul>
+                        <li><a href="https://stellarium.org">Stellarium</a>：一款强大的开源天文馆软件</li>
+                        <li><a href="https://github.com/cosinekitty/astronomy">Astronomy</a>：一个 JavaScript 天文库</li>
+                        <li><a href="https://github.com/fabricjs/fabric.js">Fabric.js</a>：一个简单而强大的 JavaScript HTML5
+                            画布库。
+                        </li>
+                        <li><a href="https://github.com/Leaflet/Leaflet">Leaflet</a>：一个交互式地图 JavaScript 库</li>
+                        <li><a href="https://simbad.cds.unistra.fr/simbad">SIMBAD</a>：一个天体数据库</li>
+                    </ul>
+                </div>
+                <div class="col-logo">
+                    <img src="961d2b0fc0caf2882812.png" alt="StarLocator" width="140" height="152"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

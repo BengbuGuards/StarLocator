@@ -29,6 +29,10 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html', // 指定模板文件的位置
       filename: 'index.html', // 设置生成的HTML文件名
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/help.html', // 指定模板文件的位置
+      filename: 'help.html', // 设置生成的HTML文件名
     })
   ],
 };

@@ -88,6 +88,13 @@ a:visited {
     display: inline-block;
 }
 
+.autocomplete-list {
+	max-height: 105px;
+	overflow: scroll;
+	overflow-x: hidden;
+	overscroll-behavior: none;
+}
+
 .autocomplete-items {
     position: relative;
     border-top: none;
@@ -98,25 +105,25 @@ a:visited {
 	width: 102%;
 	/* 0高度确保不会增加表格行高 */
     height: 0;
-  }
-  
-  .autocomplete-items div {
-    padding: 4px;
-    cursor: pointer;
-    background-color: #3363af;
-	  color: white;
-    border: none;
-  }
-  
-  /*when hovering an item:*/
-  .autocomplete-items div:hover {
-    background-color: #3363af;
-  }
-  
-  /*when navigating through the items using the arrow keys:*/
-  .autocomplete-active {
-    background-color: DodgerBlue !important; 
-    color: #ffffff; 
+}
+
+.autocomplete-items div {
+	padding: 0px;
+	cursor: pointer;
+	background-color: #3363af;
+		color: white;
+	border: none;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+	background-color: #3363af;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+	background-color: DodgerBlue !important; 
+	color: #ffffff; 
 }
 
 @media (min-width:480px) {

@@ -11,31 +11,21 @@ importers:
       astronomy-engine:
         specifier: ^2.1.19
         version: 2.1.19
-      fabric:
-        specifier: ^6.4.3
-        version: 6.4.3
-      leaflet:
-        specifier: ^1.9.4
-        version: 1.9.4
-    devDependencies:
-      '@eslint/js':
-        specifier: ^9.13.0
-        version: 9.13.0
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.95.0)
-      eslint:
-        specifier: ^9.13.0
-        version: 9.13.0
-      globals:
-        specifier: ^15.11.0
-        version: 15.11.0
+      fabric:
+        specifier: ^6.4.3
+        version: 6.4.3
       html-loader:
         specifier: ^5.1.0
         version: 5.1.0(webpack@5.95.0)
       html-webpack-plugin:
         specifier: ^5.6.3
         version: 5.6.3(webpack@5.95.0)
+      leaflet:
+        specifier: ^1.9.4
+        version: 1.9.4
       style-loader:
         specifier: ^4.0.0
         version: 4.0.0(webpack@5.95.0)
@@ -45,6 +35,16 @@ importers:
       webpack-cli:
         specifier: ^5.1.4
         version: 5.1.4(webpack@5.95.0)
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.13.0
+        version: 9.13.0
+      eslint:
+        specifier: ^9.13.0
+        version: 9.13.0
+      globals:
+        specifier: ^15.11.0
+        version: 15.11.0
 
 packages:
 

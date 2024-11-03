@@ -74,7 +74,16 @@ pnpm dev
 4. Click the long limb alien(Enderman or sth) icon to draw lines along plumb lines on the image. More is better.
 5. **SMASH** the “给我算！” button and you'll see the result in result column on the right.
 
-## 开发团队 | DEVELOPERS
+## 贡献 | CONTRIBUTING
+
+见[CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## 致谢 | CREDITS
+### 开源项目 | OPEN SOURCE PROJECTS
+
+见[NOTICE.md](./NOTICE.md)
+
+### 开发团队 | DEVELOPERS
 
 按加入时间排序
 

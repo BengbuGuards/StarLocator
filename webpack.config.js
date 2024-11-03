@@ -35,4 +35,7 @@ module.exports = {
       filename: 'help.html', // 设置生成的HTML文件名
     })
   ],
+  devServer: {
+    port: 6974
+  },
 };

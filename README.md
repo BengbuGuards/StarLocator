@@ -20,9 +20,24 @@ NOTHING to do with astrology, metaphysics and telepathy.
 ## 构建 | BUILD
 
 1. 安装Node.js和pnpm。
-2. 在项目根目录下运行`pnpm install`。
-3. 运行`pnpm build`。
-4. 在`dist`目录下找到生成的文件，点击`index.html`即可使用。
+2. 在项目根目录下安装依赖
+```bash
+pnpm install
+```
+3. 构建项目
+```bash
+pnpm build
+```
+4. 运行项目
+```bash
+pnpm serve
+```
+现在你可以在浏览器中访问`http://localhost:6974`查看项目。
+
+（Optional）如果你想在开发模式下运行项目，可以使用
+```bash
+pnpm dev
+```
 
 ## 使用方法 | HOW TO USE
 

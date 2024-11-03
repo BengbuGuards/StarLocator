@@ -58,21 +58,26 @@ function autoCompleteStarName(inp) {
     inp.addEventListener("keydown", function (e) {
         let divA = document.getElementById(this.id + "-autocomplete");
         if (divA) var items = divA.getElementsByTagName("div");
-        if (e.keyCode == 40) { //down
-            e.preventDefault();
-            currentFocus++;
-            addActive(items);
-            fixScrolling(items);
-        } else if (e.keyCode == 38) { //up
+        if (e.keyCode == 38 || (e.keyCode == 9 && e.shiftKey)) {  //up or shift+tab
             e.preventDefault();
             currentFocus--;
+            addActive(items);
+            fixScrolling(items);
+        } else if (e.keyCode == 40 || e.keyCode == 9) {  //down or tab
+            e.preventDefault();
+            currentFocus++;
             addActive(items);
             fixScrolling(items);
         } else if (e.keyCode == 13) { //enter
             e.preventDefault();
             if (currentFocus > 0) {
                 if (items) items[currentFocus].click();
+            } else {
+                closeAllLists();
             }
+        } else if (e.keyCode == 27) { //esc
+            e.preventDefault();
+            closeAllLists();
         }
     });
 

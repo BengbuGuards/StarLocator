@@ -17,28 +17,6 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - **精度良好**：我们在各个模块中采用了强稳健性的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
 - **完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
 
-## 构建 | BUILD
-
-1. 安装Node.js和pnpm。
-2. 在项目根目录下安装依赖
-```bash
-pnpm install
-```
-3. 构建项目
-```bash
-pnpm build
-```
-4. 运行项目
-```bash
-pnpm serve
-```
-现在你可以在浏览器中访问`http://localhost:6974`查看项目。
-
-（Optional）如果你想在开发模式下运行项目，可以使用
-```bash
-pnpm dev
-```
-
 ## 使用方法 | HOW TO USE
 
 *注：详细帮助请点击网页的问号按钮。*
@@ -79,7 +57,30 @@ pnpm dev
 
 见[CONTRIBUTING.md](./CONTRIBUTING.md)
 
+## 构建 | BUILD
+
+1. 安装Node.js和pnpm。
+2. 在项目根目录下安装依赖
+```bash
+pnpm install
+```
+3. 构建项目
+```bash
+pnpm build
+```
+4. 运行项目
+```bash
+pnpm serve
+```
+现在你可以在浏览器中访问`http://localhost:6974`查看项目。
+
+（Optional）如果你想在开发模式下运行项目，可以使用
+```bash
+pnpm dev
+```
+
 ## 致谢 | CREDITS
+
 ### 开源项目 | OPEN SOURCE PROJECTS
 
 见[NOTICE.md](./NOTICE.md)

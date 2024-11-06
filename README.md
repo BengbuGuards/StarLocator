@@ -16,6 +16,10 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - **隐私友好**：项目仅用前端技术实现，核心步骤均在本地运行，可自行部署。
 - **精度良好**：我们在各个模块中采用了强稳健性的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
 - **完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
+- **Simple interaction**: Marking stars and plumblines, setting the time and then simply click a button. Can finish within **5 minutes** when familiar. All time-consuming steps, like searching for data of celestial bodies, have been achieved with API and buttons.
+- **Privacy friendly**: Front-end based and self-deployable, all key steps running locally.
+- **Good accuracy**: We applied robust algorithms in modules, making it resilient to environmental noises and marking errors. The error can usually be limited to **30km**.
+- **Fully open sourced**: AGPL v3 open source protocol adopted. Aiming to make the approach as transparent as possible and to welcome community contributions.
 
 ## 构建 | BUILD
 
@@ -34,8 +38,8 @@ NOTHING to do with astrology, metaphysics and telepathy.
     - 需要包括恒星和行星在内的至少5个天体。太阳和月亮不可以，因为它们不清真（bushi）。*在最初版本中，您需要自行识别天体，但别担心，我们正在制作自动天体识别功能，并计划在宇宙达到热寂之前更新。
     - 需要多条铅垂线用于天顶计算。铅垂线越多或者地平线越完整，定位结果将会越准确。
     - 需要知道该照片拍摄的准确时间（年月日时分，若知道秒数则更好）。
-2. 点击那个看起来像手里剑的按钮开始选星（需5颗）。选取的星星最好是水平分布的，或者如果您熟悉这个概念的话，最好不要让它们与天顶的连线之间形成过小的夹角。
-3. 在底部的表格中输入正确的时间和标准的星名后，点击“获取天体坐标”按钮获取天体的赤纬和参考时角。
+2. 点击那个看起来像手里剑的按钮开始选星（需5颗）。选取的星星最好是水平分布的，或者如果您熟悉这个概念的话，最好不要让它们与天顶的连线之间形成过小的夹角。*您可以在表格中修改星星的图中坐标，并同步让图中的标记移动。
+3. 在底部的表格中输入正确的时间和标准的星名后，点击“获取天体坐标”按钮获取天体的赤纬和参考时角。*可以点击标记左上角的“×”来删除标记。
 4. 点击那个看起来像翘屁末影人的按钮开始绘制铅垂线。越多越好。
 5. **猛猛拍打**“计算”按钮然后就能在右侧的结果栏中看到结果了。
 
@@ -53,11 +57,12 @@ NOTHING to do with astrology, metaphysics and telepathy.
     - You know the exact time (year, date, hour, minute, and better with second) when the photo was taken.
 2. Click the shining shuriken icon to start to pick stars (totally 5 stars are needed). The picked stars are better
    distributed horizontally, or if you know what exactly I'm talking, don't form too small an angle relative to the
-   zenith.
+   zenith. * You can revise the coordination data of stars in the table below, and the marker on the picture will move
+   accordingly.
 3. Enter exact time and standard name of celestial bodies in the bottom table, and click the clock button to acquire
-   reference hour angles and declinations.
+   reference hour angles and declinations. * You can click the “x” on the top-left of a marker to delete it.
 4. Click the long limb alien(Enderman or sth) icon to draw lines along plumb lines on the image. More is better.
-5. **SMASH** the “给我算！” button and you'll see the result in result column on the right.
+5. **SMASH** the “Calculate” button and you'll see the result in result column on the right.
 
 ## 开发团队 | DEVELOPERS
 

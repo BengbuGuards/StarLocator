@@ -45,6 +45,7 @@ function getHaDecinSolar(starName, date) {
 */
 class AstroCalculator {
     constructor() {
+        this.cacheFixedStarRaDec = new Map();  // 缓存恒星名对应的赤经赤纬
     }
 
     /**
@@ -54,8 +55,10 @@ class AstroCalculator {
      * @returns {Promise<Map<string, [number, number]>>} 返回一个Promise对象，包含时角和赤纬
      */
     async getHaDecbyNames(starNames, date) {
+        let HaDecs = new Map();  // 存储时角和赤纬的结果
         let fixedStarNames = new Map();  // 太阳系外要查询的恒星名（查询名: 操作名）
         let solarStarNames = new Map();  // 太阳系内要查询的天体名（查询名: 操作名）
+
         for (let starName of starNames) {
             let operateName = starName;
             // 如果匹配到汉英对照星表，则转换为英文名
@@ -65,18 +68,22 @@ class AstroCalculator {
             operateName = operateName.toLowerCase();
             if (solarBodies.includes(operateName)) {
                 solarStarNames.set(starName, operateName);
+            } else if (this.cacheFixedStarRaDec.has(operateName)) {
+                HaDecs.set(starName, getHaDecbyRaDec(this.cacheFixedStarRaDec.get(operateName), date));  // 使用缓存的赤经赤纬来计算时角和赤纬
             } else {
                 fixedStarNames.set(starName, operateName);
             }
         }
-        let HaDecs = new Map();
+
         // 异步获取恒星的赤经和赤纬
         let raDecs = await getRaDecbyNames(fixedStarNames.values());
         // 同步计算天体的时角和赤纬
         let index = 0;
         for (let starName of fixedStarNames.keys()) {
+            this.cacheFixedStarRaDec.set(fixedStarNames.get(starName), raDecs[index]);  // 缓存恒星名对应的赤经赤纬
             HaDecs.set(starName, getHaDecbyRaDec(raDecs[index++], date));
         }
+
         // 计算太阳系内天体的时角和赤纬
         for (let [starName, operateName] of solarStarNames) {
             HaDecs.set(starName, getHaDecinSolar(operateName, date));

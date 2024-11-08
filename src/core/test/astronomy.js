@@ -10,3 +10,16 @@ astroCalculator.getHaDecbyNames(starNames, date).then(results => {
         console.log(`The hour angle of ${name} is ${ha} h, and the declination is ${dec} degrees.`);
     }
 });
+
+// 等待异步操作完成后再次查询，验证缓存功能
+setTimeout(
+    () => {
+        console.log("Again");
+        astroCalculator.getHaDecbyNames(starNames, date).then(results => {
+            for (let [name, [ha, dec]] of results) {
+                console.log(`The hour angle of ${name} is ${ha} h, and the declination is ${dec} degrees.`);
+            }
+        });
+    }, 
+    3000
+);

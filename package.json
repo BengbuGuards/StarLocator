@@ -15,6 +15,7 @@
 	"dependencies": {
 		"astronomy-engine": "^2.1.19",
 		"fabric": "^6.4.3",
+		"fuzzysort": "^3.1.0",
 		"leaflet": "^1.9.4"
 	},
 	"devDependencies": {

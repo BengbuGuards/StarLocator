@@ -1,8 +1,8 @@
 import { AstroCalculator } from '../AstroCoord/calc.js';
 
-let starNames = ['16 Boo', "金星", "角宿一", "月球"];
+let starNames = ['北落师门', "火鸟六", "土司空", "室宿一", "危宿三", "月球"];
 
-let date = new Date("2024-10-06T14:00:00Z");
+let date = new Date("2024-10-14T16:00:00Z");
 
 let astroCalculator = new AstroCalculator();
 astroCalculator.getHaDecbyNames(starNames, date).then(results => {

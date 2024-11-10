@@ -114,12 +114,12 @@ function calculateMedian(numbers) {
 
 /**
  * 三段二分法求函数极小值
- * @param {Function} func
+ * @param {Function} func 优化函数
  * @param {number} lowerBound 区间左端点
  * @param {number} upperBound 区间右端点
  * @param {number} tolerance 误差容限
  * @param {number} maxIter 最大迭代次数
- * @returns {number}
+ * @returns {number} 返回极小值点 x
  */
 function minimize(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) {
     let left = lowerBound;
@@ -142,8 +142,38 @@ function minimize(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) 
     return (left + right) / 2;
 }
 
+/**
+ * 三段二分法求函数极小值（异步）
+ * @param {Function} func 优化函数（异步）
+ * @param {number} lowerBound 区间左端点
+ * @param {number} upperBound 区间右端点
+ * @param {number} tolerance 误差容限
+ * @param {number} maxIter 最大迭代次数
+ * @returns {number} 返回极小值点 x
+ */
+async function minimizeAsync(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) {
+    let left = lowerBound;
+    let right = upperBound;
+    let iter = 0;
+    
+    while ((right - left) > tolerance && iter < maxIter) {
+        let midLeft = left + (right - left) / 3;
+        let midRight = right - (right - left) / 3;
+        
+        if (await func(midLeft) < await func(midRight)) {
+            right = midRight;
+        } else {
+            left = midLeft;
+        }
+        iter += 1;
+    }
+    
+    // 返回最小点 x
+    return (left + right) / 2;
+}
+
 
 export {
     add, dot, multiply, cross, normalize,
-    deg2Rad, rad2Deg, rejectOutliers, calculateMedian, minimize
+    deg2Rad, rad2Deg, rejectOutliers, calculateMedian, minimize, minimizeAsync
 };

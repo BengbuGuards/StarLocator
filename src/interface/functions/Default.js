@@ -129,7 +129,7 @@ class DefaultbuttonFunctioner{
 
     // 取消选择星体or铅垂线
     CancelPicking(e) {
-        if (this.interactPhoto.lmbDown) {
+        if (this.interactPhoto.lmbDown && (e.e.movementX**2 + e.e.movementY**2) > 10) {  // 按下左键后，滑动超过一定范围才取消选择 
             this.interactPhoto.cancelOp = true;
             this.interactPhoto.canvas.selection = false;
             this.interactPhoto.tips.innerHTML = '松开鼠标取消标记。';

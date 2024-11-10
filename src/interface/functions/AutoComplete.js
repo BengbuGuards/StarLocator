@@ -1,11 +1,15 @@
+import fuzzysort from "fuzzysort";
 import { starZH2EN } from "../../core/AstroCoord/starZH2EN.js";
+
+
+const options = { limit : 100, threshold : 0.4, all : false };
 
 function autoCompleteStarName(inp) {
     /*从英汉对照表获取所有名称，并去重*/
-    var arrAllStarNames = Object.keys(starZH2EN).concat(Object.values(starZH2EN));
-    arrAllStarNames = Array.from(new Set(arrAllStarNames))
     var currentFocus;  // 当前焦点
-
+    var arrAllStarNames = [];
+    var tmp = Array.from(new Set(Object.keys(starZH2EN).concat(Object.values(starZH2EN))));
+    tmp.forEach(t => arrAllStarNames.push(fuzzysort.prepare(t)));
     /*输入框输入时，自动显示实时补全项*/
     inp.addEventListener("input", function (e) {
         var divA, divB, val = this.value;
@@ -26,24 +30,15 @@ function autoCompleteStarName(inp) {
         divB.setAttribute("class", "autocomplete-list");
         divB.setAttribute("id", this.id + "-autocomplete-list");
         divA.appendChild(divB);
-        /* 遍历所有星星名称，找到包含输入值的星星名称 */
-        var autoCompleteList = [];
-        for (let i = 0; i < arrAllStarNames.length; i++) {
-            /*寻找子字符串*/
-            var pos = arrAllStarNames[i].toUpperCase().indexOf(val.toUpperCase());
-            if (pos >= 0) {
-                autoCompleteList.push({ name: arrAllStarNames[i], pos: pos });
-            }
-        }
+        var autoCompleteList = fuzzysort.go(val.toLowerCase(), arrAllStarNames, options);
         autoCompleteList.sort(function (first, second) {
-            return first.pos - second.pos;
+            return second.score - first.score;
         })
-
         /* 创建自动补全项 */
         autoCompleteList.forEach(element => {
             let divItem = document.createElement("DIV");
-            divItem.innerHTML += element.name;
-            divItem.innerHTML += "<input type='hidden' value='" + element.name + "'>";
+            divItem.innerHTML += element.highlight();
+            divItem.innerHTML += "<input type='hidden' value='" + element.target + "'>";
             divItem.addEventListener("click", function (e) {
                 inp.value = this.getElementsByTagName("input")[0].value;
                 inp.dispatchEvent(new Event("input"));

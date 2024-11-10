@@ -1,4 +1,5 @@
 import { ShapeObject, markerArray } from './Baseclass.js';
+import { autoCompleteStarName } from '../functions/AutoComplete.js';
 
 // 星体类
 class CelestialBody extends ShapeObject {
@@ -136,6 +137,7 @@ class CeleArray extends markerArray {
                     });
                 }
             }
+            autoCompleteStarName(document.getElementById(`name${this.num() + 1}`));
         }
         // 创建新的星星对象
         let star = new CelestialBody(x, y, this.num() + 1, this.interactPhoto.canvas);

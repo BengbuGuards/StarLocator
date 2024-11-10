@@ -4,9 +4,9 @@ import { AstroCalculator } from '../../core/AstroCoord/calc.js';
 
 // 选择天体按钮功能类
 class CeleCoord extends DefaultbuttonFunctioner{
-    constructor(interactPhoto){
+    constructor(interactPhoto, astroCalculator){
         super(interactPhoto);
-        this.astroCalculator = new AstroCalculator();
+        this.astroCalculator = astroCalculator;
     }
 
     onClick() {

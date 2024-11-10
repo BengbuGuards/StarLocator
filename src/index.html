@@ -30,8 +30,8 @@
                 <img src="img\icon\celePick.png" alt="天体选择" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
-            <button type="button" class="actionButton" id="manualTime" title="获取天体坐标">
-                <img src="img\icon\manualTime.png" alt="获取天体坐标" width="48" height="48"
+            <button type="button" class="actionButton" id="celeCoord" title="获取天体坐标">
+                <img src="img\icon\celeCoord.png" alt="获取天体坐标" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <button type="button" class="actionButton" id="vaniZen" title="铅垂线标记">
@@ -41,7 +41,7 @@
             <!-- <button type="button" class="actionButton" id="horiZen" title="地平线标记">
             <img src="img\icon\horiZen.png" alt="地平线标记" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
-        </button>
+        </button> -->
         <button type="button" class="actionButton" id="moonTime" title="标月定时">
             <img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
@@ -267,58 +267,55 @@
                             class="tooltiptext">是否考虑当地的重力方向与天顶方向不重合的影响</span></label><br />
                     <!-- <input type="checkbox" id="check4"/>
                 <label for="check4" class="tooltip">时间未定<span class="tooltiptext">时间未定定位结果将显示整个纬线圈</span></label><br/> -->
-                    <label for="setDate" class="tooltip">拍摄时间<span
-                            class="tooltiptext">时间若无法精确到秒，可以填入30作为尾数</span></label>
-                    <input id="setDate" type="date" style="width: 25%">
-                    <input id="setTime" type="time" step="1" style="width: 20%" aria-label="时间" />
-                    <label for="setTimeZone" class="tooltip">时区<span class="tooltiptext">北京时间为UTC+8</span></label>
-                    <input id="setTimeZone" type="number" min="-12" max="12" step="0.5" style="width: 10%" /><br />
-                    <!-- <label for="setTimeDev" class="tooltip">时间偏差 <span class="tooltiptext">时间的不确定程度，决定经度误差线的长度</span></label>
-                <input id="setTimeDev" type="number" style="width: 65%"> -->
+                <label for="setDate" class="tooltip">拍摄时间<span class="tooltiptext">时间若无法精确到秒，可以填入30作为尾数</span></label>
+                <input id="setDate" type="date" style="width: 25%">
+                <input id="setTime" type="time" step="1" style="width: 20%" aria-label="时间"/>
+                <label for="setTimeZone" class="tooltip">时区<span class="tooltiptext">北京时间为UTC+8</span></label>
+                <input id="setTimeZone" type="number" min="-12" max="12" step="0.5" style="width: 10%"/><br/>
+                <label for="setTimeScope" class="tooltip">标月定时搜索区间 <span class="tooltiptext">以大致的拍摄时间为中心，前后搜索确切拍摄时间的区间大小</span></label>
+                <input id="setTimeScope" type="number" min="0" value="60" style="width: 5%">天
+            </div>
+        </div>
+        <div style="margin-top:65px">
+            <h2>结果</h2>
+            <table style="width: 100%; margin-top: 10px; margin-bottom: 10px">
+                <tr>
+                    <th class="tooltip">像素焦距z<span class="tooltiptext">焦平面到光心的像素距离</span></th>
+                    <th class="tooltip">35mm焦距<span class="tooltiptext">根据照片的分辨率换算得到的等效焦距</span></th>
+                    <th class="tooltip">经度<span class="tooltiptext">定位点的经度；正值为东经，负值为西经</span></th>
+                    <th class="tooltip"><span class="tooltiptext">定位点的纬度；正值为北纬，负值为南纬</span>纬度</th>
+                </tr>
+                <tr>
+                    <td id="focLenPix" class="result">0.00</td>
+                    <td id="focLenMm" class="result">0mm</td>
+                    <td id="outputLong" class="result">0.0000°</td>
+                    <td id="outputLat" class="result">0.0000°</td>
+                </tr>
+            </table>
+            <div id="address" style="height:30px;"></div>
+            <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
+        </div>
+        <div style="margin-top: 30px">
+            <h2>关于</h2>
+            <!--TODO: 这里填README相同的注意事项-->
+            <div class="row">
+                <div class="col-acknow">
+                    感谢开源项目（完整名单见<a href="https://github.com/BengbuGuards/StarLocator/blob/main/NOTICE.md">NOTICE</a>）：
+                    <ul>
+                        <li><a href="https://stellarium.org">Stellarium</a>：一款强大的开源天文馆软件</li>
+                        <li><a href="https://github.com/cosinekitty/astronomy">Astronomy</a>：一个 JavaScript 天文库</li>
+                        <li><a href="https://github.com/fabricjs/fabric.js">Fabric.js</a>：一个简单而强大的 JavaScript HTML5 画布库。</li>
+                        <li><a href="https://github.com/Leaflet/Leaflet">Leaflet</a>：一个交互式地图 JavaScript 库</li>
+                        <li><a href="https://simbad.cds.unistra.fr/simbad">SIMBAD</a>：一个天体数据库</li>
+                    </ul>
                 </div>
-            </div>
-            <div style="margin-top:65px">
-                <h2>结果</h2>
-                <table style="width: 100%; margin-top: 10px; margin-bottom: 10px">
-                    <tr>
-                        <th class="tooltip">像素焦距z<span class="tooltiptext">焦平面到光心的像素距离</span></th>
-                        <th class="tooltip">35mm焦距<span class="tooltiptext">根据照片的分辨率换算得到的等效焦距</span></th>
-                        <th class="tooltip">经度<span class="tooltiptext">定位点的经度；正值为东经，负值为西经</span></th>
-                        <th class="tooltip"><span class="tooltiptext">定位点的纬度；正值为北纬，负值为南纬</span>纬度</th>
-                    </tr>
-                    <tr>
-                        <td id="focLenPix" class="result">0.00</td>
-                        <td id="focLenMm" class="result">0mm</td>
-                        <td id="outputLong" class="result">0.0000°</td>
-                        <td id="outputLat" class="result">0.0000°</td>
-                    </tr>
-                </table>
-                <div id="address" style="height:30px;"></div>
-                <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
-            </div>
-            <div style="margin-top: 30px">
-                <h2>关于</h2>
-                <!--TODO: 这里填README相同的注意事项-->
-                <div class="row">
-                    <div class="col-acknow">
-                        感谢开源项目（完整名单见<a
-                            href="https://github.com/BengbuGuards/StarLocator/blob/main/NOTICE.md">NOTICE</a>）：
-                        <ul>
-                            <li><a href="https://stellarium.org">Stellarium</a>：一款强大的开源天文馆软件</li>
-                            <li><a href="https://github.com/cosinekitty/astronomy">Astronomy</a>：一个 JavaScript 天文库</li>
-                            <li><a href="https://github.com/fabricjs/fabric.js">Fabric.js</a>：一个简单而强大的 JavaScript HTML5
-                                画布库。</li>
-                            <li><a href="https://github.com/Leaflet/Leaflet">Leaflet</a>：一个交互式地图 JavaScript 库</li>
-                            <li><a href="https://simbad.cds.unistra.fr/simbad">SIMBAD</a>：一个天体数据库</li>
-                        </ul>
-                    </div>
-                    <div class="col-logo">
-                        <img src="img\icon\starLocator.png" alt="StarLocator" width="140" height="152" />
-                    </div>
+                <div class="col-logo">
+                    <img src="img\icon\starLocator.png" alt="StarLocator" width="140" height="152"/>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 </html>

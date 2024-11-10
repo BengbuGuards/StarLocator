@@ -75,6 +75,13 @@ class InteractPhoto {
         
         return date;
     }
+
+    // 设置当前日期时间时区
+    setDateTime(date) {
+        this.date.value = date.toISOString().slice(0, 10);
+        this.time.value = date.toISOString().slice(11, 16);
+        this.timeZone.value = date.getTimezoneOffset() / 60;
+    }
 }
 
 

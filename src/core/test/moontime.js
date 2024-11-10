@@ -13,12 +13,12 @@ const originalStars = [
 // 2024-10-15 00:00:00
 
 const z = 3000;
-const zeniths = [0, -5196.15];
+const zenith = [0, -5196.15];
 const approxDate = new Date(2024, 4, 1);  // 2024-5-1
 const scopeDate = 365;
 const astroCalculator = new AstroCalculator();
 
 let stars = markStars(originalStars);
-calc(stars, z, zeniths, approxDate, scopeDate, astroCalculator).then(date => {
+calc(stars, z, zenith, approxDate, scopeDate, astroCalculator, false, false).then(date => {
     console.log(date);
 });

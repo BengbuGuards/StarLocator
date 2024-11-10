@@ -5,6 +5,7 @@ import { getVPoint } from '../../core/algorithm/VPoint.js'
 import { getZ } from '../../core/getZ.js';
 import { calc } from '../../core/calc.js';
 import { markStars } from '../../core/mark.js';
+import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
 
 
 // 选择天体按钮功能类
@@ -20,8 +21,8 @@ class Calc extends DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
 
         // 读取数据
-        let globalPLsPointsCoord = this.getGlobalPLPointsCoord();
-        let originalStars = this.getOriginalStars();
+        let globalPLsPointsCoord = getGlobalPLPointsCoord();
+        let originalStars = getOriginalStars();
 
         // 检查数据
         if (globalPLsPointsCoord.length < 2) {
@@ -37,7 +38,7 @@ class Calc extends DefaultbuttonFunctioner {
         this.interactPhoto.tips.innerHTML = `计算中...`;
 
         try {
-            // 计算灭点，注意检查数量
+            // 计算灭点
             let zenith = getVPoint(globalPLsPointsCoord);
             this.addZenithtoTable(zenith);
 
@@ -74,42 +75,6 @@ class Calc extends DefaultbuttonFunctioner {
     addZenithtoTable(zenith) {
         document.getElementById('zenX').value = Math.round(zenith[0] * 100) / 100;
         document.getElementById('zenY').value = Math.round(zenith[1] * 100) / 100;
-    }
-
-    // 获取铅垂线端点坐标
-    getGlobalPLPointsCoord() {
-        let globalPLPointsCoord = [];
-        for (let i = 0; i < this.interactPhoto.PLArray.num(); i++) {
-            let pl = this.interactPhoto.PLArray.array[i];
-            let points = [];
-            for (let j = 0; j < pl.points.length; j++) {
-                points.push(pl.points[j].coordinate);
-            }
-            globalPLPointsCoord.push(points);
-        }
-        return globalPLPointsCoord;
-    }
-
-    // 获取原始星星数据
-    getOriginalStars() {
-        let stars = [];
-        for (let i = 1; i <= this.interactPhoto.CeleArray.num(); i++) {
-            let star = [
-                parseFloat(document.getElementById(`coordX${i}`).value),
-                parseFloat(document.getElementById(`coordY${i}`).value),
-                document.getElementById(`name${i}`).value,
-                document.getElementById(`hAngleH${i}`).textContent + 'h' +
-                document.getElementById(`hAngleM${i}`).textContent + 'm' +
-                document.getElementById(`hAngleS${i}`).textContent + 's',
-                document.getElementById(`declinD${i}`).textContent + '°' +
-                document.getElementById(`declinM${i}`).textContent + '\'' +
-                document.getElementById(`declinS${i}`).textContent + '"'
-            ];
-            if (star[0] && star[1] && star[2] && star[3] && star[4]) {
-                stars.push(star);
-            }
-        }
-        return stars;
     }
 
     // 显示焦距

@@ -11,11 +11,15 @@ function toHours(hourAngle) {
     const pattern = /(\d+)h(\d+)m(\d+(?:\.\d+)?)s/;
     let match = hourAngle.match(pattern);
 
-    let h = parseFloat(match[1]);
-    let m = parseFloat(match[2]);
-    let s = parseFloat(match[3]);
+    if (match) {
+        let h = parseFloat(match[1]);
+        let m = parseFloat(match[2]);
+        let s = parseFloat(match[3]);
+        return h + m / 60 + s / 3600;
+    } else {
+        return NaN;
+    }
 
-    return h + m / 60 + s / 3600;
 }
 
 
@@ -28,12 +32,15 @@ function toDegrees(declination) {
     const pattern = /([+-]?)(\d+)°(\d+)'(\d+(?:\.\d+)?)"/;
     let match = declination.match(pattern);
 
-    let sign = match[1];
-    let d = parseFloat(match[2]);
-    let m = parseFloat(match[3]);
-    let s = parseFloat(match[4]);
-
-    return (sign === '-' ? -1 : 1) * (d + m / 60 + s / 3600);
+    if (match) {
+        let sign = match[1];
+        let d = parseFloat(match[2]);
+        let m = parseFloat(match[3]);
+        let s = parseFloat(match[4]);
+        return (sign === '-' ? -1 : 1) * (d + m / 60 + s / 3600);
+    } else {
+        return NaN;
+    }
 }
 
 

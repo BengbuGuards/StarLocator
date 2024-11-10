@@ -4,6 +4,19 @@ import { AngleBetween, VectorFromSphere, Vector, Spherical, Observer } from "ast
 
 
 /**
+ * 从星星数组中找到月的索引
+ * @param {Array<Star>} stars 星星数组
+ * @returns {number} 返回月的索引
+ */
+function findMoonIndex(stars) {
+    let moonIndex = stars.findIndex(
+        star => star.name === "月" || star.name === "月球" || star.name === "月亮"
+        || star.name.toLowerCase() === "moon"
+    );
+    return moonIndex;
+}
+
+/**
  * 计算月与星星相互角距
  * @param {Array<Star>} stars 星星数组
  * @param {number} moonIndex 月的索引
@@ -28,14 +41,14 @@ function AngleBetweenMoonAndStar(stars, moonIndex, z) {
  * @param {Date} approxDate 大致日期
  * @param {Array<Star>} stars 星星数组
  * @param {number} z 像素焦距
- * @param {Array<number>} zeniths 顶点坐标
+ * @param {Array<number>} zenith 顶点坐标
  * @param {AstroCalculator} astroCalculator 天文坐标计算器
  * @param {number} moonIndex 月在星数组的索引
  * @param {boolean} isFixGravity 是否修正重力
  * @param {boolean} isFixRefraction 是否修正大气折射
  * @returns {Date} 返回对应时间
  */
-async function geoEstimatebyStars(approxDate, stars, z, zeniths, astroCalculator, moonIndex, isFixGravity = false, isFixRefraction = false) {
+async function geoEstimatebyStars(approxDate, stars, z, zenith, astroCalculator, moonIndex, isFixGravity = false, isFixRefraction = false) {
     // 根据大致日期获取各星时角赤纬
     let date = new Date(approxDate);
     let approxStarHaDecs = await astroCalculator.getHaDecbyNames(stars.map(star => star.name), date);
@@ -47,7 +60,7 @@ async function geoEstimatebyStars(approxDate, stars, z, zeniths, astroCalculator
     let geoEstimate = geoCalc(
         stars.filter((star, index) => index !== moonIndex),
         // z, zeniths, true, true //TODO
-        z, zeniths, isFixGravity, isFixRefraction
+        z, zenith, isFixGravity, isFixRefraction
     );
     return geoEstimate;
 }
@@ -90,4 +103,4 @@ async function angleError(time, approxDate, stars, geoEstimate, moonIndex, astro
 }
 
 
-export { AngleBetweenMoonAndStar, geoEstimatebyStars, angleError };
+export { findMoonIndex, AngleBetweenMoonAndStar, geoEstimatebyStars, angleError };

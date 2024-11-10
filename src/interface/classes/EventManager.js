@@ -5,19 +5,26 @@ import { PickPL } from '../functions/PickPL.js';
 import { ImageChange } from '../functions/ImageChange.js';
 import { Calc } from '../functions/Calc.js';
 import { CeleCoord } from '../functions/CeleCoord.js';
+import { MoonTime } from '../functions/MoonTime.js';
+import { AstroCalculator } from '../../core/AstroCoord/calc.js';
+
 
 // 事件管理器，管理鼠标事件、按钮事件与照片的交互
 class EventManager{
     constructor(interactPhoto){
         this.interactPhoto = interactPhoto;
         this.touchEventAdapter = new TouchEventAdapter();
+
+        // 事件共享变量
+        this.astroCalculator = new AstroCalculator();
         
         // 按钮事件处理类
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));
         this.calc = new Calc(this.interactPhoto);
-        this.celeCoord = new CeleCoord(this.interactPhoto);
+        this.celeCoord = new CeleCoord(this.interactPhoto, this.astroCalculator);
+        this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator);
 
         // 页面加载完成事件
         window.onload = function () {

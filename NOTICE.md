@@ -6,6 +6,7 @@ This project uses the following open source projects and follows their respectiv
 - [Astronomy](https://github.com/astronomy/astronomy)：MIT License
 - [Fabric](https://github.com/fabric/fabric)：Custom License
 - [Leaflet](https://github.com/Leaflet/Leaflet)：BSD 2-Clause License
+- [fuzzysort](https://github.com/farzher/fuzzysort): MIT License
 
 
 This project has made use of the SIMBAD database, operated at CDS, Strasbourg, France.

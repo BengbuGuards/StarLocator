@@ -315,12 +315,12 @@ a:visited {
 
 .formatedInput {
 	display: flex;
-	padding-right: 5px;
 }
 
 .formatedInput div {
-	width: 2.5rem;
+	flex: 1;
 	overflow: hidden;
+	text-overflow: clip;
 	white-space: nowrap;
 }
 

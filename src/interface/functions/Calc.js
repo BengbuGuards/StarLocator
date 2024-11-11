@@ -21,8 +21,8 @@ class Calc extends DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
 
         // 读取数据
-        let globalPLsPointsCoord = getGlobalPLPointsCoord();
-        let originalStars = getOriginalStars();
+        let globalPLsPointsCoord = getGlobalPLPointsCoord(this.interactPhoto);
+        let originalStars = getOriginalStars(this.interactPhoto);
 
         // 检查数据
         if (globalPLsPointsCoord.length < 2) {
@@ -63,7 +63,7 @@ class Calc extends DefaultbuttonFunctioner {
             this.show35mmZ(z);
 
             // 结束计算
-            this.interactPhoto.tips.innerHTML = '';
+            this.interactPhoto.tips.innerHTML = '计算地理位置成功';
         } catch (e) {
             this.interactPhoto.tips.innerHTML = `计算失败：${e.message}，请检查数据`;
         } finally {

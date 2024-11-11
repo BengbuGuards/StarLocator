@@ -12,11 +12,7 @@ function initializeElements(interactPhoto) {
     interactPhoto.date = document.getElementById('setDate');
     interactPhoto.time = document.getElementById('setTime');
     interactPhoto.timeZone = document.getElementById('setTimeZone');
-    // 设置当前日期、时间、时区
-    let now = new Date();
-    interactPhoto.date.value = now.toISOString().split('T')[0];
-    interactPhoto.time.value = now.toTimeString().split(' ')[0];
-    interactPhoto.timeZone.value = - parseInt(now.getTimezoneOffset() / 60);
+    interactPhoto.setDateTime(new Date());  // 设置当前日期、时间、时区
 }
 
 // 初始化画布

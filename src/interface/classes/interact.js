@@ -76,11 +76,18 @@ class InteractPhoto {
         return date;
     }
 
-    // 设置当前日期时间时区
-    setDateTime(date) {
-        this.date.value = date.toISOString().slice(0, 10);
-        this.time.value = date.toISOString().slice(11, 16);
-        this.timeZone.value = date.getTimezoneOffset() / 60;
+    /**
+     * 设置日期时间时区
+     * @param {Date} datetime 日期时间
+     */
+    setDateTime(datetime) {
+        let date = datetime.toLocaleDateString().split('/');
+        let year = date[0];
+        let month = date[1];
+        let day = date[2];
+        this.date.value = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        this.time.value = datetime.toLocaleTimeString();
+        this.timeZone.value = - datetime.getTimezoneOffset() / 60;
     }
 }
 

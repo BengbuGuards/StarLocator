@@ -18,8 +18,8 @@ class MoonTime extends DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
 
         // 读取数据
-        let globalPLsPointsCoord = getGlobalPLPointsCoord();
-        let originalStars = getOriginalStars();
+        let globalPLsPointsCoord = getGlobalPLPointsCoord(this.interactPhoto);
+        let originalStars = getOriginalStars(this.interactPhoto);
         let stars = markStars(originalStars);
 
         // 检查数据
@@ -40,11 +40,13 @@ class MoonTime extends DefaultbuttonFunctioner {
 
         // 计算灭点
         let zenith = getVPoint(globalPLsPointsCoord);
-        this.addZenithtoTable(zenith);
 
         // 计算焦距
         let isFixRefraction = document.getElementById('check1').checked;
-        let z = getZ(stars, zenith, isFixRefraction);
+        let z = getZ(
+            stars.filter((star, index) => index !== findMoonIndex(stars)),  // 注意用除月外的星星算
+            zenith, isFixRefraction
+        );
         if (isNaN(z)) {
             this.interactPhoto.tips.innerHTML = "无法计算像素焦距";
             return;
@@ -52,13 +54,13 @@ class MoonTime extends DefaultbuttonFunctioner {
 
         // 计算时间
         let approxDate = this.interactPhoto.getDateTime();
-        let scopeDate = document.getElementById('setTimeScope').value;
+        let scopeDate = parseFloat(document.getElementById('setTimeScope').value);
         calc(stars, z, zenith, approxDate, scopeDate, this.astroCalculator).then(date => {
             // 显示结果
             this.interactPhoto.setDateTime(date);
     
             // 结束计算
-            this.interactPhoto.tips.innerHTML = '';
+            this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';
             this.interactPhoto.resetbuttonFunctioner();
         });
     }

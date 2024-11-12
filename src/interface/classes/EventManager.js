@@ -24,7 +24,7 @@ class EventManager{
         this.pickPL = new PickPL(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));
         this.calc = new Calc(this.interactPhoto, this.celeCoord);
-        this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator);
+        this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator, this.celeCoord);
 
         // 页面加载完成事件
         window.onload = function () {

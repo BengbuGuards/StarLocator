@@ -59,7 +59,6 @@ async function geoEstimatebyStars(approxDate, stars, z, zenith, astroCalculator,
     // 计算大致日期下的地理坐标
     let geoEstimate = geoCalc(
         stars.filter((star, index) => index !== moonIndex),
-        // z, zeniths, true, true //TODO
         z, zenith, isFixGravity, isFixRefraction
     );
     return geoEstimate;

@@ -96,7 +96,7 @@ class CelestialBody extends ShapeObject {
     }
 
     removeTableData() {
-        document.getElementById(`name${this.id}`).textContent = '';
+        document.getElementById(`name${this.id}`).value = '';
         document.getElementById(`hAngleH${this.id}`).textContent = '';
         document.getElementById(`hAngleM${this.id}`).textContent = '';
         document.getElementById(`hAngleS${this.id}`).textContent = '';
@@ -159,7 +159,7 @@ class CeleArray extends markerArray {
         // 对后面的星星进行 id 更新
         for(let celeBody of this.array){
             if(celeBody.id > id) {
-                document.getElementById(`name${celeBody.id-1}`).textContent = document.getElementById(`name${celeBody.id}`).textContent;
+                document.getElementById(`name${celeBody.id-1}`).value = document.getElementById(`name${celeBody.id}`).value;
                 document.getElementById(`hAngleH${celeBody.id-1}`).textContent = document.getElementById(`hAngleH${celeBody.id}`).textContent;
                 document.getElementById(`hAngleM${celeBody.id-1}`).textContent = document.getElementById(`hAngleM${celeBody.id}`).textContent;
                 document.getElementById(`hAngleS${celeBody.id-1}`).textContent = document.getElementById(`hAngleS${celeBody.id}`).textContent;

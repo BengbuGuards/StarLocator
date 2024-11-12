@@ -4,8 +4,8 @@ import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
 import { ImageChange } from '../functions/ImageChange.js';
 import { Calc } from '../functions/Calc.js';
-import { CeleCoord } from '../functions/CeleCoord.js';
 import { MoonTime } from '../functions/MoonTime.js';
+import { CeleCoord } from '../functions/CeleCoord.js';
 import { AstroCalculator } from '../../core/AstroCoord/calc.js';
 
 
@@ -17,13 +17,13 @@ class EventManager{
 
         // 事件共享变量
         this.astroCalculator = new AstroCalculator();
+        this.celeCoord = new CeleCoord(this.interactPhoto, this.astroCalculator);
         
         // 按钮事件处理类
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));
-        this.calc = new Calc(this.interactPhoto);
-        this.celeCoord = new CeleCoord(this.interactPhoto, this.astroCalculator);
+        this.calc = new Calc(this.interactPhoto, this.celeCoord);
         this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator);
 
         // 页面加载完成事件

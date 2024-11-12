@@ -67,7 +67,6 @@ function initializeEvents(eventManager) {
     document.getElementById('vaniZen').addEventListener('click', eventManager.pickPL.onClick.bind(eventManager.pickPL));
     document.getElementById("srcFile").addEventListener('change', e => eventManager.imageChange.onClick.call(eventManager.imageChange, e));
     document.getElementById('actionCalcul').addEventListener('click', eventManager.calc.onClick.bind(eventManager.calc));
-    document.getElementById('celeCoord').addEventListener('click', eventManager.celeCoord.onClick.bind(eventManager.celeCoord));
     document.getElementById('moonTime').addEventListener('click', eventManager.moonTime.onClick.bind(eventManager.moonTime));
 
     //为星体名称输入框启用自动补全

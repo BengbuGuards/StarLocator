@@ -8,10 +8,11 @@ import { markStars } from '../../core/mark.js';
 import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
 
 
-// 选择天体按钮功能类
+// 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
-    constructor(interactPhoto) {
+    constructor(interactPhoto, celeCoord) {
         super(interactPhoto);
+        this.celeCoord = celeCoord;
         this.mapMarker = null;
         this.mapLine = null;
     }
@@ -20,6 +21,17 @@ class Calc extends DefaultbuttonFunctioner {
         super.onClick();
         if (!this.interactPhoto.movable) return;
 
+        // 先计算天体坐标
+        this.celeCoord.calc().then((code) => {
+            // 如果天体坐标计算成功，再计算地理位置
+            if (code == 0) {
+                this.calc();
+            }
+        });
+    }
+
+    // 计算地理位置
+    calc() {
         // 读取数据
         let globalPLsPointsCoord = getGlobalPLPointsCoord(this.interactPhoto);
         let originalStars = getOriginalStars(this.interactPhoto);
@@ -30,6 +42,9 @@ class Calc extends DefaultbuttonFunctioner {
             return;
         } else if (originalStars.length < 3) {
             this.interactPhoto.tips.innerHTML = `请至少选择三颗星`;
+            return;
+        } else if (!this.checkStars(originalStars)) {
+            this.interactPhoto.tips.innerHTML = `请完整填写星星名称`;
             return;
         }
 
@@ -69,6 +84,19 @@ class Calc extends DefaultbuttonFunctioner {
         } finally {
             this.interactPhoto.resetbuttonFunctioner();
         }
+    }
+
+    // 检查originalStars数组每个子项的数据是否完整
+    checkStars(originalStars) {
+        let isComplete = true;
+        originalStars.forEach(originalStar => {
+            originalStar.forEach(data => {
+                if (data === '') {
+                    isComplete = false;
+                }
+            });
+        });
+        return isComplete;
     }
 
     // 添加天顶坐标到表格
@@ -132,6 +160,8 @@ class Calc extends DefaultbuttonFunctioner {
                             }
                         });
                 }
+            }).catch(() => {
+                console.error('无法获取地理位置信息');
             });
         // 添加新的标记
         let newMarker = marker([geoEstimate[0], geoEstimate[1]]).addTo(map);

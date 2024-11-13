@@ -12,6 +12,8 @@ calculate the rough position of the photo taker was on the earth. The process is
 sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is
 NOTHING to do with astrology, metaphysics and telepathy.
 
+[![Star History Chart](https://api.star-history.com/svg?repos=BengbuGuards/StarLocator&type=Timeline)](https://star-history.com/#BengbuGuards/StarLocator&Timeline)
+
 ## 特点 | FEATURES
 
 - 😀**交互简单**：标星、标铅垂线、设置拍摄时间，然后就是点击按钮的事了，熟练掌握后整个过程不到**5分钟**。原本的耗时步骤，如查询天体天文数据，已被API和按钮所实现。

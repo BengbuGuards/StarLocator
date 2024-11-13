@@ -94,6 +94,11 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
         }
     }
 
+    // 检查crudePositions是否为空
+    if (crudePositions.length === 0) {
+        throw new Error("所有星平面都不相交");
+    }
+
     // 计算各星高度角
     let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
     // 去折射修正

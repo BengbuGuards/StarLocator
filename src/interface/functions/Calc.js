@@ -21,13 +21,18 @@ class Calc extends DefaultbuttonFunctioner {
         super.onClick();
         if (!this.interactPhoto.movable) return;
 
-        // 先计算天体坐标
-        this.celeCoord.calc().then((code) => {
-            // 如果天体坐标计算成功，再计算地理位置
-            if (code == 0) {
-                this.calc();
-            }
-        });
+        let isAutoCeleCoord = document.getElementById('check3').checked;  // 是否自动计算天体坐标
+        if (isAutoCeleCoord) {
+            // 先计算天体坐标
+            this.celeCoord.calc().then((code) => {
+                // 如果天体坐标计算成功，再计算地理位置
+                if (code == 0) {
+                    this.calc();
+                }
+            });
+        } else {
+            this.calc();
+        }
     }
 
     // 计算地理位置
@@ -37,14 +42,14 @@ class Calc extends DefaultbuttonFunctioner {
         let originalStars = getOriginalStars(this.interactPhoto);
 
         // 检查数据
-        if (globalPLsPointsCoord.length < 2) {
-            this.interactPhoto.tips.innerHTML = `请至少选择两条铅垂线`;
-            return;
-        } else if (originalStars.length < 3) {
+        if (originalStars.length < 3) {
             this.interactPhoto.tips.innerHTML = `请至少选择三颗星`;
             return;
         } else if (!this.checkStars(originalStars)) {
-            this.interactPhoto.tips.innerHTML = `请完整填写星星名称`;
+            this.interactPhoto.tips.innerHTML = `请完整填写星星数据`;
+            return;
+        } else if (globalPLsPointsCoord.length < 2) {
+            this.interactPhoto.tips.innerHTML = `请至少选择两条铅垂线`;
             return;
         }
 

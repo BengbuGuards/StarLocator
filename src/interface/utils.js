@@ -1,21 +1,23 @@
-// 获取原始星星数据
+// 获取原始星星数据，不完整的星星数据不会被返回
 function getOriginalStars(interactPhoto) {
     let stars = [];
     for (let i = 1; i <= interactPhoto.CeleArray.num(); i++) {
-        let star = [
-            parseFloat(document.getElementById(`coordX${i}`).value),
-            parseFloat(document.getElementById(`coordY${i}`).value),
-            document.getElementById(`name${i}`).value,
-            document.getElementById(`hAngleH${i}`).textContent + 'h' +
-            document.getElementById(`hAngleM${i}`).textContent + 'm' +
-            document.getElementById(`hAngleS${i}`).textContent + 's',
-            document.getElementById(`declinD${i}`).textContent + '°' +
-            document.getElementById(`declinM${i}`).textContent + '\'' +
-            document.getElementById(`declinS${i}`).textContent + '"'
-        ];
-        if (star[0] && star[1] && star[2] && star[3] && star[4]) {
-            stars.push(star);
-        }
+        let coordX = parseFloat(document.getElementById(`coordX${i}`).value);
+        let coordY = parseFloat(document.getElementById(`coordY${i}`).value);
+        let name = document.getElementById(`name${i}`).value;
+        let hAngleH = document.getElementById(`hAngleH${i}`).textContent;
+        let hAngleM = document.getElementById(`hAngleM${i}`).textContent;
+        let hAngleS = document.getElementById(`hAngleS${i}`).textContent;
+        let declinD = document.getElementById(`declinD${i}`).textContent;
+        let declinM = document.getElementById(`declinM${i}`).textContent;
+        let declinS = document.getElementById(`declinS${i}`).textContent;
+        stars.push([
+            coordX,
+            coordY,
+            name,
+            hAngleH==='' || hAngleM==='' || hAngleS==='' ? '' : hAngleH + 'h' + hAngleM + 'm' + hAngleS + 's',
+            declinD==='' || declinM==='' || declinS==='' ? '' : declinD + '°' + declinM + '\'' + declinS + '"'
+        ]);
     }
     return stars;
 }

@@ -38,16 +38,21 @@ class MoonTime extends DefaultbuttonFunctioner {
             return;
         }
 
-        // 先计算天体坐标
-        this.celeCoord.calc().then((code) => {
-            // 如果天体坐标计算成功，再计算地理位置
-            if (code == 0) {
-                // 重新读取已更新的数据
-                let originalStars = getOriginalStars(this.interactPhoto);
-                let stars = markStars(originalStars);
-                this.calc(stars, globalPLsPointsCoord);
-            }
-        });
+        let isAutoCeleCoord = document.getElementById('check3').checked;  // 是否自动计算天体坐标
+        if (isAutoCeleCoord) {
+            // 先计算天体坐标
+            this.celeCoord.calc().then((code) => {
+                // 如果天体坐标计算成功，再计算地理位置
+                if (code == 0) {
+                    // 重新读取已更新的数据
+                    let originalStars = getOriginalStars(this.interactPhoto);
+                    let stars = markStars(originalStars);
+                    this.calc(stars, globalPLsPointsCoord);
+                }
+            });
+        } else {
+            this.calc(stars, globalPLsPointsCoord);
+        }
     }
 
     // 计算拍摄时间
@@ -79,6 +84,9 @@ class MoonTime extends DefaultbuttonFunctioner {
         calc(stars, z, zenith, approxDate, scopeDate, this.astroCalculator, isFixGravity, isFixRefraction).then(date => {
             // 显示结果
             this.interactPhoto.setDateTime(date);
+
+            // 使用新时间重新计算天体坐标并显示
+            this.celeCoord.calc()
     
             // 结束计算
             this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';

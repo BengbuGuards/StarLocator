@@ -40,6 +40,8 @@ class EventManager{
         this.interactPhoto.buttonFunctioner = this.interactPhoto.defaultbuttonFunctioner;
         this.pickCele.clearData();
         this.pickPL.clearData();
+        this.calc.clearData();
+        this.interactPhoto.CeleArray.clear();  // 清空表格数据
     }
 
     // 鼠标事件处理

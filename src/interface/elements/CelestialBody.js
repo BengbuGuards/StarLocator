@@ -179,13 +179,33 @@ class CeleArray extends markerArray {
         }
         // 最后从数组中删除对应星星
         this.array.splice(id - 1, 1);
+        // 删除最后一行表格
+        let inputTable = document.getElementById('inputTable');
+        if (this.num() >= 5 && inputTable.rows.length - 2 > 5) {
+            inputTable.deleteRow(inputTable.rows.length - 1);
+        }
     }
 
     clear() {
         // 清空表格数据
-        for (let i = 1;i <= this.num(); i++) {
+        for (let i = 1;i <= 5; i++) {
+            document.getElementById(`name${i}`).value = '';
+            document.getElementById(`hAngleH${i}`).textContent = '';
+            document.getElementById(`hAngleM${i}`).textContent = '';
+            document.getElementById(`hAngleS${i}`).textContent = '';
+            document.getElementById(`declinD${i}`).textContent = '';
+            document.getElementById(`declinM${i}`).textContent = '';
+            document.getElementById(`declinS${i}`).textContent = '';
             document.getElementById(`coordX${i}`).value = '';
             document.getElementById(`coordY${i}`).value = '';
+            document.getElementById(`name${i}`).oninput = null;
+            document.getElementById(`name${i}`).onfocus = null;
+            document.getElementById(`coordX${i}`).oninput = null;
+            document.getElementById(`coordY${i}`).oninput = null;
+        }
+        let inputTable = document.getElementById('inputTable');
+        while (inputTable.rows.length - 2 > 5) {
+            inputTable.deleteRow(inputTable.rows.length - 1);
         }
         // 清空星星及其数组
         for(let i of this.array){

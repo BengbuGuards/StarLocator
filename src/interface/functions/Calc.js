@@ -35,6 +35,12 @@ class Calc extends DefaultbuttonFunctioner {
         }
     }
 
+    // 重置标注数据
+    clearData() {
+        document.getElementById('zenX').value = '';
+        document.getElementById('zenY').value = '';
+    }
+
     // 计算地理位置
     calc() {
         // 读取数据

@@ -123,6 +123,7 @@ class Calc extends DefaultbuttonFunctioner {
 
     // 显示地理坐标
     showGeoEstimate(geoEstimate) {
+        // 在地图上显示位置
         if (geoEstimate[1] > 180) {
             geoEstimate[1] -= 360;
         }
@@ -136,8 +137,10 @@ class Calc extends DefaultbuttonFunctioner {
         if (this.mapLine) {
             map.removeLayer(this.mapLine);
         }
-        // 先申请国内
+        // 逆地址解析
         let addressDiv = document.getElementById('address');
+        addressDiv.innerText = '正在获取地理位置信息...';
+        // 先申请国内
         fetch(
             `https://geocode.xyz/${geoEstimate[0]},${geoEstimate[1]}?json=1`,
             { method: 'GET' })
@@ -172,7 +175,7 @@ class Calc extends DefaultbuttonFunctioner {
                         });
                 }
             }).catch(() => {
-                console.error('无法获取地理位置信息');
+                addressDiv.innerText = '获取地理位置信息失败';
             });
         // 添加新的标记
         let newMarker = marker([geoEstimate[0], geoEstimate[1]]).addTo(map);

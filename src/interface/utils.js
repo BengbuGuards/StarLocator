@@ -1,4 +1,4 @@
-// 获取原始星星数据，不完整的星星数据不会被返回
+// 获取原始星星数据
 function getOriginalStars(interactPhoto) {
     let stars = [];
     for (let i = 1; i <= interactPhoto.CeleArray.num(); i++) {

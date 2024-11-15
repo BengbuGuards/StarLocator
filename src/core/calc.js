@@ -1,12 +1,11 @@
-import {SphereFromVector, Vector, InverseRefraction} from "astronomy-engine";
-import {rad2Deg, deg2Rad} from "./math.js";
-import {getElevationAngle} from "./getZ.js";
-import {squareMedianAverage} from "./algorithm/squareMedianAverage.js";
+import { SphereFromVector, Vector, InverseRefraction } from 'astronomy-engine';
+import { rad2Deg, deg2Rad } from './math.js';
+import { getElevationAngle } from './getZ.js';
+import { squareMedianAverage } from './algorithm/squareMedianAverage.js';
 
 const sin = Math.sin;
 const cos = Math.cos;
 const sqrt = Math.sqrt;
-
 
 /**
  * 获取一颗星星的平面方程 Ax + By + Cz = D 的 A, B, C, D
@@ -18,14 +17,8 @@ function getPlane(star, elevationAngle) {
     let phi = star.lat;
     let lam = star.lon;
     let theta = elevationAngle;
-    return [
-        sin(theta) * cos(lam) * cos(phi),
-        sin(lam) * sin(theta) * cos(phi),
-        sin(phi) * sin(theta),
-        sin(theta) ** 2
-    ];
+    return [sin(theta) * cos(lam) * cos(phi), sin(lam) * sin(theta) * cos(phi), sin(phi) * sin(theta), sin(theta) ** 2];
 }
-
 
 /**
  * 解两个平面与地球（单位球）联立的方程组
@@ -37,18 +30,358 @@ function solve(plane1, plane2) {
     let [A1, B1, C1, D1] = plane1;
     let [A2, B2, C2, D2] = plane2;
 
-    let x1 = (-A1 * B1 * B2 * D2 + A1 * B2 ** 2 * D1 - A1 * C1 * C2 * D2 + A1 * C2 ** 2 * D1 + A2 * B1 ** 2 * D2 - A2 * B1 * B2 * D1 + A2 * C1 ** 2 * D2 - A2 * C1 * C2 * D1 - B1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) + B2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2)) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
-    let y1 = (A1 ** 2 * B2 * D2 - A1 * A2 * B1 * D2 - A1 * A2 * B2 * D1 + A1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) + A2 ** 2 * B1 * D1 - A2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) - B1 * C1 * C2 * D2 + B1 * C2 ** 2 * D1 + B2 * C1 ** 2 * D2 - B2 * C1 * C2 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
-    let z1 = -(A1 * B2 - A2 * B1) * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2) + (A1 ** 2 * C2 * D2 - A1 * A2 * C1 * D2 - A1 * A2 * C2 * D1 + A2 ** 2 * C1 * D1 + B1 ** 2 * C2 * D2 - B1 * B2 * C1 * D2 - B1 * B2 * C2 * D1 + B2 ** 2 * C1 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
-    let x2 = (-A1 * B1 * B2 * D2 + A1 * B2 ** 2 * D1 - A1 * C1 * C2 * D2 + A1 * C2 ** 2 * D1 + A2 * B1 ** 2 * D2 - A2 * B1 * B2 * D1 + A2 * C1 ** 2 * D2 - A2 * C1 * C2 * D1 + B1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) - B2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2)) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
-    let y2 = (A1 ** 2 * B2 * D2 - A1 * A2 * B1 * D2 - A1 * A2 * B2 * D1 - A1 * C2 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) + A2 ** 2 * B1 * D1 + A2 * C1 * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) - B1 * C1 * C2 * D2 + B1 * C2 ** 2 * D1 + B2 * C1 ** 2 * D2 - B2 * C1 * C2 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
-    let z2 = (A1 * B2 - A2 * B1) * sqrt(A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - A1 ** 2 * D2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + 2 * A1 * A2 * D1 * D2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 - A2 ** 2 * D1 ** 2 + B1 ** 2 * C2 ** 2 - B1 ** 2 * D2 ** 2 - 2 * B1 * B2 * C1 * C2 + 2 * B1 * B2 * D1 * D2 + B2 ** 2 * C1 ** 2 - B2 ** 2 * D1 ** 2 - C1 ** 2 * D2 ** 2 + 2 * C1 * C2 * D1 * D2 - C2 ** 2 * D1 ** 2) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2) + (A1 ** 2 * C2 * D2 - A1 * A2 * C1 * D2 - A1 * A2 * C2 * D1 + A2 ** 2 * C1 * D1 + B1 ** 2 * C2 * D2 - B1 * B2 * C1 * D2 - B1 * B2 * C2 * D1 + B2 ** 2 * C1 * D1) / (A1 ** 2 * B2 ** 2 + A1 ** 2 * C2 ** 2 - 2 * A1 * A2 * B1 * B2 - 2 * A1 * A2 * C1 * C2 + A2 ** 2 * B1 ** 2 + A2 ** 2 * C1 ** 2 + B1 ** 2 * C2 ** 2 - 2 * B1 * B2 * C1 * C2 + B2 ** 2 * C1 ** 2);
+    let x1 =
+        (-A1 * B1 * B2 * D2 +
+            A1 * B2 ** 2 * D1 -
+            A1 * C1 * C2 * D2 +
+            A1 * C2 ** 2 * D1 +
+            A2 * B1 ** 2 * D2 -
+            A2 * B1 * B2 * D1 +
+            A2 * C1 ** 2 * D2 -
+            A2 * C1 * C2 * D1 -
+            B1 *
+                C2 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) +
+            B2 *
+                C1 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                )) /
+        (A1 ** 2 * B2 ** 2 +
+            A1 ** 2 * C2 ** 2 -
+            2 * A1 * A2 * B1 * B2 -
+            2 * A1 * A2 * C1 * C2 +
+            A2 ** 2 * B1 ** 2 +
+            A2 ** 2 * C1 ** 2 +
+            B1 ** 2 * C2 ** 2 -
+            2 * B1 * B2 * C1 * C2 +
+            B2 ** 2 * C1 ** 2);
+    let y1 =
+        (A1 ** 2 * B2 * D2 -
+            A1 * A2 * B1 * D2 -
+            A1 * A2 * B2 * D1 +
+            A1 *
+                C2 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) +
+            A2 ** 2 * B1 * D1 -
+            A2 *
+                C1 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) -
+            B1 * C1 * C2 * D2 +
+            B1 * C2 ** 2 * D1 +
+            B2 * C1 ** 2 * D2 -
+            B2 * C1 * C2 * D1) /
+        (A1 ** 2 * B2 ** 2 +
+            A1 ** 2 * C2 ** 2 -
+            2 * A1 * A2 * B1 * B2 -
+            2 * A1 * A2 * C1 * C2 +
+            A2 ** 2 * B1 ** 2 +
+            A2 ** 2 * C1 ** 2 +
+            B1 ** 2 * C2 ** 2 -
+            2 * B1 * B2 * C1 * C2 +
+            B2 ** 2 * C1 ** 2);
+    let z1 =
+        (-(A1 * B2 - A2 * B1) *
+            sqrt(
+                A1 ** 2 * B2 ** 2 +
+                    A1 ** 2 * C2 ** 2 -
+                    A1 ** 2 * D2 ** 2 -
+                    2 * A1 * A2 * B1 * B2 -
+                    2 * A1 * A2 * C1 * C2 +
+                    2 * A1 * A2 * D1 * D2 +
+                    A2 ** 2 * B1 ** 2 +
+                    A2 ** 2 * C1 ** 2 -
+                    A2 ** 2 * D1 ** 2 +
+                    B1 ** 2 * C2 ** 2 -
+                    B1 ** 2 * D2 ** 2 -
+                    2 * B1 * B2 * C1 * C2 +
+                    2 * B1 * B2 * D1 * D2 +
+                    B2 ** 2 * C1 ** 2 -
+                    B2 ** 2 * D1 ** 2 -
+                    C1 ** 2 * D2 ** 2 +
+                    2 * C1 * C2 * D1 * D2 -
+                    C2 ** 2 * D1 ** 2
+            )) /
+            (A1 ** 2 * B2 ** 2 +
+                A1 ** 2 * C2 ** 2 -
+                2 * A1 * A2 * B1 * B2 -
+                2 * A1 * A2 * C1 * C2 +
+                A2 ** 2 * B1 ** 2 +
+                A2 ** 2 * C1 ** 2 +
+                B1 ** 2 * C2 ** 2 -
+                2 * B1 * B2 * C1 * C2 +
+                B2 ** 2 * C1 ** 2) +
+        (A1 ** 2 * C2 * D2 -
+            A1 * A2 * C1 * D2 -
+            A1 * A2 * C2 * D1 +
+            A2 ** 2 * C1 * D1 +
+            B1 ** 2 * C2 * D2 -
+            B1 * B2 * C1 * D2 -
+            B1 * B2 * C2 * D1 +
+            B2 ** 2 * C1 * D1) /
+            (A1 ** 2 * B2 ** 2 +
+                A1 ** 2 * C2 ** 2 -
+                2 * A1 * A2 * B1 * B2 -
+                2 * A1 * A2 * C1 * C2 +
+                A2 ** 2 * B1 ** 2 +
+                A2 ** 2 * C1 ** 2 +
+                B1 ** 2 * C2 ** 2 -
+                2 * B1 * B2 * C1 * C2 +
+                B2 ** 2 * C1 ** 2);
+    let x2 =
+        (-A1 * B1 * B2 * D2 +
+            A1 * B2 ** 2 * D1 -
+            A1 * C1 * C2 * D2 +
+            A1 * C2 ** 2 * D1 +
+            A2 * B1 ** 2 * D2 -
+            A2 * B1 * B2 * D1 +
+            A2 * C1 ** 2 * D2 -
+            A2 * C1 * C2 * D1 +
+            B1 *
+                C2 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) -
+            B2 *
+                C1 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                )) /
+        (A1 ** 2 * B2 ** 2 +
+            A1 ** 2 * C2 ** 2 -
+            2 * A1 * A2 * B1 * B2 -
+            2 * A1 * A2 * C1 * C2 +
+            A2 ** 2 * B1 ** 2 +
+            A2 ** 2 * C1 ** 2 +
+            B1 ** 2 * C2 ** 2 -
+            2 * B1 * B2 * C1 * C2 +
+            B2 ** 2 * C1 ** 2);
+    let y2 =
+        (A1 ** 2 * B2 * D2 -
+            A1 * A2 * B1 * D2 -
+            A1 * A2 * B2 * D1 -
+            A1 *
+                C2 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) +
+            A2 ** 2 * B1 * D1 +
+            A2 *
+                C1 *
+                sqrt(
+                    A1 ** 2 * B2 ** 2 +
+                        A1 ** 2 * C2 ** 2 -
+                        A1 ** 2 * D2 ** 2 -
+                        2 * A1 * A2 * B1 * B2 -
+                        2 * A1 * A2 * C1 * C2 +
+                        2 * A1 * A2 * D1 * D2 +
+                        A2 ** 2 * B1 ** 2 +
+                        A2 ** 2 * C1 ** 2 -
+                        A2 ** 2 * D1 ** 2 +
+                        B1 ** 2 * C2 ** 2 -
+                        B1 ** 2 * D2 ** 2 -
+                        2 * B1 * B2 * C1 * C2 +
+                        2 * B1 * B2 * D1 * D2 +
+                        B2 ** 2 * C1 ** 2 -
+                        B2 ** 2 * D1 ** 2 -
+                        C1 ** 2 * D2 ** 2 +
+                        2 * C1 * C2 * D1 * D2 -
+                        C2 ** 2 * D1 ** 2
+                ) -
+            B1 * C1 * C2 * D2 +
+            B1 * C2 ** 2 * D1 +
+            B2 * C1 ** 2 * D2 -
+            B2 * C1 * C2 * D1) /
+        (A1 ** 2 * B2 ** 2 +
+            A1 ** 2 * C2 ** 2 -
+            2 * A1 * A2 * B1 * B2 -
+            2 * A1 * A2 * C1 * C2 +
+            A2 ** 2 * B1 ** 2 +
+            A2 ** 2 * C1 ** 2 +
+            B1 ** 2 * C2 ** 2 -
+            2 * B1 * B2 * C1 * C2 +
+            B2 ** 2 * C1 ** 2);
+    let z2 =
+        ((A1 * B2 - A2 * B1) *
+            sqrt(
+                A1 ** 2 * B2 ** 2 +
+                    A1 ** 2 * C2 ** 2 -
+                    A1 ** 2 * D2 ** 2 -
+                    2 * A1 * A2 * B1 * B2 -
+                    2 * A1 * A2 * C1 * C2 +
+                    2 * A1 * A2 * D1 * D2 +
+                    A2 ** 2 * B1 ** 2 +
+                    A2 ** 2 * C1 ** 2 -
+                    A2 ** 2 * D1 ** 2 +
+                    B1 ** 2 * C2 ** 2 -
+                    B1 ** 2 * D2 ** 2 -
+                    2 * B1 * B2 * C1 * C2 +
+                    2 * B1 * B2 * D1 * D2 +
+                    B2 ** 2 * C1 ** 2 -
+                    B2 ** 2 * D1 ** 2 -
+                    C1 ** 2 * D2 ** 2 +
+                    2 * C1 * C2 * D1 * D2 -
+                    C2 ** 2 * D1 ** 2
+            )) /
+            (A1 ** 2 * B2 ** 2 +
+                A1 ** 2 * C2 ** 2 -
+                2 * A1 * A2 * B1 * B2 -
+                2 * A1 * A2 * C1 * C2 +
+                A2 ** 2 * B1 ** 2 +
+                A2 ** 2 * C1 ** 2 +
+                B1 ** 2 * C2 ** 2 -
+                2 * B1 * B2 * C1 * C2 +
+                B2 ** 2 * C1 ** 2) +
+        (A1 ** 2 * C2 * D2 -
+            A1 * A2 * C1 * D2 -
+            A1 * A2 * C2 * D1 +
+            A2 ** 2 * C1 * D1 +
+            B1 ** 2 * C2 * D2 -
+            B1 * B2 * C1 * D2 -
+            B1 * B2 * C2 * D1 +
+            B2 ** 2 * C1 * D1) /
+            (A1 ** 2 * B2 ** 2 +
+                A1 ** 2 * C2 ** 2 -
+                2 * A1 * A2 * B1 * B2 -
+                2 * A1 * A2 * C1 * C2 +
+                A2 ** 2 * B1 ** 2 +
+                A2 ** 2 * C1 ** 2 +
+                B1 ** 2 * C2 ** 2 -
+                2 * B1 * B2 * C1 * C2 +
+                B2 ** 2 * C1 ** 2);
 
     let solve1 = SphereFromVector(new Vector(x1, y1, z1, 0));
     let solve2 = SphereFromVector(new Vector(x2, y2, z2, 0));
-    return [[solve1.lat, solve1.lon], [solve2.lat, solve2.lon]];
+    return [
+        [solve1.lat, solve1.lon],
+        [solve2.lat, solve2.lon],
+    ];
 }
-
 
 /**
  * 双星定位
@@ -67,7 +400,6 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
     return solve(plane1, plane2);
 }
 
-
 /**
  * 两两计算位置，取平均值
  * @param {Array<Star>} stars 星星数组
@@ -79,9 +411,9 @@ function dualStarPositioning(star1, star2, z, zenithVector) {
  */
 function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     // 天顶向量
-    let zenithVector = new Vector(zenith[0], zenith[1], z, 0)
+    let zenithVector = new Vector(zenith[0], zenith[1], z, 0);
     // 存放粗的数据，每个元素有两组经纬度
-    let crudePositions = []
+    let crudePositions = [];
     // 两两计算，注意不相交的情况已忽略
     for (let i = 0; i < stars.length; ++i) {
         for (let j = i + 1; j < stars.length; ++j) {
@@ -89,24 +421,24 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
                 crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
             } catch (e) {
                 // 抛异常
-                console.error("存在两星平面不相交", stars[i], stars[j]);
+                console.error('存在两星平面不相交', stars[i], stars[j]);
             }
         }
     }
 
     // 检查crudePositions是否为空
     if (crudePositions.length === 0) {
-        throw new Error("所有星平面都不相交");
+        throw new Error('所有星平面都不相交');
     }
 
     // 计算各星高度角
-    let starAngles = stars.map(star => rad2Deg(getElevationAngle(star, z, zenithVector)));
+    let starAngles = stars.map((star) => rad2Deg(getElevationAngle(star, z, zenithVector)));
     // 去折射修正
     if (isFixRefraction) {
-        starAngles = starAngles.map(angle => angle + InverseRefraction("normal", angle));
+        starAngles = starAngles.map((angle) => angle + InverseRefraction('normal', angle));
     }
     // 计算各星的天顶角
-    let zenithAngles = starAngles.map(angle => 90 - angle);
+    let zenithAngles = starAngles.map((angle) => 90 - angle);
 
     // 加权平均
     let [avgLat, avgLon] = squareMedianAverage(crudePositions, stars, zenithAngles);
@@ -117,10 +449,13 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
      * 重力修正纬度 = 纬度 + (0.00032712 * sin(纬度) ** 2 - 0.00000368 * sin(纬度) - 0.099161) * sin (纬度 * 2)
      */
     if (isFixGravity) {
-        avgLat = avgLat + (0.00032712 * sin(deg2Rad(avgLat)) ** 2 - 0.00000368 * sin(deg2Rad(avgLat)) - 0.099161) * sin(deg2Rad(avgLat) * 2);
+        avgLat =
+            avgLat +
+            (0.00032712 * sin(deg2Rad(avgLat)) ** 2 - 0.00000368 * sin(deg2Rad(avgLat)) - 0.099161) *
+                sin(deg2Rad(avgLat) * 2);
     }
 
     return [avgLat, avgLon];
 }
 
-export {calc};
+export { calc };

@@ -1,8 +1,8 @@
 import { DefaultbuttonFunctioner } from './Default.js';
 
 // 选择天体按钮功能类
-class PickCele extends DefaultbuttonFunctioner{
-    constructor(interactPhoto){
+class PickCele extends DefaultbuttonFunctioner {
+    constructor(interactPhoto) {
         super(interactPhoto);
         this.isPickingCele = false; // 是否正在选择天体
     }
@@ -10,10 +10,10 @@ class PickCele extends DefaultbuttonFunctioner{
     onClick() {
         super.onClick();
         if (!this.interactPhoto.movable) return;
-        
+
         this.isPickingCele = !this.isPickingCele;
         this.interactPhoto.tips.innerHTML = `${this.isPickingCele ? '单击要选择的天体。' : ''}`;
-        
+
         if (this.isPickingCele) {
             this.interactPhoto.buttonFunctioner = this;
         } else {

@@ -14,7 +14,7 @@ class ShapeObject {
             width: 32,
             height: 32,
             fill: this.color,
-            hasControls: false
+            hasControls: false,
         });
 
         this.label = new IText(label, {
@@ -24,16 +24,16 @@ class ShapeObject {
             fontFamily: 'Segoe WPC,Segoe UI,Microsoft YaHei,sans-serif',
             fill: this.color,
             selectable: false,
-            hoverCursor: 'grab'
+            hoverCursor: 'grab',
         });
 
         this.deleter = new IText('×', {
             left: x - 28.5,
             top: y - 24.5,
             fontSize: 20,
-            fill: "#CF0000",
+            fill: '#CF0000',
             hasControls: false,
-            hoverCursor:'pointer',
+            hoverCursor: 'pointer',
         });
 
         this.point.on('moving', this.onMove.bind(this));
@@ -45,9 +45,9 @@ class ShapeObject {
     }
 
     setRealXY(x, y) {
-        this.x = x, this.y = y;
-		this.point.left = x - 16.5, this.point.top = y - 16.5;
-		this.onMove();
+        (this.x = x), (this.y = y);
+        (this.point.left = x - 16.5), (this.point.top = y - 16.5);
+        this.onMove();
     }
 
     onMove() {
@@ -59,9 +59,7 @@ class ShapeObject {
         this.deleter.setCoords();
     }
 
-    onZoom() {
-
-    }
+    onZoom() {}
 
     remove() {
         this.canvas.remove(this.point);
@@ -92,7 +90,7 @@ class LineObject {
             stroke: this.color,
             strokeWidth: 1,
             selectable: false,
-            hoverCursor: 'grab'
+            hoverCursor: 'grab',
         });
 
         this.canvas.add(this.line);
@@ -104,8 +102,8 @@ class LineObject {
 }
 
 // 数据结构基类
-class markerArray{
-    constructor(interactPhoto){
+class markerArray {
+    constructor(interactPhoto) {
         this.array = [];
         this.interactPhoto = interactPhoto;
     }
@@ -118,20 +116,18 @@ class markerArray{
         this.array.push(obj);
     }
 
-    remove(id) {
-
-    }
+    remove(id) {}
 
     get(id) {
         return this.array[id];
     }
 
     clear() {
-        for(let i of this.array){
+        for (let i of this.array) {
             i.remove();
         }
-        this.array=[];
+        this.array = [];
     }
 }
 
-export { ShapeObject, LineObject , markerArray};
+export { ShapeObject, LineObject, markerArray };

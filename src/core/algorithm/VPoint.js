@@ -1,5 +1,4 @@
-import { calculateMedian } from "../math.js";
-
+import { calculateMedian } from '../math.js';
 
 /**
  * 计算多条直线的交点，取中位数作为V点
@@ -26,8 +25,8 @@ function getVPoint(lines) {
         }
     }
     // 求points中位数
-    let x_list = points.map(p => p[0]);
-    let y_list = points.map(p => p[1]);
+    let x_list = points.map((p) => p[0]);
+    let y_list = points.map((p) => p[1]);
     let avg_x = calculateMedian(x_list);
     let avg_y = calculateMedian(y_list);
     return [avg_x, avg_y];

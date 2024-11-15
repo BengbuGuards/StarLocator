@@ -2,10 +2,9 @@ import { getZ } from '../../core/getZ.js';
 import { markStars } from '../../core/mark.js';
 import { calc } from '../../core/MoonTime/calc.js';
 import { DefaultbuttonFunctioner } from './Default.js';
-import { getVPoint } from '../../core/algorithm/VPoint.js'
+import { getVPoint } from '../../core/algorithm/VPoint.js';
 import { findMoonIndex } from '../../core/MoonTime/utils.js';
 import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
-
 
 class MoonTime extends DefaultbuttonFunctioner {
     constructor(interactPhoto, astroCalculator, celeCoord) {
@@ -38,7 +37,7 @@ class MoonTime extends DefaultbuttonFunctioner {
             return;
         }
 
-        let isAutoCeleCoord = document.getElementById('check3').checked;  // 是否自动计算天体坐标
+        let isAutoCeleCoord = document.getElementById('check3').checked; // 是否自动计算天体坐标
         if (isAutoCeleCoord) {
             // 先计算天体坐标
             this.celeCoord.calc().then((code) => {
@@ -70,34 +69,37 @@ class MoonTime extends DefaultbuttonFunctioner {
 
         // 计算焦距
         let z = getZ(
-            stars.filter((star, index) => index !== findMoonIndex(stars)),  // 注意用除月外的星星算
-            zenith, isFixRefraction
+            stars.filter((star, index) => index !== findMoonIndex(stars)), // 注意用除月外的星星算
+            zenith,
+            isFixRefraction
         );
         if (isNaN(z)) {
-            this.interactPhoto.tips.innerHTML = "无法计算像素焦距";
+            this.interactPhoto.tips.innerHTML = '无法计算像素焦距';
             return;
         }
 
         // 计算时间
         let approxDate = this.interactPhoto.getDateTime();
         let scopeDate = parseFloat(document.getElementById('setTimeScope').value);
-        calc(stars, z, zenith, approxDate, scopeDate, this.astroCalculator, isFixGravity, isFixRefraction).then(date => {
-            // 显示结果
-            this.interactPhoto.setDateTime(date);
+        calc(stars, z, zenith, approxDate, scopeDate, this.astroCalculator, isFixGravity, isFixRefraction).then(
+            (date) => {
+                // 显示结果
+                this.interactPhoto.setDateTime(date);
 
-            // 使用新时间重新计算天体坐标并显示
-            this.celeCoord.calc()
-    
-            // 结束计算
-            this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';
-            this.interactPhoto.resetbuttonFunctioner();
-        });
+                // 使用新时间重新计算天体坐标并显示
+                this.celeCoord.calc();
+
+                // 结束计算
+                this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';
+                this.interactPhoto.resetbuttonFunctioner();
+            }
+        );
     }
 
     // 检查originalStars数组每个子项的名称是否完整
     checkStars(originalStars) {
         let isComplete = true;
-        originalStars.forEach(originalStar => {
+        originalStars.forEach((originalStar) => {
             if (originalStar[0] === '') {
                 isComplete = false;
             }
@@ -105,6 +107,5 @@ class MoonTime extends DefaultbuttonFunctioner {
         return isComplete;
     }
 }
-
 
 export { MoonTime };

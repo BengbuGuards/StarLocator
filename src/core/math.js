@@ -1,4 +1,4 @@
-import { Vector } from "astronomy-engine";
+import { Vector } from 'astronomy-engine';
 /**
  * 向量加法
  * @param {Vector} v1
@@ -8,7 +8,6 @@ import { Vector } from "astronomy-engine";
 function add(v1, v2) {
     return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, 0);
 }
-
 
 /**
  * 向量点乘
@@ -20,7 +19,6 @@ function dot(v1, v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
 }
 
-
 /**
  * 向量元素乘
  * @param {number} n
@@ -31,7 +29,6 @@ function multiply(n, v) {
     return new Vector(n * v.x, n * v.y, n * v.z, 0);
 }
 
-
 /**
  * 向量叉乘
  * @param {Vector} v1
@@ -39,14 +36,8 @@ function multiply(n, v) {
  * @returns {Vector}
  */
 function cross(v1, v2) {
-    return new Vector(
-        v1.y * v2.z - v1.z * v2.y,
-        v1.z * v2.x - v1.x * v2.z,
-        v1.x * v2.y - v1.y * v2.x,
-        0
-    );
+    return new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x, 0);
 }
-
 
 /**
  * 向量归一化
@@ -58,24 +49,22 @@ function normalize(v) {
     return new Vector(v.x / length, v.y / length, v.z / length, 0);
 }
 
-
 /**
  * 角度制转弧度制
- * @param {number} deg 
+ * @param {number} deg
  * @returns {number}
  */
 function deg2Rad(deg) {
-    return deg * Math.PI / 180;
+    return (deg * Math.PI) / 180;
 }
-
 
 /**
  * 弧度制转角度制
- * @param {number} rad 
+ * @param {number} rad
  * @returns {number}
  */
 function rad2Deg(rad) {
-    return rad * 180 / Math.PI;
+    return (rad * 180) / Math.PI;
 }
 
 /**
@@ -87,7 +76,7 @@ function rad2Deg(rad) {
 function rejectOutliers(arr, sigma = 2) {
     let mean = arr.reduce((a, b) => a + b) / arr.length;
     let std = Math.sqrt(arr.reduce((a, b) => a + (b - mean) ** 2) / arr.length);
-    return arr.filter(x => Math.abs(x - mean) < sigma * std);
+    return arr.filter((x) => Math.abs(x - mean) < sigma * std);
 }
 
 /**
@@ -98,19 +87,18 @@ function rejectOutliers(arr, sigma = 2) {
 function calculateMedian(numbers) {
     // 首先对数组进行排序
     numbers.sort((a, b) => a - b);
-  
+
     const middleIndex = Math.floor(numbers.length / 2);
-  
+
     // 判断数组长度是奇数还是偶数
     if (numbers.length % 2 === 0) {
-      // 偶数个元素，返回中间两个元素的平均值
-      return (numbers[middleIndex - 1] + numbers[middleIndex]) / 2;
+        // 偶数个元素，返回中间两个元素的平均值
+        return (numbers[middleIndex - 1] + numbers[middleIndex]) / 2;
     } else {
-      // 奇数个元素，返回中间的元素
-      return numbers[middleIndex];
+        // 奇数个元素，返回中间的元素
+        return numbers[middleIndex];
     }
 }
-
 
 /**
  * 三段二分法求函数极小值
@@ -125,11 +113,11 @@ function minimize(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) 
     let left = lowerBound;
     let right = upperBound;
     let iter = 0;
-    
-    while ((right - left) > tolerance && iter < maxIter) {
+
+    while (right - left > tolerance && iter < maxIter) {
         let midLeft = left + (right - left) / 3;
         let midRight = right - (right - left) / 3;
-        
+
         if (func(midLeft) < func(midRight)) {
             right = midRight;
         } else {
@@ -137,7 +125,7 @@ function minimize(func, lowerBound, upperBound, tolerance = 1e-6, maxIter = 60) 
         }
         iter += 1;
     }
-    
+
     // 返回最小点 x
     return (left + right) / 2;
 }
@@ -155,25 +143,33 @@ async function minimizeAsync(func, lowerBound, upperBound, tolerance = 1e-6, max
     let left = lowerBound;
     let right = upperBound;
     let iter = 0;
-    
-    while ((right - left) > tolerance && iter < maxIter) {
+
+    while (right - left > tolerance && iter < maxIter) {
         let midLeft = left + (right - left) / 3;
         let midRight = right - (right - left) / 3;
-        
-        if (await func(midLeft) < await func(midRight)) {
+
+        if ((await func(midLeft)) < (await func(midRight))) {
             right = midRight;
         } else {
             left = midLeft;
         }
         iter += 1;
     }
-    
+
     // 返回最小点 x
     return (left + right) / 2;
 }
 
-
 export {
-    add, dot, multiply, cross, normalize,
-    deg2Rad, rad2Deg, rejectOutliers, calculateMedian, minimize, minimizeAsync
+    add,
+    dot,
+    multiply,
+    cross,
+    normalize,
+    deg2Rad,
+    rad2Deg,
+    rejectOutliers,
+    calculateMedian,
+    minimize,
+    minimizeAsync,
 };

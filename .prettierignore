@@ -1,0 +1,7 @@
+*.md
+*.json
+*.yml
+*.yaml
+*.html
+*.css
+node_modules/

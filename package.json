@@ -7,7 +7,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --config webpack.config.js",
 		"dev": "webpack-dev-server --config webpack.config.js",
-		"serve": "http-server ./dist -p 6974"
+		"serve": "http-server ./dist -p 6974",
+		"format": "prettier --write '**/*.js'"
 	},
 	"keywords": [],
 	"author": "",
@@ -26,6 +27,7 @@
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.3",
 		"http-server": "^14.1.1",
+		"prettier": "^3.3.3",
 		"style-loader": "^4.0.0",
 		"webpack": "^5.95.0",
 		"webpack-cli": "^5.1.4",

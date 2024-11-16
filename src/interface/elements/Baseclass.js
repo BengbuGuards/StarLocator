@@ -116,6 +116,7 @@ class markerArray {
         this.array.push(obj);
     }
 
+    /* eslint-disable-next-line no-unused-vars */
     remove(id) {}
 
     get(id) {

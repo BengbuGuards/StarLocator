@@ -11,30 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: 检出代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: 设置 Node.js 环境
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Install pnpm 📦
+        uses: pnpm/action-setup@v4
         with:
-          node-version: '18' # 使用 Node.js 18
+          version: "9"
+          run_install: false
 
-      # Step 3: 安装依赖
-      - name: Install dependencies
-        run: npm install
+      - name: Install and Build 🔧
+        run: pnpm install --frozen-lockfile
 
-      # Step 4: 检查格式化
-      - name: Run Prettier to check formatting
-        run: npx prettier --check "**/*.js"
+      - name: lint
+        run: pnpm run lintfix
 
-      # Step 5: 如果有差异则失败
-      - name: Fail if formatting is incorrect
+      - name: format
+        run: pnpm run format
+
+      - name: Ensure no format changes
         run: |
-          DIFF=$(npx prettier --check "**/*.js" | grep -E "^[^✓]" || true)
-          if [ -n "$DIFF" ]; then
-            echo "The following files need formatting:"
-            echo "$DIFF"
-            exit 1
-          fi
+          git diff --exit-code || (echo "Code formatting issues detected" && exit 1)

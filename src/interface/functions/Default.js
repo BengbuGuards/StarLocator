@@ -23,7 +23,7 @@ class DefaultbuttonFunctioner {
     }
 
     // 处理鼠标按下事件
-    handleMouseDown(e) {
+    handleMouseDown() {
         this.interactPhoto.lmbDown = true;
 
         if (!this.interactPhoto.movable) return;
@@ -41,7 +41,7 @@ class DefaultbuttonFunctioner {
     }
 
     // 处理鼠标抬起事件
-    handleMouseUp(e) {
+    handleMouseUp() {
         this.interactPhoto.lmbDown = false;
 
         if (!this.interactPhoto.movable) return;
@@ -96,7 +96,6 @@ class DefaultbuttonFunctioner {
     handleMouseOut(e) {
         if (!this.interactPhoto.movable) return;
         if (e) {
-            let p = this.interactPhoto.canvas.getPointer(e.e);
             this.interactPhoto.cursorCrd.innerHTML = '';
         }
     }

@@ -8,6 +8,7 @@
 		"build": "webpack --config webpack.config.js",
 		"dev": "webpack-dev-server --config webpack.config.js",
 		"serve": "http-server ./dist -p 6974",
+		"lintfix": "eslint . --fix",
 		"format": "prettier --write '**/*.js'"
 	},
 	"keywords": [],
@@ -23,6 +24,8 @@
 		"@eslint/js": "^9.13.0",
 		"css-loader": "^7.1.2",
 		"eslint": "^9.13.0",
+		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-prettier": "^5.2.1",
 		"globals": "^15.11.0",
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.3",

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -39,3 +40,4 @@ module.exports = {
         port: 6974,
     },
 };
+/* eslint-enable no-undef */

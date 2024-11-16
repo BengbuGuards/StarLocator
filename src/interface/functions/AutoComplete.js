@@ -10,7 +10,7 @@ function autoCompleteStarName(inp) {
     var tmp = Array.from(new Set(Object.keys(starZH2EN).concat(Object.values(starZH2EN))));
     tmp.forEach((t) => arrAllStarNames.push(fuzzysort.prepare(t)));
     /*输入框输入时，自动显示实时补全项*/
-    inp.addEventListener('input', function (e) {
+    inp.addEventListener('input', function () {
         var divA,
             divB,
             val = this.value;
@@ -42,7 +42,7 @@ function autoCompleteStarName(inp) {
             let divItem = document.createElement('DIV');
             divItem.innerHTML += element.highlight();
             divItem.innerHTML += "<input type='hidden' value='" + element.target + "'>";
-            divItem.addEventListener('click', function (e) {
+            divItem.addEventListener('click', function () {
                 inp.value = this.getElementsByTagName('input')[0].value;
                 inp.dispatchEvent(new Event('input'));
                 closeAllLists();

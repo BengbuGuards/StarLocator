@@ -134,7 +134,7 @@ class CeleArray extends markerArray {
                         .replace(/id="(.*?)2"/g, (match, p1) => {
                             return `id="${p1}${this.num() + 1}"`;
                         })
-                        .replace(/<div(.*?)>(.*?)<\/div>/g, (match, p1, p2) => {
+                        .replace(/<div(.*?)>.*?<\/div>/g, (match, p1) => {
                             return `<div${p1}></div>`;
                         });
                 }

@@ -419,7 +419,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
         for (let j = i + 1; j < stars.length; ++j) {
             try {
                 crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
-            } catch (e) {
+            } catch {
                 // 抛异常
                 console.error('存在两星平面不相交', stars[i], stars[j]);
             }

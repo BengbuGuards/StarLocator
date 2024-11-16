@@ -55,12 +55,6 @@ pnpm serve
 pnpm dev
 ```
 
-5. 格式化
-
-```bash
-pnpm run format
-```
-
 ## 致谢 | CREDITS
 
 ### 开源项目 | OPEN SOURCE PROJECTS

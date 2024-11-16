@@ -1,6 +1,6 @@
 # StarLocator
 
-💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">在线版镜像链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a> 
+💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">在线版镜像链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
 
 > StarLocator 是什么 | WHAT IS STARLOCATOR
 
@@ -27,7 +27,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 
 ## 使用方法 | HOW TO USE
 
-见<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a> 
+见<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
 
 ## 贡献 | CONTRIBUTING
 
@@ -53,6 +53,12 @@ pnpm serve
 （Optional）如果你想在开发模式下运行项目，可以使用
 ```bash
 pnpm dev
+```
+
+5. 格式化
+
+```bash
+pnpm run format
 ```
 
 ## 致谢 | CREDITS

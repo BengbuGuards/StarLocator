@@ -1,12 +1,11 @@
 import { marker } from 'leaflet';
 import { polyline } from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
-import { getVPoint } from '../../core/algorithm/VPoint.js'
+import { getVPoint } from '../../core/algorithm/VPoint.js';
 import { getZ } from '../../core/getZ.js';
 import { calc } from '../../core/calc.js';
 import { markStars } from '../../core/mark.js';
 import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
-
 
 // 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
@@ -21,7 +20,7 @@ class Calc extends DefaultbuttonFunctioner {
         super.onClick();
         if (!this.interactPhoto.movable) return;
 
-        let isAutoCeleCoord = document.getElementById('check3').checked;  // 是否自动计算天体坐标
+        let isAutoCeleCoord = document.getElementById('check3').checked; // 是否自动计算天体坐标
         if (isAutoCeleCoord) {
             // 先计算天体坐标
             this.celeCoord.calc().then((code) => {
@@ -73,7 +72,7 @@ class Calc extends DefaultbuttonFunctioner {
             let isFixRefraction = document.getElementById('check1').checked;
             let z = getZ(stars, zenith, isFixRefraction);
             if (isNaN(z)) {
-                throw new Error("无法计算像素焦距");
+                throw new Error('无法计算像素焦距');
             }
             this.showZ(z);
 
@@ -81,7 +80,7 @@ class Calc extends DefaultbuttonFunctioner {
             let isFixGravity = document.getElementById('check2').checked;
             let geoEstimate = calc(stars, z, zenith, isFixGravity, isFixRefraction);
             if (geoEstimate.length == 0 || isNaN(geoEstimate[0]) || isNaN(geoEstimate[1])) {
-                throw new Error("无法计算地理坐标");
+                throw new Error('无法计算地理坐标');
             }
 
             // 显示结果
@@ -100,8 +99,8 @@ class Calc extends DefaultbuttonFunctioner {
     // 检查originalStars数组每个子项的数据是否完整
     checkStars(originalStars) {
         let isComplete = true;
-        originalStars.forEach(originalStar => {
-            originalStar.forEach(data => {
+        originalStars.forEach((originalStar) => {
+            originalStar.forEach((data) => {
                 if (data === '') {
                     isComplete = false;
                 }
@@ -127,8 +126,8 @@ class Calc extends DefaultbuttonFunctioner {
         if (geoEstimate[1] > 180) {
             geoEstimate[1] -= 360;
         }
-        document.getElementById('outputLat').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + "°";
-        document.getElementById('outputLong').textContent = Math.round(geoEstimate[1] * 10000) / 10000 + "°";
+        document.getElementById('outputLat').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + '°';
+        document.getElementById('outputLong').textContent = Math.round(geoEstimate[1] * 10000) / 10000 + '°';
         let map = this.interactPhoto.map;
         // 清除之前的标记
         if (this.mapMarker) {
@@ -141,14 +140,12 @@ class Calc extends DefaultbuttonFunctioner {
         let addressDiv = document.getElementById('address');
         addressDiv.innerText = '正在获取地理位置信息...';
         // 先申请国内
-        fetch(
-            `https://geocode.xyz/${geoEstimate[0]},${geoEstimate[1]}?json=1`,
-            { method: 'GET' })
-            .then(response => response.json())
-            .then(data => {
+        fetch(`https://geocode.xyz/${geoEstimate[0]},${geoEstimate[1]}?json=1`, { method: 'GET' })
+            .then((response) => response.json())
+            .then((data) => {
                 if (!data.geocode.startsWith('Throttled')) {
                     function info2str(info) {
-                        return (typeof info == 'string') ? (info + ", ") : '';
+                        return typeof info == 'string' ? info + ', ' : '';
                     }
                     let address = `${info2str(data.staddress) + info2str(data.city) + info2str(data.region) + info2str(data.state) + info2str(data.country)}`;
                     addressDiv.innerText = address.slice(0, -2);
@@ -156,25 +153,26 @@ class Calc extends DefaultbuttonFunctioner {
                     // OSM逆地址解析API（镜像）
                     fetch(
                         `https://map.mapscdn.com/nominatim/reverse?format=json&lat=${geoEstimate[0]}&lon=${geoEstimate[1]}&zoom=18&addressdetails=0`,
-                        { method: 'GET' })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.display_name != undefined)
-                                addressDiv.innerText = data.display_name;
+                        { method: 'GET' }
+                    )
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.display_name != undefined) addressDiv.innerText = data.display_name;
                             else {
                                 // 原API（需梯子）
                                 fetch(
                                     `https://nominatim.openstreetmap.org/reverse?format=json&lat=${geoEstimate[0]}&lon=${geoEstimate[1]}&zoom=18&addressdetails=0`,
-                                    { method: 'GET' })
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        if (data.display_name != undefined)
-                                            addressDiv.innerText = data.display_name;
+                                    { method: 'GET' }
+                                )
+                                    .then((response) => response.json())
+                                    .then((data) => {
+                                        if (data.display_name != undefined) addressDiv.innerText = data.display_name;
                                     });
                             }
                         });
                 }
-            }).catch(() => {
+            })
+            .catch(() => {
                 addressDiv.innerText = '获取地理位置信息失败';
             });
         // 添加新的标记
@@ -182,9 +180,13 @@ class Calc extends DefaultbuttonFunctioner {
         this.mapMarker = newMarker;
         // 误差线
         let shift = 0.125; // TODO: 从界面读取误差值
-        this.mapLine = polyline([[geoEstimate[0], ((geoEstimate[1] - shift + 180) % 360 + 360) % 360 - 180],
-                                 [geoEstimate[0], ((geoEstimate[1] + shift + 180) % 360 + 360) % 360 - 180]],
-                                 { color: '#4996d2' }).addTo(map);
+        this.mapLine = polyline(
+            [
+                [geoEstimate[0], ((((geoEstimate[1] - shift + 180) % 360) + 360) % 360) - 180],
+                [geoEstimate[0], ((((geoEstimate[1] + shift + 180) % 360) + 360) % 360) - 180],
+            ],
+            { color: '#4996d2' }
+        ).addTo(map);
         map.setView([geoEstimate[0], geoEstimate[1]], 3);
     }
 
@@ -193,10 +195,9 @@ class Calc extends DefaultbuttonFunctioner {
         let width = this.interactPhoto.img.width;
         let height = this.interactPhoto.img.height;
         let tri_long = Math.sqrt(width * width + height * height);
-        let z35 = z * 43.27 / tri_long;
+        let z35 = (z * 43.27) / tri_long;
         document.getElementById('focLenMm').textContent = Math.round(z35);
     }
 }
-
 
 export { Calc };

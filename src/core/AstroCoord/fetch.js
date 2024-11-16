@@ -1,6 +1,5 @@
 import { solarBodies } from './calc.js';
 
-
 /**
  * 根据恒星名称获取其赤经和赤纬
  * @param {string} starName 恒星名称
@@ -20,16 +19,16 @@ async function getRaDeCbyName(starName) {
             method: 'GET',
         }
     )
-    .then(response => response.json()) // 解析响应体为JSON格式
-    .then(data => {
-        let ra = data[0]['ra'] / 15;
-        let dec = data[0]['dec'];
-        return [ra, dec];
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        return [NaN, NaN];
-    }); // 捕获错误
+        .then((response) => response.json()) // 解析响应体为JSON格式
+        .then((data) => {
+            let ra = data[0]['ra'] / 15;
+            let dec = data[0]['dec'];
+            return [ra, dec];
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            return [NaN, NaN];
+        }); // 捕获错误
 
     return results;
 }
@@ -41,13 +40,12 @@ async function getRaDeCbyName(starName) {
  */
 async function getRaDecbyNames(starNames) {
     // 异步获取恒星的赤经和赤纬
-    let raDecs = starNames.map(async starName => {
+    let raDecs = starNames.map(async (starName) => {
         let raDec = await getRaDeCbyName(starName);
         return raDec;
     });
     raDecs = await Promise.all(raDecs);
     return raDecs;
 }
-
 
 export { getRaDecbyNames };

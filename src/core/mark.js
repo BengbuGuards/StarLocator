@@ -1,6 +1,5 @@
-import { Star } from "./data.js";
-import { deg2Rad } from "./math.js";
-
+import { Star } from './data.js';
+import { deg2Rad } from './math.js';
 
 /**
  * 将时角的单位转化为 h
@@ -19,9 +18,7 @@ function toHours(hourAngle) {
     } else {
         return NaN;
     }
-
 }
-
 
 /**
  * 将赤纬的单位转化为度
@@ -43,7 +40,6 @@ function toDegrees(declination) {
     }
 }
 
-
 /**
  * 处理原始数据，标记星星
  * @param {Array<Array>} originalStars 所有星星的原始数据，在这个数组里的每个数组应为
@@ -51,7 +47,7 @@ function toDegrees(declination) {
  * @returns {Array<Star>} Star 对象数组
  */
 function markStars(originalStars) {
-    let stars = []
+    let stars = [];
     // 遍历每组原始数据
     for (let originalStar of originalStars) {
         let [x, y, name, hourAngle, declination] = originalStar;
@@ -66,6 +62,5 @@ function markStars(originalStars) {
     }
     return stars;
 }
-
 
 export { markStars };

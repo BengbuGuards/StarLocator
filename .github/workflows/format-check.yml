@@ -1,0 +1,34 @@
+name: Format Check
+
+on:
+  pull_request: # 在每次提交 PR 时运行
+    branches:
+      - main # 针对 main 分支运行
+      - dev # 针对 dev 分支运行
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm 📦
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+          run_install: false
+
+      - name: Install and Build 🔧
+        run: pnpm install --frozen-lockfile
+
+      - name: lint
+        run: pnpm run lintfix
+
+      - name: format
+        run: pnpm run format
+
+      - name: Ensure no format changes
+        run: |
+          git diff --exit-code || (echo "Code formatting issues detected" && exit 1)

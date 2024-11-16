@@ -15,8 +15,8 @@ function getOriginalStars(interactPhoto) {
             coordX,
             coordY,
             name,
-            hAngleH==='' || hAngleM==='' || hAngleS==='' ? '' : hAngleH + 'h' + hAngleM + 'm' + hAngleS + 's',
-            declinD==='' || declinM==='' || declinS==='' ? '' : declinD + '°' + declinM + '\'' + declinS + '"'
+            hAngleH === '' || hAngleM === '' || hAngleS === '' ? '' : hAngleH + 'h' + hAngleM + 'm' + hAngleS + 's',
+            declinD === '' || declinM === '' || declinS === '' ? '' : declinD + '°' + declinM + "'" + declinS + '"',
         ]);
     }
     return stars;

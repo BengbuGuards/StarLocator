@@ -1,8 +1,10 @@
 /** 一颗星星 */
 class Star {
-    x; y;
+    x;
+    y;
     name;
-    lat; lon;
+    lat;
+    lon;
     /**
      * @param {number} x 照片上横坐标
      * @param {number} y 照片上纵坐标
@@ -17,7 +19,6 @@ class Star {
         this.lat = lat;
         this.lon = lon;
     }
-};
-
+}
 
 export { Star };

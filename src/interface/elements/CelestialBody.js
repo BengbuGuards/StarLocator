@@ -10,7 +10,7 @@ class CelestialBody extends ShapeObject {
         // 初始化图上坐标
         this.addToTable();
         // 绑定事件
-        this.bindEvents()
+        this.bindEvents();
     }
 
     /**
@@ -49,10 +49,7 @@ class CelestialBody extends ShapeObject {
         super.onMove();
 
         // 修改表格内容（貌似性能不是很好）
-        this.addToTable(
-            this.round(this.point.left + 16.5, 2),
-            this.round(this.point.top + 16.5, 2)
-        )
+        this.addToTable(this.round(this.point.left + 16.5, 2), this.round(this.point.top + 16.5, 2));
     }
 
     /**
@@ -69,10 +66,10 @@ class CelestialBody extends ShapeObject {
      */
     onRename() {
         // 获取填写的名称
-        let name = document.getElementById(`name${this.id}`).value;  // this.id 为字符串 name数字
+        let name = document.getElementById(`name${this.id}`).value; // this.id 为字符串 name数字
         // 若没填写名字，显示两位数编号
         if (name === '' || name === '\n') {
-            name = this.id.toString().padStart(2, '0')
+            name = this.id.toString().padStart(2, '0');
         }
         // 必须使用 set() 方法并刷新画布，否则文本更改不会显示
         this.label.set('text', name);
@@ -85,7 +82,7 @@ class CelestialBody extends ShapeObject {
     onValueChange() {
         let x = parseFloat(document.getElementById(`coordX${this.id}`).value);
         let y = parseFloat(document.getElementById(`coordY${this.id}`).value);
-		this.setRealXY(x, y);
+        this.setRealXY(x, y);
         this.point.setCoords();
         this.label.setCoords();
         this.canvas.renderAll();
@@ -117,10 +114,11 @@ class CeleArray extends markerArray {
         super(interactPhoto);
     }
 
-    add (x, y) {
+    add(x, y) {
         // 判断星星数量是否已超过表格行数
         let inputTable = document.getElementById('inputTable');
-        if (this.num() + 1 > inputTable.rows.length - 2) {    // 减掉一行标题与一行天顶
+        if (this.num() + 1 > inputTable.rows.length - 2) {
+            // 减掉一行标题与一行天顶
             // 添加一行
             let newRow = inputTable.insertRow(this.num() + 2);
             // 添加单元格
@@ -128,15 +126,17 @@ class CeleArray extends markerArray {
             // 第二颗星星的行，用于 HTML 模板
             // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
             for (let i = 0; i <= 5; ++i) {
-                let newcell = newRow.insertCell(i)    // 将第二行 HTML 抄过来并替换数字
+                let newcell = newRow.insertCell(i); // 将第二行 HTML 抄过来并替换数字
                 if (i == 0) {
                     newcell.innerHTML = this.num() + 1;
                 } else {
-                    newcell.innerHTML = secondStarRow.cells[i].innerHTML.replace(/id="(.*?)2"/g, (match, p1) => {
-                        return `id="${p1}${this.num() + 1}"`;
-                    }).replace(/<div(.*?)>(.*?)<\/div>/g, (match, p1, p2) => {
-                        return `<div${p1}></div>`;
-                    });
+                    newcell.innerHTML = secondStarRow.cells[i].innerHTML
+                        .replace(/id="(.*?)2"/g, (match, p1) => {
+                            return `id="${p1}${this.num() + 1}"`;
+                        })
+                        .replace(/<div(.*?)>.*?<\/div>/g, (match, p1) => {
+                            return `<div${p1}></div>`;
+                        });
                 }
             }
             autoCompleteStarName(document.getElementById(`name${this.num() + 1}`));
@@ -145,35 +145,63 @@ class CeleArray extends markerArray {
         let star = new CelestialBody(x, y, this.num() + 1, this.interactPhoto.canvas);
         this.array.push(star);
         // 为新添加的星星绑定与CeleArray相关的删除事件
-        star.deleter.on('mousedown', () => {
-            this.remove(star.id);
-        }).bind(this);
+        star.deleter
+            .on('mousedown', () => {
+                this.remove(star.id);
+            })
+            .bind(this);
     }
 
     /**
      * 从数组中删除指定id（从1开始计）的星星
      * 注：不处理星星标记本身的删除逻辑
-     * @param {Number} id 
+     * @param {Number} id
      */
-    remove(id){
+    remove(id) {
         // 先清除表格数据
         this.array[id - 1].removeTableData();
         // 对后面的星星进行 id 更新
-        for(let celeBody of this.array){
-            if(celeBody.id > id) {
-                document.getElementById(`name${celeBody.id-1}`).value = document.getElementById(`name${celeBody.id}`).value;
-                document.getElementById(`hAngleH${celeBody.id-1}`).textContent = document.getElementById(`hAngleH${celeBody.id}`).textContent;
-                document.getElementById(`hAngleM${celeBody.id-1}`).textContent = document.getElementById(`hAngleM${celeBody.id}`).textContent;
-                document.getElementById(`hAngleS${celeBody.id-1}`).textContent = document.getElementById(`hAngleS${celeBody.id}`).textContent;
-                document.getElementById(`declinD${celeBody.id-1}`).textContent = document.getElementById(`declinD${celeBody.id}`).textContent;
-                document.getElementById(`declinM${celeBody.id-1}`).textContent = document.getElementById(`declinM${celeBody.id}`).textContent;
-                document.getElementById(`declinS${celeBody.id-1}`).textContent = document.getElementById(`declinS${celeBody.id}`).textContent;
-                document.getElementById(`coordX${celeBody.id-1}`).value = document.getElementById(`coordX${celeBody.id}`).value;
-                document.getElementById(`coordY${celeBody.id-1}`).value = document.getElementById(`coordY${celeBody.id}`).value;
-                document.getElementById(`name${celeBody.id-1}`).oninput = document.getElementById(`name${celeBody.id}`).oninput;
-                document.getElementById(`name${celeBody.id-1}`).onfocus = document.getElementById(`name${celeBody.id}`).onfocus;
-                document.getElementById(`coordX${celeBody.id-1}`).oninput = document.getElementById(`coordX${celeBody.id}`).oninput;
-                document.getElementById(`coordY${celeBody.id-1}`).oninput = document.getElementById(`coordY${celeBody.id}`).oninput;
+        for (let celeBody of this.array) {
+            if (celeBody.id > id) {
+                document.getElementById(`name${celeBody.id - 1}`).value = document.getElementById(
+                    `name${celeBody.id}`
+                ).value;
+                document.getElementById(`hAngleH${celeBody.id - 1}`).textContent = document.getElementById(
+                    `hAngleH${celeBody.id}`
+                ).textContent;
+                document.getElementById(`hAngleM${celeBody.id - 1}`).textContent = document.getElementById(
+                    `hAngleM${celeBody.id}`
+                ).textContent;
+                document.getElementById(`hAngleS${celeBody.id - 1}`).textContent = document.getElementById(
+                    `hAngleS${celeBody.id}`
+                ).textContent;
+                document.getElementById(`declinD${celeBody.id - 1}`).textContent = document.getElementById(
+                    `declinD${celeBody.id}`
+                ).textContent;
+                document.getElementById(`declinM${celeBody.id - 1}`).textContent = document.getElementById(
+                    `declinM${celeBody.id}`
+                ).textContent;
+                document.getElementById(`declinS${celeBody.id - 1}`).textContent = document.getElementById(
+                    `declinS${celeBody.id}`
+                ).textContent;
+                document.getElementById(`coordX${celeBody.id - 1}`).value = document.getElementById(
+                    `coordX${celeBody.id}`
+                ).value;
+                document.getElementById(`coordY${celeBody.id - 1}`).value = document.getElementById(
+                    `coordY${celeBody.id}`
+                ).value;
+                document.getElementById(`name${celeBody.id - 1}`).oninput = document.getElementById(
+                    `name${celeBody.id}`
+                ).oninput;
+                document.getElementById(`name${celeBody.id - 1}`).onfocus = document.getElementById(
+                    `name${celeBody.id}`
+                ).onfocus;
+                document.getElementById(`coordX${celeBody.id - 1}`).oninput = document.getElementById(
+                    `coordX${celeBody.id}`
+                ).oninput;
+                document.getElementById(`coordY${celeBody.id - 1}`).oninput = document.getElementById(
+                    `coordY${celeBody.id}`
+                ).oninput;
                 celeBody.removeTableData();
                 celeBody.id--;
                 celeBody.onRename();
@@ -190,7 +218,7 @@ class CeleArray extends markerArray {
 
     clear() {
         // 清空表格数据
-        for (let i = 1;i <= 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             document.getElementById(`name${i}`).value = '';
             document.getElementById(`hAngleH${i}`).textContent = '';
             document.getElementById(`hAngleM${i}`).textContent = '';
@@ -210,11 +238,11 @@ class CeleArray extends markerArray {
             inputTable.deleteRow(inputTable.rows.length - 1);
         }
         // 清空星星及其数组
-        for(let i of this.array){
+        for (let i of this.array) {
             i.remove();
         }
-        this.array=[];
+        this.array = [];
     }
 }
 
-export { CelestialBody , CeleArray};
+export { CelestialBody, CeleArray };

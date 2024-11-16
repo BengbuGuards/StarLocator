@@ -8,17 +8,16 @@ import { MoonTime } from '../functions/MoonTime.js';
 import { CeleCoord } from '../functions/CeleCoord.js';
 import { AstroCalculator } from '../../core/AstroCoord/calc.js';
 
-
 // 事件管理器，管理鼠标事件、按钮事件与照片的交互
-class EventManager{
-    constructor(interactPhoto){
+class EventManager {
+    constructor(interactPhoto) {
         this.interactPhoto = interactPhoto;
         this.touchEventAdapter = new TouchEventAdapter();
 
         // 事件共享变量
         this.astroCalculator = new AstroCalculator();
         this.celeCoord = new CeleCoord(this.interactPhoto, this.astroCalculator);
-        
+
         // 按钮事件处理类
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
@@ -41,7 +40,7 @@ class EventManager{
         this.pickCele.clearData();
         this.pickPL.clearData();
         this.calc.clearData();
-        this.interactPhoto.CeleArray.clear();  // 清空表格数据
+        this.interactPhoto.CeleArray.clear(); // 清空表格数据
     }
 
     // 鼠标事件处理

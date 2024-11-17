@@ -1,4 +1,4 @@
-import { rejectOutliers, deg2Rad, rad2Deg, cross, normalize, minimize } from './math.js';
+import { rejectOutliers, deg2Rad, rad2Deg, cross3d, normalize, minimize } from './math.js';
 import {
     AngleBetween,
     VectorFromSphere,
@@ -114,7 +114,7 @@ function getZWithoutRefraction(stars, z0, zenith) {
         vector = normalize(vector);
         zenithVector = normalize(zenithVector);
         // 旋转轴
-        let axis = cross(vector, zenithVector);
+        let axis = cross3d(vector, zenithVector);
         // 保证逆时针旋转
         angle = deg2Rad(-angle);
         // 罗德里格斯旋转公式

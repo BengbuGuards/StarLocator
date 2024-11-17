@@ -6,6 +6,7 @@ import { getZ } from '../../core/getZ.js';
 import { calc } from '../../core/calc.js';
 import { markStars } from '../../core/mark.js';
 import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
+import { wrapAngleInDeg } from '../../core/math.js';
 
 // 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
@@ -64,7 +65,12 @@ class Calc extends DefaultbuttonFunctioner {
 
         try {
             // 计算灭点
-            let zenith = getVPoint(globalPLsPointsCoord);
+            const vpoint_res = getVPoint(globalPLsPointsCoord);
+            if (!vpoint_res.has_vpoint) {
+                throw new Error('铅垂线的延长线不相交，无法计算灭点');
+            }
+            let zenith = vpoint_res.vpoint;
+
             this.addZenithtoTable(zenith);
 
             // 计算焦距
@@ -123,9 +129,8 @@ class Calc extends DefaultbuttonFunctioner {
     // 显示地理坐标
     showGeoEstimate(geoEstimate) {
         // 在地图上显示位置
-        if (geoEstimate[1] > 180) {
-            geoEstimate[1] -= 360;
-        }
+        geoEstimate[1] = wrapAngleInDeg(geoEstimate[1]);
+
         document.getElementById('outputLat').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + '°';
         document.getElementById('outputLong').textContent = Math.round(geoEstimate[1] * 10000) / 10000 + '°';
         let map = this.interactPhoto.map;

@@ -5,6 +5,9 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default [
     {
+        ignores: ['dist/'],
+    },
+    {
         languageOptions: {
             globals: globals.browser,
         },

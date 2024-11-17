@@ -65,7 +65,12 @@ class MoonTime extends DefaultbuttonFunctioner {
         let isFixGravity = document.getElementById('check2').checked;
 
         // 计算灭点
-        let zenith = getVPoint(globalPLsPointsCoord);
+        const vpoint_res = getVPoint(globalPLsPointsCoord);
+        if (!vpoint_res.has_vpoint) {
+            this.interactPhoto.tips.innerHTML = '铅垂线的延长线不相交，无法计算灭点';
+            return;
+        }
+        let zenith = vpoint_res.vpoint;
 
         // 计算焦距
         let z = getZ(

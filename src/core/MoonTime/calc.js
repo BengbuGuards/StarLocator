@@ -38,15 +38,17 @@ async function calc(
         isFixRefraction
     );
 
+    const msPerDay = 86400000;
+
     // 将scopeDate划分为每20天一个区间，对每个区间使用三段二分法minimize搜索最小误差，最后返回最小误差对应的时间
-    let minTime = approxDate.getTime() - (scopeDate * 86400000) / 2;
-    let maxTime = approxDate.getTime() + (scopeDate * 86400000) / 2;
+    let minTime = approxDate.getTime() - (scopeDate * msPerDay) / 2;
+    let maxTime = approxDate.getTime() + (scopeDate * msPerDay) / 2;
     let minError = Infinity;
     let optTime = 0;
     let optFunc = async (time) =>
         await angleError(time, approxDate, stars, geoEstimate, moonIndex, astroCalculator, targetAngles);
-    for (let lefti = minTime; lefti < maxTime; lefti += 20 * 86400000) {
-        let righti = Math.min(lefti + 20 * 86400000, maxTime);
+    for (let lefti = minTime; lefti < maxTime; lefti += 20 * msPerDay) {
+        let righti = Math.min(lefti + 20 * msPerDay, maxTime);
         let optTimeSingle = await minimizeAsync(optFunc, lefti, righti, 1e-6, 100);
         let timeError = await optFunc(optTimeSingle);
         // console.log(new Date(optTimeSingle), timeError);

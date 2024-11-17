@@ -80,7 +80,7 @@ function rad2Deg(rad) {
 
 /**
  * 使得角度位于 [-180,180]
- * @param {number} rad
+ * @param {number} deg
  * @returns {number}
  */
 function wrapAngleInDeg(deg) {

@@ -1,5 +1,5 @@
 import { calc as geoCalc } from '../calc.js';
-import { deg2Rad } from '../math.js';
+import { deg2Rad, wrapAngleInDeg } from '../math.js';
 import { AngleBetween, VectorFromSphere, Vector, Spherical, Observer } from 'astronomy-engine';
 
 /**
@@ -23,14 +23,11 @@ function findMoonIndex(stars) {
  * @returns {Array<number>} 返回月与星星相互角距
  */
 function AngleBetweenMoonAndStar(stars, moonIndex, z) {
-    let targetAngles = [];
+    const targetAngles = [];
+    const moonVec = new Vector(stars[moonIndex].x, stars[moonIndex].y, z, 0);
     for (let i = 0; i < stars.length; ++i) {
-        targetAngles.push(
-            AngleBetween(
-                new Vector(stars[moonIndex].x, stars[moonIndex].y, z, 0),
-                new Vector(stars[i].x, stars[i].y, z, 0)
-            )
-        );
+        const starVec = new Vector(stars[i].x, stars[i].y, z, 0);
+        targetAngles.push(AngleBetween(moonVec, starVec));
     }
     return targetAngles;
 }
@@ -78,6 +75,11 @@ async function geoEstimatebyStars(
     return geoEstimate;
 }
 
+function msToSiderealDays(ms) {
+    const msInSiderealDay = 86164090.5;
+    return ms / msInSiderealDay;
+}
+
 /**
  * 误差函数，计算每一天的星星（含月）相互角距，输出误差
  * @param {Number} time 时间戳
@@ -92,10 +94,8 @@ async function geoEstimatebyStars(
 async function angleError(time, approxDate, stars, geoEstimate, moonIndex, astroCalculator, targetAngles) {
     let date = new Date(time);
     // 使用恒星日周期快速计算该时间下观测者地理坐标
-    let observerLon = (geoEstimate[1] - ((time - approxDate.getTime()) / 86164090.5) * 360) % 360;
-    // observerLon to [-180, 180]
-    if (observerLon > 180) observerLon -= 360;
-    if (observerLon < -180) observerLon += 360;
+    let observerLon = geoEstimate[1] - msToSiderealDays(time - approxDate.getTime()) * 360;
+    observerLon = wrapAngleInDeg(observerLon);
     // 得到该时间所计算的观测者地理坐标
     let observer = new Observer(geoEstimate[0], observerLon, 0);
     // 获取该时间、该地理坐标下的天体时角赤纬
@@ -105,15 +105,13 @@ async function angleError(time, approxDate, stars, geoEstimate, moonIndex, astro
         observer
     );
     let moonHaDec = starHaDecs.get(stars[moonIndex].name);
+    const moonVec = VectorFromSphere(new Spherical(moonHaDec[1], moonHaDec[0] * 15, 1), 0);
     // 计算每颗星星（不包含月）与月的角距误差
     let errors = [];
     for (let i = 0; i < stars.length; ++i) {
         if (i === moonIndex) continue;
         let starHaDec = starHaDecs.get(stars[i].name);
-        let angle = AngleBetween(
-            VectorFromSphere(new Spherical(moonHaDec[1], moonHaDec[0] * 15, 1), 0),
-            VectorFromSphere(new Spherical(starHaDec[1], starHaDec[0] * 15, 1), 0)
-        );
+        let angle = AngleBetween(moonVec, VectorFromSphere(new Spherical(starHaDec[1], starHaDec[0] * 15, 1), 0));
         errors.push((angle - targetAngles[i]) ** 2);
     }
     return errors.reduce((acc, cur) => acc + cur, 0);

@@ -1,12 +1,16 @@
 /* eslint-disable no-undef */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 module.exports = {
-    mode: 'development',
-    entry: './src/index.js',
+    entry: {
+        sitecss: './src/css/site.css',
+        main: './src/index.js',
+    },
     output: {
-        filename: 'main.js',
+        filename: '[name].js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
     },
@@ -14,7 +18,7 @@ module.exports = {
         rules: [
             {
                 test: /\.css$/i,
-                use: ['style-loader', 'css-loader'], // 从右向左解析
+                use: [MiniCssExtractPlugin.loader, 'css-loader'], // 从右向左解析
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
@@ -34,10 +38,14 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/help.html', // 指定模板文件的位置
             filename: 'help.html', // 设置生成的HTML文件名
+            chunks: ['sitecss'], // 指定需要加载的chunk
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
         }),
     ],
-    devServer: {
-        port: 6974,
+    optimization: {
+        minimizer: [`...`, new CssMinimizerPlugin()],
     },
 };
 /* eslint-enable no-undef */

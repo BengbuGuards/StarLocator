@@ -5,8 +5,8 @@
 	"private": true,
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "webpack --config webpack.config.js",
-		"dev": "webpack-dev-server --config webpack.config.js",
+		"build": "webpack --config webpack.prod.js",
+		"dev": "webpack-dev-server --config webpack.dev.js",
 		"serve": "http-server ./dist -p 6974",
 		"lintfix": "eslint . --fix",
 		"format": "prettier --write '**/*.js'"
@@ -23,6 +23,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.13.0",
 		"css-loader": "^7.1.2",
+		"css-minimizer-webpack-plugin": "^7.0.0",
 		"eslint": "^9.13.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
@@ -30,6 +31,7 @@
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.3",
 		"http-server": "^14.1.1",
+		"mini-css-extract-plugin": "^2.9.2",
 		"prettier": "^3.3.3",
 		"style-loader": "^4.0.0",
 		"webpack": "^5.95.0",

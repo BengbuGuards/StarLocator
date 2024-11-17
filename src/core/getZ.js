@@ -39,24 +39,29 @@ function getZFrom2Stars(star1, star2) {
     let delta = b ** 2 - 4 * a * c;
     // let z = Math.sqrt((-Math.sqrt(delta) - b) / (2 * a));
 
+    if (delta < 0) {
+        return [];
+    }
+
     /**
      * 注意：这里的解是平方根，所以可能有两个解，在使用各种条件筛除后仍然可能存在双解。
      * 目前的解法是都返回，然后在 getZ 函数中使用2 sigma 原则筛除异常值。
      */
-    let solve1 = (-b + Math.sqrt(delta)) / (2 * a);
-    let solve2 = (-b - Math.sqrt(delta)) / (2 * a);
+    const sqrtDelta = Math.sqrt(delta);
+    let solve1 = (-b + sqrtDelta) / (2 * a);
+    let solve2 = (-b - sqrtDelta) / (2 * a);
 
     if (
-        (star1.x * star2.x + star1.y * star2.y + solve1) * (star1.x * star2.x + star1.y * star2.y + solve2) > 0 &&
         solve1 >= 0 &&
-        solve2 >= 0
+        solve2 >= 0 &&
+        (star1.x * star2.x + star1.y * star2.y + solve1) * (star1.x * star2.x + star1.y * star2.y + solve2) > 0
     ) {
         return [Math.sqrt(solve1), Math.sqrt(solve2)];
     }
-    if ((star1.x * star2.x + star1.y * star2.y + solve1) * theoreticalCosAngle > 0 && solve1 >= 0) {
+    if (solve1 >= 0 && (star1.x * star2.x + star1.y * star2.y + solve1) * theoreticalCosAngle > 0) {
         return [Math.sqrt(solve1)];
     }
-    if ((star1.x * star2.x + star1.y * star2.y + solve2) * theoreticalCosAngle > 0 && solve2 >= 0) {
+    if (solve2 >= 0 && (star1.x * star2.x + star1.y * star2.y + solve2) * theoreticalCosAngle > 0) {
         return [Math.sqrt(solve2)];
     }
 

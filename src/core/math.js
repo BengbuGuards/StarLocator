@@ -35,8 +35,19 @@ function multiply(n, v) {
  * @param {Vector} v2
  * @returns {Vector}
  */
-function cross(v1, v2) {
+function cross3d(v1, v2) {
     return new Vector(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x, 0);
+}
+
+/**
+ * 2维向量叉乘，叉乘结果为标量。输入的向量，只关心前两维
+ * @param {Vector} v1
+ * @param {Vector} v2
+ * @returns {number}
+ */
+function cross2d(v1, v2) {
+    const res = cross3d(v1, v2);
+    return res.z;
 }
 
 /**
@@ -65,6 +76,21 @@ function deg2Rad(deg) {
  */
 function rad2Deg(rad) {
     return (rad * 180) / Math.PI;
+}
+
+/**
+ * 使得角度位于 [-180,180]
+ * @param {number} rad
+ * @returns {number}
+ */
+function wrapAngleInDeg(deg) {
+    while (deg > 180) {
+        deg -= 360;
+    }
+    while (deg < -180) {
+        deg += 360;
+    }
+    return deg;
 }
 
 /**
@@ -164,10 +190,12 @@ export {
     add,
     dot,
     multiply,
-    cross,
+    cross3d,
+    cross2d,
     normalize,
     deg2Rad,
     rad2Deg,
+    wrapAngleInDeg,
     rejectOutliers,
     calculateMedian,
     minimize,

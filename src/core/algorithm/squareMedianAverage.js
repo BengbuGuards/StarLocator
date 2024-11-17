@@ -65,9 +65,12 @@ function squareMedianAverage(crudePositions, stars, zenithAngles) {
     let latList = positions2.map((p) => p[0]);
     let lonList = positions2.map((p) => p[1]);
     let medianLat = calculateMedian(latList);
-    let MedianLon = calculateMedian(lonList);
+    let medianLon = calculateMedian(lonList);
 
-    return [medianLat, MedianLon];
+    // 注意：该结果需要去除 adjustAngle 对经度修改的影响
+    const res = [medianLat, medianLon];
+
+    return res;
 }
 
 /**

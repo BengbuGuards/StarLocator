@@ -29,5 +29,5 @@ def intersection(lines: list) -> tuple:
 
     m = np.linalg.inv(np.dot(G.T, G)).dot(G.T).dot(d)
 
-    return m[0:2]
+    return m[:2].flatten()
     # return m

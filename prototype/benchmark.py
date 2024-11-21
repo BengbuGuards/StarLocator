@@ -3,9 +3,15 @@ import argparse
 import numpy as np
 import scipy.stats as st
 
+from methods.least2 import intersection as least_square
+from methods.matrix_inverse import intersection as matrix_inverse
 from methods.median import intersection as median
 from methods.median2 import intersection as median2
+from methods.nearest_l2 import intersection as nearest_l2
+from methods.optim import intersection as optim
 from methods.sphere import intersection as sphere
+from methods.square_weight import intersection as square_weight
+from utils.rand import rand_range
 
 
 def generate_lines(num_lines, scope_x, scope_y, alpha):
@@ -16,10 +22,10 @@ def generate_lines(num_lines, scope_x, scope_y, alpha):
         ## 生成一个参考点
         x0 = 0
         while np.abs(x0) < 1e-2:
-            x0 = np.random.random() * (scope_x[1] - scope_x[0]) + scope_x[0]
+            x0 = rand_range(*scope_x)
         y0 = 0
         while np.abs(y0) < 1e-2:
-            y0 = np.random.random() * (scope_y[1] - scope_y[0]) + scope_y[0]
+            y0 = rand_range(*scope_y)
         ## 生成范围
         if y0 / x0 > 0:
             limit_x1 = np.max((scope_x[0], scope_y[0] / y0 * x0))
@@ -46,14 +52,14 @@ def main(methods, args):
     results = {}
     for name in methods.keys():
         results[name] = {"error": [], "error_x": [], "error_y": []}
-    for i in range(args.num_tests):
+    for _ in range(args.num_tests):
         ## 生成线的两点
         lines = generate_lines(args.num_lines, args.scope_x, args.scope_y, args.alpha)
         for name, method in methods.items():
             ## 计算灭点
             point = method(lines)
             ## 计算误差
-            results[name]["error"].append(np.hypot(point, point))
+            results[name]["error"].append(np.hypot(*point))
             results[name]["error_x"].append(point[0])
             results[name]["error_y"].append(point[1])
     ## 排序
@@ -68,7 +74,7 @@ def main(methods, args):
         error_y = np.array(result["error_y"])
         # print('Mean error:', np.mean(error), 'Std:', np.std(error, ddof=1))
         print(
-            "Mean error:",
+            "\tMean error:",
             np.mean(error),
             "Interval:",
             st.t.interval(
@@ -76,7 +82,7 @@ def main(methods, args):
             ),
         )
         print(
-            "Mean error_x:",
+            "\t\tMean error_x:",
             np.mean(error_x),
             "Interval:",
             st.t.interval(
@@ -84,7 +90,7 @@ def main(methods, args):
             ),
         )
         print(
-            "Mean error_y:",
+            "\t\tMean error_y:",
             np.mean(error_y),
             "Interval:",
             st.t.interval(
@@ -107,6 +113,15 @@ if __name__ == "__main__":
     assert args.scope_y[0] < args.scope_y[1]
 
     ## 定义所需评测的方法
-    methods = {"median2": median2, "median": median, "sphere": sphere}
+    methods = {
+        "median2": median2,
+        "median": median,
+        "sphere": sphere,
+        "square_weight": square_weight,
+        "least_square": least_square,
+        "nearest_l2": nearest_l2,
+        "matrix_inverse": matrix_inverse,
+        # "optim": optim,
+    }
 
     main(methods, args)

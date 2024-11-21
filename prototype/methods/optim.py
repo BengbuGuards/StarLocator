@@ -14,19 +14,21 @@ def objective_function(point: tuple, lines: list) -> float:
         distance: float, sum of distance from point to lines
     """
     x, y = point
-    distance = 0
+    total_distance = 0
     for line in lines:
         x1, y1 = line[0]
         x2, y2 = line[1]
         a = y2 - y1
         b = x1 - x2
         c = np.cross(line[1], line[0]).item()
-        distance += (
-            abs(np.dot((a, b, c), (x, y, 1)))
+
+        distance = (
+            np.hypot(x1 - x2, y1 - y2)
+            * np.abs(np.dot((a, b, c), (x, y, 1)))
             / np.hypot(a, b)
             / np.hypot(x - (x1 + x2) / 2, y - (y1 + y2) / 2)
-            * np.hypot(x1 - x2, y1 - y2)
-        ) ** 2
+        )
+        total_distance += distance**2
     return distance
 
 

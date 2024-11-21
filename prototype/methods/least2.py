@@ -20,7 +20,7 @@ def least_squares_fit(points):
     k = numerator / denominator
 
     # 计算截距b
-    b = mean_y - (k * mean_x)
+    b = mean_y - k * mean_x
 
     return k, b
 

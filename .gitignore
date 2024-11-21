@@ -5,3 +5,5 @@
 node_modules/
 dist/
 package-lock.json
+.pytest_cache/
+__pycache__/

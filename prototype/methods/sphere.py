@@ -10,18 +10,18 @@ def intersection(lines: list) -> tuple:
         intersection point (x, y)
     """
     ## 设置焦点
-    z = 1000
+    z = np.array([0, 0, -1500])
     ## 计算每条线所处平面的法向量
     normals = []
     for line in lines:
         x1, y1 = line[0]
         x2, y2 = line[1]
-        a = np.array([x1, y1, z])
-        b = np.array([x2, y2, z])
+        a = np.array([x1, y1, 0]) - z
+        b = np.array([x2, y2, 0]) - z
         normal = np.cross(a, b)
         normals.append(normal)
     normals = np.array(normals, dtype=np.float32)
-    normals /= np.linalg.norm(normals, axis=1, keepdims=True)
+    # normals /= np.linalg.norm(normals, axis=1, keepdims=True)
     ## 计算灭点
     ## normals * point = 0
     A = normals.T @ normals
@@ -29,6 +29,6 @@ def intersection(lines: list) -> tuple:
     _, V = np.linalg.eig(A)
     point = V[:, np.argmin(np.linalg.eigvals(A))]
     ## 归一化
-    point *= z / point[2]
+    point = point * -z[2] / point[2] + z
 
     return point[:2]

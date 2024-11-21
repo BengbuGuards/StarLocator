@@ -15,11 +15,13 @@ args.noise_std = 1  # 高斯噪声标准差
 
 |排名|方法|平均误差|95%置信区间|
 |---|---|---|---|
-|1|[剔除后中位法](methods/median2.py)|8.577|[7.326, 9.828]|
-|2|[中位数法](methods/median.py)|9.559|[8.130, 10.987]|
-|3|[L2最近点法](methods/nearest_l2.py)|10.598|[8.938, 12.259]|
-|4|[最小二乘法](methods/least2.py)|11.619|[9.501, 13.738]|
-|5|[二次倒加权法](methods/square_weight.py)|14.380|[12.286, 16.475]|
+| 1 | [matrix_inverse](methods/matrix_inverse.py) | 7.684 | (6.496, 8.872) |
+| 2 | [sphere](methods/sphere.py) | 7.687 | (6.498, 8.875) |
+| 3 | [median2](methods/median2.py) | 8.987 | (7.709, 10.266) |
+| 4 | [median](methods/median.py) | 9.203 | (7.899, 10.506) |
+| 5 | [nearest_l2](methods/nearest_l2.py) | 11.375 | (8.062, 14.688) |
+| 6 | [least_square](methods/least_square.py) | 11.570 | (8.128, 15.013) |
+| 7 | [square_weight](methods/square_weight.py) | 45.755 | (31.688, 59.822) |
 
 
 ### 使用方法

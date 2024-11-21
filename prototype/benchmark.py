@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 import scipy.stats as st
 
-from methods.least2 import intersection as least_square
+from methods.least_square import intersection as least_square
 from methods.matrix_inverse import intersection as matrix_inverse
 from methods.median import intersection as median
 from methods.median2 import intersection as median2
@@ -48,24 +48,7 @@ def generate_lines(num_lines, scope_x, scope_y, alpha):
     return lines
 
 
-def main(methods, args):
-    results = {}
-    for name in methods.keys():
-        results[name] = {"error": [], "error_x": [], "error_y": []}
-    for _ in range(args.num_tests):
-        ## 生成线的两点
-        lines = generate_lines(args.num_lines, args.scope_x, args.scope_y, args.alpha)
-        for name, method in methods.items():
-            ## 计算灭点
-            point = method(lines)
-            ## 计算误差
-            results[name]["error"].append(np.hypot(*point))
-            results[name]["error_x"].append(point[0])
-            results[name]["error_y"].append(point[1])
-    ## 排序
-    results = dict(
-        sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
-    )
+def print_results(results):
     ## 输出结果
     for name, result in results.items():
         print("Method:", name)
@@ -97,6 +80,49 @@ def main(methods, args):
                 0.95, len(error_y) - 1, loc=np.mean(error_y), scale=st.sem(error_y)
             ),
         )
+    ## 输出markdown表格
+    print("|排名|方法|平均误差|95%置信区间|")
+    print("|---|---|---|---|")
+    results = dict(
+        sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=False)
+    )  # 误差从小到大
+    for i, (name, result) in enumerate(results.items()):
+        error = np.array(result["error"])
+        mean_error = np.mean(error)
+        interval = st.t.interval(0.95, len(error) - 1, loc=mean_error, scale=st.sem(error))
+        print(
+            "|",
+            i + 1,
+            "|",
+            f"[{name}](methods/{name}.py)",
+            "|",
+            f"{mean_error:.3f}",
+            "|",
+            f"({interval[0]:.3f}, {interval[1]:.3f})",
+            "|",
+        )
+
+
+def main(methods, args):
+    results = {}
+    for name in methods.keys():
+        results[name] = {"error": [], "error_x": [], "error_y": []}
+    for _ in range(args.num_tests):
+        ## 生成线的两点
+        lines = generate_lines(args.num_lines, args.scope_x, args.scope_y, args.alpha)
+        for name, method in methods.items():
+            ## 计算灭点
+            point = method(lines)
+            ## 计算误差
+            results[name]["error"].append(np.hypot(*point))
+            results[name]["error_x"].append(point[0])
+            results[name]["error_y"].append(point[1])
+    ## 排序
+    results = dict(
+        sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
+    )
+    ## 输出结果
+    print_results(results)
 
 
 if __name__ == "__main__":

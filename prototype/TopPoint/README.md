@@ -1,8 +1,10 @@
+# 灭点计算误差测试框架
+
 ## 算法原形
 
 使用 python 来进行一组直线交点算法的验证
 
-### 排行榜
+## 排行榜
 **参数**：
 ```python
 args.num_lines = 10    # 线的数量
@@ -24,23 +26,9 @@ args.noise_std = 1  # 高斯噪声标准差
 | 7 | [square_weight](methods/square_weight.py) | 45.755 | (31.688, 59.822) |
 
 
-### 使用方法
+## 使用方法
 
-1. 命令行进入本文件夹
-1. 安装依赖
-    ```bash
-    pip install -r requirements.txt
-    ```
 2. 运行
-    ```bash
-    python benchmark.py
-    ```
-
-
-### 单元测试
-
-尽量写好单元测试。单元测试的运行方式是进入本文件夹，运行
-
 ```bash
-pytest
+python benchmark.py
 ```

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from methods.sphere import intersection as sphere_intersection
 from methods.matrix_inverse import intersection as matrix_inverse_intersection
 
-twop_lines = np.array(
+two_lines = np.array(
     [
         [(923, 746), (1669, 918)],
         [(920, 752), (1672, 921)],
@@ -20,17 +20,17 @@ twop_lines = np.array(
     ]
 )
 
-result1 = sphere_intersection(twop_lines)
+result1 = sphere_intersection(two_lines)
 print(result1)
 
-result2 = matrix_inverse_intersection(twop_lines)
+result2 = matrix_inverse_intersection(two_lines)
 print(result2)
 
 
 plt.figure(figsize=(10, 10))
 
 # 遍历每一行的线段，并绘制
-for line in twop_lines:
+for line in two_lines:
     point1, point2 = line
     plt.plot([point1[0], point2[0]], [point1[1], point2[1]], marker='o')
 

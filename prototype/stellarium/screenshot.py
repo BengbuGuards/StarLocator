@@ -10,7 +10,7 @@ PORT = 8090
 BASE_URL = "{}:{}".format(HOST, PORT)
 
 
-def excute_code(code):
+def execute_code(code):
     url = "{}/api/scripts/direct".format(BASE_URL)
     data = {"code": code}
     resp = requests.post(url, data=data)
@@ -23,12 +23,12 @@ def screenshot(name, folder="./"):
     SCRIPT_SCREEN_SHOT = (
         'core.wait(0.5);core.screenshot("{}",false,"{}",true,"png");'.format(name, path)
     )
-    excute_code(SCRIPT_SCREEN_SHOT)
+    execute_code(SCRIPT_SCREEN_SHOT)
 
 
 def set_location(lat, lng, alt):
     COMMAND_SCRIPT = "core.setObserverLocation({},{},{},0);".format(lng, lat, alt)
-    res = excute_code(COMMAND_SCRIPT)
+    res = execute_code(COMMAND_SCRIPT)
     print("设置经纬度 lat/lng/alt {}/{}/{} : {}".format(lat, lng, alt, res))
 
 
@@ -39,7 +39,7 @@ def set_time(dt: datetime):
         utc_time_str
     )
 
-    res = excute_code(COMMAND_SCRIPT)
+    res = execute_code(COMMAND_SCRIPT)
 
     print("设置时间 {} : {}".format(dt, res))
 
@@ -47,7 +47,7 @@ def set_time(dt: datetime):
 def set_direction(azimuth_from_south, altitude):
     COMMAND_SCRIPT = "core.moveToAltAzi({},{},0);".format(altitude, azimuth_from_south)
 
-    res = excute_code(COMMAND_SCRIPT)
+    res = execute_code(COMMAND_SCRIPT)
 
     print("设置 方位角 {} 高度角 {} : {}".format(azimuth_from_south, altitude, res))
 
@@ -55,7 +55,7 @@ def set_direction(azimuth_from_south, altitude):
 def set_fov(fov_degree):
     COMMAND_SCRIPT = "StelMovementMgr.zoomTo({}, 0)".format(fov_degree)
 
-    res = excute_code(COMMAND_SCRIPT)
+    res = execute_code(COMMAND_SCRIPT)
 
     print("设置 FOV {} : {}".format(fov_degree, res))
 
@@ -97,7 +97,7 @@ def make_screenshot():
     StelSkyDrawer.setFlagHasAtmosphere(false);
     ZodiacalLight.setFlagShow(false);
     """
-    excute_code(COMMAND_SCRIPT)
+    execute_code(COMMAND_SCRIPT)
 
     fn = "stellarium_{}_{}_{}".format(
         dt.isoformat(), observer_latitude, observer_longtitude

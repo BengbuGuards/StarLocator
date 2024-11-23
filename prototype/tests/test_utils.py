@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from utils.plane import two_line_intersection_point
+from TopPoint.utils.plane import two_line_intersection_point
 
 
 def test_two_line_intersection_point():

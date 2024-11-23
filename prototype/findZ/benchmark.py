@@ -1,0 +1,111 @@
+import argparse
+
+import numpy as np
+import scipy.stats as st
+
+from methods.bi_mean import get_z as bi_mean
+from utils.rand import rand_range
+
+
+def generate_points(num_points, scope_x, scope_y):
+    ## 生成点和夹角（弧度）
+    points = []
+    thetas = np.zeros((num_points, num_points), dtype=np.float32)
+    for i in range(num_points):
+        ## 生成一个参考点
+        points_x = rand_range(*scope_x)
+        points_y = rand_range(*scope_y)
+        points.append([points_x, points_y])
+    points = np.array(points)
+    ## 加入高斯噪声
+    points += np.random.normal(0, args.noise_std, points.shape)
+
+    ## 计算夹角
+    for i in range(num_points):
+        for j in range(i + 1, num_points):
+            vec_a = np.concatenate([points[i], [args.z]])
+            vec_b = np.concatenate([points[j], [args.z]])
+            cos_theta = np.dot(vec_a, vec_b) / (
+                np.linalg.norm(vec_a) * np.linalg.norm(vec_b)
+            )
+            thetas[i, j] = thetas[j, i] = np.arccos(cos_theta)
+    
+    return (points, thetas)
+
+
+def print_results(results):
+    ## 输出结果
+    for name, result in results.items():
+        print("Method:", name)
+        error = np.array(result["error"])
+        # print('Mean error:', np.mean(error), 'Std:', np.std(error, ddof=1))
+        print(
+            "\tMean error:",
+            np.mean(error),
+            "Interval:",
+            st.t.interval(
+                0.95, len(error) - 1, loc=np.mean(error), scale=st.sem(error)
+            ),
+        )
+    ## 输出markdown表格
+    print("|排名|方法|平均误差|95%置信区间|")
+    print("|---|---|---|---|")
+    results = dict(
+        sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=False)
+    )  # 误差从小到大
+    for i, (name, result) in enumerate(results.items()):
+        error = np.array(result["error"])
+        mean_error = np.mean(error)
+        interval = st.t.interval(0.95, len(error) - 1, loc=mean_error, scale=st.sem(error))
+        print(
+            "|",
+            i + 1,
+            "|",
+            f"[{name}](methods/{name}.py)",
+            "|",
+            f"{mean_error:.3f}",
+            "|",
+            f"({interval[0]:.3f}, {interval[1]:.3f})",
+            "|",
+        )
+
+
+def main(methods, args):
+    results = {}
+    for name in methods.keys():
+        results[name] = {"error": []}
+    for _ in range(args.num_tests):
+        ## 生成点和夹角
+        datas = generate_points(args.num_points, args.scope_x, args.scope_y)
+        for name, method in methods.items():
+            ## 计算焦距
+            z = method(datas)
+            ## 计算误差
+            results[name]["error"].append(z - args.z)
+    ## 排序
+    results = dict(
+        sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
+    )
+    ## 输出结果
+    print_results(results)
+
+
+if __name__ == "__main__":
+    args = argparse.ArgumentParser()
+    args.num_points = 5  # 点的数量
+    args.num_tests = 100  # 测试次数
+    args.scope_x = (-1000, 1000)
+    args.scope_y = (1000, 2000)
+    args.z = 3000  # 焦距
+    args.noise_std = 1  # 高斯噪声标准差
+
+    ## 检测是否有效范围
+    assert args.scope_x[0] < args.scope_x[1]
+    assert args.scope_y[0] < args.scope_y[1]
+
+    ## 定义所需评测的方法
+    methods = {
+        "bi_mean": bi_mean,
+    }
+
+    main(methods, args)

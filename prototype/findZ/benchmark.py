@@ -4,6 +4,7 @@ import numpy as np
 import scipy.stats as st
 
 from methods.bi_mean import get_z as bi_mean
+from methods.trisect import get_z as trisect
 from utils.rand import rand_range
 
 
@@ -17,8 +18,6 @@ def generate_points(num_points, scope_x, scope_y):
         points_y = rand_range(*scope_y)
         points.append([points_x, points_y])
     points = np.array(points)
-    ## 加入高斯噪声
-    points += np.random.normal(0, args.noise_std, points.shape)
 
     ## 计算夹角
     for i in range(num_points):
@@ -29,7 +28,10 @@ def generate_points(num_points, scope_x, scope_y):
                 np.linalg.norm(vec_a) * np.linalg.norm(vec_b)
             )
             thetas[i, j] = thetas[j, i] = np.arccos(cos_theta)
-    
+
+    ## 加入高斯噪声
+    points += np.random.normal(0, args.noise_std, points.shape)
+
     return (points, thetas)
 
 
@@ -56,7 +58,9 @@ def print_results(results):
     for i, (name, result) in enumerate(results.items()):
         error = np.array(result["error"])
         mean_error = np.mean(error)
-        interval = st.t.interval(0.95, len(error) - 1, loc=mean_error, scale=st.sem(error))
+        interval = st.t.interval(
+            0.95, len(error) - 1, loc=mean_error, scale=st.sem(error)
+        )
         print(
             "|",
             i + 1,
@@ -81,7 +85,7 @@ def main(methods, args):
             ## 计算焦距
             z = method(datas)
             ## 计算误差
-            results[name]["error"].append(z - args.z)
+            results[name]["error"].append(np.abs(z - args.z))
     ## 排序
     results = dict(
         sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
@@ -106,6 +110,7 @@ if __name__ == "__main__":
     ## 定义所需评测的方法
     methods = {
         "bi_mean": bi_mean,
+        "trisect": trisect,
     }
 
     main(methods, args)

@@ -5,7 +5,9 @@ import scipy.stats as st
 
 from methods.bi_mean import get_z as bi_mean
 from methods.trisect import get_z as trisect
+from methods.north_len import get_z as north_len
 from utils.rand import rand_range
+from utils.math import vector_angle
 
 
 def generate_points(num_points, scope_x, scope_y):
@@ -29,10 +31,25 @@ def generate_points(num_points, scope_x, scope_y):
             )
             thetas[i, j] = thetas[j, i] = np.arccos(cos_theta)
 
+    # 根据一个随机的北天极，生成赤纬
+    ## 生成一个随机的北天极
+    north_pole = np.random.rand(3)
+    ## 生成赤纬
+    des = np.array(
+        [
+            np.pi / 2 - vector_angle(north_pole, np.concatenate([point, [args.z]]))
+            for point in points
+        ]
+    )
+
     ## 加入高斯噪声
     points += np.random.normal(0, args.noise_std, points.shape)
 
-    return (points, thetas)
+    return {
+        "points": points,
+        "thetas": thetas,
+        "des": des,
+    }
 
 
 def print_results(results):
@@ -111,6 +128,7 @@ if __name__ == "__main__":
     methods = {
         "bi_mean": bi_mean,
         "trisect": trisect,
+        "north_len": north_len,
     }
 
     main(methods, args)

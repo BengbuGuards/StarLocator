@@ -10,11 +10,12 @@ def get_z(datas: tuple) -> float:
     return:
         z: zenith point
     """
-    points = datas[0]
-    thetas = datas[1]
+    points = datas["points"]
+    thetas = datas["thetas"]
+    n = len(points)
     z_list = []
-    for i in range(len(datas[0])):
-        for j in range(i + 1, len(datas[0])):
+    for i in range(n):
+        for j in range(i + 1, n):
             z = get_z_from_2_points(points[i], points[j], thetas[i][j])
             z_list.extend(z)
     z = reject_outliers(z_list)

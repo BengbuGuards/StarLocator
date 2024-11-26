@@ -17,8 +17,8 @@ def get_z(datas: tuple) -> float:
     return:
         z: zenith point
     """
-    points = datas[0]
-    thetas = datas[1]
+    points = datas["points"]
+    thetas = datas["thetas"]
 
     f_left = 0
     f_right = 1e9

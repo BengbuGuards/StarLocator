@@ -83,15 +83,18 @@ $$g_p = 9.8321849378\ \text{m}/\text{s}$$
 
 https://en.wikipedia.org/wiki/Theoretical_gravity
 
-还给出了重力与万有引力夹角的近似公式，还未进行验证
+还给出了重力与万有引力夹角的近似公式
 
 $$\frac{\sin 2\phi}{2g}\cdot R\Omega^2$$
 
 其中
 
-$$g=g_{45}-{\tfrac {1}{2}}(g_{\mathrm {poles} }-g_{\mathrm {equator} })\cos \left(2\,\varphi\right)$$
+$$g=g_{45}-{\tfrac {1}{2}}(g_{\mathrm {poles} }-g_{\mathrm {equator} })\cos \left(2\varphi\right)$$
 
 $$g_{\mathrm {poles}} = 9.832$$
 $$g_{45} = 9.806$$
 $$g_{\mathrm {equator} } = 9.780$$
-$$R\approx 6370\ \text{rm}$$
+$$R\approx 6370\ \text{km}$$
+
+
+原参考文献需付费下载，可以参考引用它的[文章](https://arxiv.org/pdf/2311.09357)的第 6-7 页

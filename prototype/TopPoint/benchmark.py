@@ -89,7 +89,9 @@ def print_results(results):
     for i, (name, result) in enumerate(results.items()):
         error = np.array(result["error"])
         mean_error = np.mean(error)
-        interval = st.t.interval(0.95, len(error) - 1, loc=mean_error, scale=st.sem(error))
+        interval = st.t.interval(
+            0.95, len(error) - 1, loc=mean_error, scale=st.sem(error)
+        )
         print(
             "|",
             i + 1,

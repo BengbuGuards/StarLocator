@@ -74,7 +74,7 @@ class AstroCalculator {
         }
 
         // 异步获取恒星的赤经和赤纬
-        let raDecs = await getRaDecbyNames(fixedStarNames.values());
+        let raDecs = await getRaDecbyNames(Array.from(fixedStarNames.values()));
         // 同步计算天体的时角和赤纬
         // 计算太阳系外天体的时角和赤纬
         let index = 0;

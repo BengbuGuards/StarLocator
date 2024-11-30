@@ -131,11 +131,11 @@ class CeleArray extends markerArray {
                     newcell.innerHTML = this.num() + 1;
                 } else {
                     newcell.innerHTML = secondStarRow.cells[i].innerHTML
-                        .replace(/id="(.*?)2"/g, (match, p1) => {
-                            return `id="${p1}${this.num() + 1}"`;
+                        .replace(/id="(.+?2)">.*?<\/div>/g, (match, p1) => {
+                            return `id="${p1}"></div>`;
                         })
-                        .replace(/<div(.*?)>.*?<\/div>/g, (match, p1) => {
-                            return `<div${p1}></div>`;
+                        .replace(/id="(.+?)2"/g, (match, p1) => {
+                            return `id="${p1}${this.num() + 1}"`;
                         });
                 }
             }

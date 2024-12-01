@@ -4,77 +4,89 @@ import numpy as np
 import scipy.stats as st
 
 from methods.bi_mean import get_z as bi_mean
-from methods.trisect import get_z as trisect
-from methods.north_len import get_z as north_len
 from utils.rand import rand_range
-from utils.math import vector_angle
+from utils.math import cart2sph
 
 
-def generate_points(args):
+def generate_datas(args):
     num_points = args.num_points
     scope_x = args.scope_x
     scope_y = args.scope_y
-    ## 生成点和夹角（弧度）
+    ## 生成星点矢量
     points = []
-    thetas = np.zeros((num_points, num_points), dtype=np.float32)
     for i in range(num_points):
         ## 生成一个参考点
         points_x = rand_range(*scope_x)
         points_y = rand_range(*scope_y)
-        points.append([points_x, points_y])
+        points.append([points_x, points_y, -args.z])
     points = np.array(points)
+    points /= np.linalg.norm(points, axis=1).reshape(-1, 1)  # 归一化
 
-    ## 计算夹角
-    for i in range(num_points):
-        for j in range(i + 1, num_points):
-            vec_a = np.concatenate([points[i], [args.z]])
-            vec_b = np.concatenate([points[j], [args.z]])
-            cos_theta = np.dot(vec_a, vec_b) / (
-                np.linalg.norm(vec_a) * np.linalg.norm(vec_b)
-            )
-            thetas[i, j] = thetas[j, i] = np.arccos(cos_theta)
-
-    # 根据一个随机的北天极，生成赤纬
+    # 根据一个随机的北天极、一个随机的(0N,0E)轴，生成参考时角&赤纬
     ## 生成一个随机的北天极
-    north_pole = np.random.rand(3) * 2 - 1
-    ## 生成赤纬
-    des = np.array(
-        [
-            np.pi / 2 - vector_angle(north_pole, np.concatenate([point, [-args.z]]))
-            for point in points
-        ]
-    )
+    z_pole = np.random.rand(3) * 2 - 1
+    z_pole /= np.linalg.norm(z_pole)
+    ## 生成一个随机的(0N,0E)轴，与北天极正交
+    x_pole = np.random.rand(3) * 2 - 1
+    x_pole = x_pole - np.dot(x_pole, z_pole) * z_pole
+    x_pole /= np.linalg.norm(x_pole)
+    ## 生成一个随机的(0N,90E)轴，与北天极正交
+    y_pole = np.cross(z_pole, x_pole)
+
+    ## 生成随机灭点矢量
+    top_point = np.random.rand(3) * 2 - 1
+    top_point *= -args.z / top_point[2]
+
+    ## 生成参考时角&赤纬，以及真实地理坐标
+    A = np.array([x_pole, y_pole, z_pole]).T
+    b = np.concatenate([top_point.T, points.T], axis=1)
+    x = np.linalg.solve(A, b.T).T
+    geo_cart = x[0]
+    points_cart = x[1:]
+    geo = cart2sph(*geo_cart)[:2]
+    hour_des = np.array([cart2sph(*point)[:2] for point in points_cart])
 
     ## 施加径向畸变
     if args.k1 is not None and args.k2 is not None:
         points = destort(points, args.k1, args.k2, args.scope_x, args.scope_y)
+        top_point = destort(
+            top_point.reshape(1, -1), args.k1, args.k2, args.scope_x, args.scope_y
+        ).reshape(-1)
     ## 加入高斯噪声
     points += np.random.normal(0, args.noise_std, points.shape)
+    top_point += np.random.normal(0, args.noise_std, top_point.shape)
 
-    return {
-        "points": points,
-        "thetas": thetas,
-        "des": des,
-    }
+    return (
+        {
+            "points": points,
+            "top_point": top_point,
+            "hour_des": hour_des,
+            "f": args.z,
+        },
+        geo,
+    )
 
 
 def destort(points, k1, k2, scope_x, scope_y):
     """
     施加径向畸变
     params:
-        points: np.array, shape=(n, 2), 2D points
+        points: np.array, shape=(n, 3), 2D points
         k1: float, radial distortion coefficient
         k2: float, tangential distortion coefficient
         scope_x: tuple, x scope
         scope_y: tuple, y scope
     return:
-        points: np.array, shape=(n, 2), 2D points
+        points: np.array, shape=(n, 3), 2D points
     """
+    points = points[:, :2]
+    z = points[:, 2]
     center = np.array([scope_x[0] + scope_x[1], scope_y[0] + scope_y[1]]) / 2
     points_relative = points - center
     r = np.hypot(points_relative[:, 0], points_relative[:, 1]).reshape(-1, 1)
     points_relative *= 1 + k1 * r**2 + k2 * r**4
     points = points_relative + center
+    points = np.concatenate([points, z.reshape(-1, 1)], axis=1)
     return points
 
 
@@ -122,13 +134,13 @@ def main(methods, args):
     for name in methods.keys():
         results[name] = {"error": []}
     for _ in range(args.num_tests):
-        ## 生成点和夹角
-        datas = generate_points(args)
+        ## 生成数据
+        datas, real_geo = generate_datas(args)
         for name, method in methods.items():
-            ## 计算焦距
-            z = method(datas)
+            ## 计算地理坐标
+            geo = method(datas)
             ## 计算误差
-            results[name]["error"].append(np.abs(z - args.z))
+            results[name]["error"].append(np.hypot(geo - real_geo))
     ## 排序
     results = dict(
         sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
@@ -139,6 +151,7 @@ def main(methods, args):
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
+    ## 默认灭点在(0, 0)
     args.num_points = 5  # 点的数量
     args.num_tests = 100  # 测试次数
     args.scope_x = (-1000, 1000)
@@ -155,8 +168,6 @@ if __name__ == "__main__":
     ## 定义所需评测的方法
     methods = {
         "bi_mean": bi_mean,
-        "trisect": trisect,
-        "north_len": north_len,
     }
 
     main(methods, args)

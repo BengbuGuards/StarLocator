@@ -13,8 +13,8 @@ args.num_tests = 100     # 测试次数
 args.scope_x = (-300, 300)
 args.scope_y = (-2000, -1000)
 args.alpha = 0.2  # 0~1，越大时两点的距离越接近
-args.k1 = 0
-args.k2 = 0
+args.k1 = 0  # 畸变系数
+args.k2 = 0  # 畸变系数
 args.noise_std = 1  # 高斯噪声标准差
 ```
 
@@ -31,24 +31,23 @@ args.noise_std = 1  # 高斯噪声标准差
 ### 有畸变
 **参数**：
 ```python
-args = argparse.ArgumentParser()
 args.num_lines = 10  # 线的数量
 args.num_tests = 3000  # 测试次数
 args.scope_x = (-300, 300)
 args.scope_y = (-2000, -1000)
 args.alpha = 0.2  # 0~1，越大时两点的距离越接近
-args.k1 = 1e-3  # 畸变系数
-args.k2 = 1e-6  # 畸变系数
+args.k1 = 1e-7  # 畸变系数
+args.k2 = 1e-14  # 畸变系数
 args.noise_std = 1  # 高斯噪声标准差
 ```
 
 |排名|方法|平均误差|95%置信区间|
 |---|---|---|---|
-| 1 | [sphere](methods/sphere.py) | 48.243 | (46.904, 49.582) |
-| 2 | [median](methods/median.py) | 51.151 | (46.632, 55.671) |
-| 3 | [median2](methods/median2.py) | 51.270 | (46.812, 55.728) |
-| 4 | [matrix_inverse](methods/matrix_inverse.py) | 53.281 | (51.808, 54.753) |
-| 5 | [least_square](methods/least_square.py) | 66.702 | (63.855, 69.549) |
+| 1 | [matrix_inverse](methods/matrix_inverse.py) | 37.326 | (36.728, 37.923) |
+| 2 | [sphere](methods/sphere.py) | 37.359 | (36.761, 37.957) |
+| 3 | [median2](methods/median2.py) | 47.079 | (46.180, 47.977) |
+| 4 | [median](methods/median.py) | 49.681 | (48.733, 50.629) |
+| 5 | [least_square](methods/least_square.py) | 61.402 | (60.303, 62.501) |
 
 ## 使用方法
 

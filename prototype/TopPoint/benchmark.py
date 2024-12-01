@@ -48,23 +48,30 @@ def generate_lines(args):
     lines = np.array(lines, dtype=np.float32)
     ## 施加径向畸变
     if args.k1 is not None and args.k2 is not None:
-        lines = destort(lines, args.k1, args.k2)
+        lines = destort(lines, args.k1, args.k2, args.scope_x, args.scope_y)
     ## 加入高斯噪声
     lines += np.random.normal(0, args.noise_std, lines.shape)
     return lines
 
 
-def destort(lines, k1, k2):
+def destort(lines, k1, k2, scope_x, scope_y):
     """
     施加径向畸变
     params:
         lines: numpy array, each row contains two points. [((x1, y1), (x2, y2)), ...]
         k1: float, radial distortion coefficient
         k2: float, tangential distortion coefficient
+        scope_x: tuple, x scope
+        scope_y: tuple, y scope
+    return:
+        lines: numpy array, each row contains two points. [((x1, y1), (x2, y2)), ...]
     """
     lines = lines.reshape(-1, 2)
-    r = np.hypot(lines[:, 0], lines[:, 1]).reshape(-1, 1)
-    lines *= 1 + k1 * r**2 + k2 * r**4
+    center = np.array([scope_x[0] + scope_x[1], scope_y[0] + scope_y[1]]) / 2
+    lines_relative = lines - center
+    r = np.hypot(lines_relative[:, 0], lines_relative[:, 1]).reshape(-1, 1)
+    lines_relative *= 1 + k1 * r**2 + k2 * r**4
+    lines = lines_relative + center
     lines = lines.reshape(-1, 2, 2)
     return lines
 
@@ -155,8 +162,8 @@ if __name__ == "__main__":
     args.scope_x = (-300, 300)
     args.scope_y = (-2000, -1000)
     args.alpha = 0.2  # 0~1，越大时两点的距离越接近
-    args.k1 = 1e-3  # 畸变系数
-    args.k2 = 1e-6  # 畸变系数
+    args.k1 = 1e-7  # 畸变系数
+    args.k2 = 1e-14  # 畸变系数
     args.noise_std = 1  # 高斯噪声标准差
 
     ## 检测是否有效范围

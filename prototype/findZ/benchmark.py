@@ -47,7 +47,7 @@ def generate_points(args):
 
     ## 施加径向畸变
     if args.k1 is not None and args.k2 is not None:
-        points = destort(points, args.k1, args.k2)
+        points = destort(points, args.k1, args.k2, args.scope_x, args.scope_y)
     ## 加入高斯噪声
     points += np.random.normal(0, args.noise_std, points.shape)
 
@@ -58,16 +58,23 @@ def generate_points(args):
     }
 
 
-def destort(points, k1, k2):
+def destort(points, k1, k2, scope_x, scope_y):
     """
     施加径向畸变
     params:
         points: np.array, shape=(n, 2), 2D points
         k1: float, radial distortion coefficient
         k2: float, tangential distortion coefficient
+        scope_x: tuple, x scope
+        scope_y: tuple, y scope
+    return:
+        points: np.array, shape=(n, 2), 2D points
     """
-    r = np.hypot(points[:, 0], points[:, 1]).reshape(-1, 1)
-    points *= 1 + k1 * r**2 + k2 * r**4
+    center = np.array([scope_x[0] + scope_x[1], scope_y[0] + scope_y[1]]) / 2
+    points_relative = points - center
+    r = np.hypot(points_relative[:, 0], points_relative[:, 1]).reshape(-1, 1)
+    points_relative *= 1 + k1 * r**2 + k2 * r**4
+    points = points_relative + center
     return points
 
 
@@ -133,12 +140,12 @@ def main(methods, args):
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.num_points = 5  # 点的数量
-    args.num_tests = 1000  # 测试次数
+    args.num_tests = 100  # 测试次数
     args.scope_x = (-1000, 1000)
     args.scope_y = (1000, 2000)
     args.z = 3000  # 焦距
-    args.k1 = 1e-10  # 畸变系数k1
-    args.k2 = 1e-20  # 畸变系数k2
+    args.k1 = 1e-9  # 畸变系数k1
+    args.k2 = 1e-18  # 畸变系数k2
     args.noise_std = 1  # 高斯噪声标准差
 
     ## 检测是否有效范围

@@ -2,7 +2,6 @@ import argparse
 
 import numpy as np
 import scipy.stats as st
-
 from methods.least_square import intersection as least_square
 from methods.matrix_inverse import intersection as matrix_inverse
 from methods.median import intersection as median

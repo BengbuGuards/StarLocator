@@ -1,5 +1,4 @@
 import numpy as np
-
 from utils.plane import all_points_of_lines_intersection
 
 

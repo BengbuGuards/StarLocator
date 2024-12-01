@@ -1,8 +1,7 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
-from methods.sphere import intersection as sphere_intersection
+import numpy as np
 from methods.matrix_inverse import intersection as matrix_inverse_intersection
+from methods.sphere import intersection as sphere_intersection
 
 two_lines = np.array(
     [
@@ -32,19 +31,19 @@ plt.figure(figsize=(10, 10))
 # 遍历每一行的线段，并绘制
 for line in two_lines:
     point1, point2 = line
-    plt.plot([point1[0], point2[0]], [point1[1], point2[1]], marker='o')
+    plt.plot([point1[0], point2[0]], [point1[1], point2[1]], marker="o")
 
-plt.plot(result1[0], result1[1], marker='o', color='red', label='Sphere')
-plt.plot(result2[0], result2[1], marker='o', color='green', label='Matrix Inverse')
+plt.plot(result1[0], result1[1], marker="o", color="red", label="Sphere")
+plt.plot(result2[0], result2[1], marker="o", color="green", label="Matrix Inverse")
 
 # 添加标题和标签
-plt.title('Line Segments between Points')
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
+plt.title("Line Segments between Points")
+plt.xlabel("X-axis")
+plt.ylabel("Y-axis")
 
 # 显示网格
 plt.grid()
 plt.legend()
 # 显示绘图
-plt.axis('equal')  # 设置比例相等
+plt.axis("equal")  # 设置比例相等
 plt.show()

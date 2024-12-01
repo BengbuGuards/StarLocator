@@ -18,6 +18,7 @@ def north_len(points: np.ndarray, des: np.ndarray, f: float) -> float:
     N = np.linalg.pinv(C_normlized) @ D
     return np.linalg.norm(N)
 
+
 def get_z(datas: tuple) -> float:
     """
     Find the zenith point.
@@ -32,7 +33,7 @@ def get_z(datas: tuple) -> float:
 
     f_left = 0
     f_right = 1e9
-    
+
     for _ in range(100):
         delta = (f_right - f_left) / 3
         f_mid_left = f_left + delta

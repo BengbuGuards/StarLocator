@@ -1,15 +1,7 @@
 import constants
 import numpy as np
-from matplotlib import pyplot as plt
-from method.bisect_formular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_formular,
-)
-from method.bisect_tabular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_tabular,
-)
-from method.naive import astronomic_latitude_to_geodetic_latitude as naive
 
-geodetic_latitudes = np.linspace(-90, 90, 10000)
+geodetic_latitudes = np.linspace(-90, 90, 100000)
 
 
 def get_geocentric_latitude(geodetic_latitude_in_rad):
@@ -73,35 +65,29 @@ for geodetic_latitude in geodetic_latitudes:
     astronomic_latitude_in_rad = get_astronomic_latitude(geocentric_latitude)
     astronomic_latitude = np.rad2deg(astronomic_latitude_in_rad)
     astronomic_latitudes.append(astronomic_latitude)
-    geocentric_latitudes.append(np.rad2deg(geocentric_latitude))
-
-# ===============================
-#         对比算法
-# ===============================
-
-methods = {
-    "naive": naive,
-    "bisect_formular": bisect_formular,
-    "bisect_tabular": bisect_tabular,
-}
 
 
-diff = dict()
-for method_name, method in methods.items():
-    diff[method_name] = []
+def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree):
+    n = len(astronomic_latitudes)
+    l = 0
+    r = n - 1
+    while l < r:
+        m = (l + r) // 2
+        if astronomic_latitudes[m] < astronomic_latitudes_in_degree:
+            l = m + 1
+        else:
+            r = m
 
-for geodetic_latitude, astronomic_latitude in zip(
-    geodetic_latitudes, astronomic_latitudes
-):
-    for method_name, method in methods.items():
-        solved_geodetic_latitude = method(astronomic_latitude)
-        diff[method_name].append(solved_geodetic_latitude - geodetic_latitude)
+    diff_to_left = np.abs(astronomic_latitudes[l] - astronomic_latitudes_in_degree)
+    diff_to_right = 0
+    if l + 1 < n:
+        diff_to_right = np.abs(
+            astronomic_latitudes[l + 1] - astronomic_latitudes_in_degree
+        )
 
-for method_name, method_diff in diff.items():
-    plt.plot(geodetic_latitudes, diff[method_name], label=method_name)
+    delta = diff_to_left + diff_to_right
+    if np.abs(delta) < 1e-6:
+        return geodetic_latitudes[l]
 
-plt.grid(True)
-plt.xlabel("real geodetic latitude in degree")
-plt.ylabel("error in degree")
-plt.legend(loc="best")
-plt.show()
+    ratio = diff_to_left / delta
+    return geodetic_latitudes[l] * (1 - ratio) + geodetic_latitudes[l] * ratio

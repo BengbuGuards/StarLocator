@@ -2,10 +2,9 @@ import argparse
 
 import numpy as np
 import scipy.stats as st
-
 from methods.bi_mean import get_z as bi_mean
-from utils.rand import rand_range
 from utils.math import cart2sph
+from utils.rand import rand_range
 
 
 def generate_datas(args):

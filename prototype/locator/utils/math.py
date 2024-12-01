@@ -6,6 +6,7 @@ def vector_angle(vec1, vec2):
     cos_theta = np.clip(cos_theta, -1, 1)
     return np.arccos(cos_theta)
 
+
 def cart2sph(x, y, z):
     hxy = np.hypot(x, y)
     r = np.hypot(hxy, z)

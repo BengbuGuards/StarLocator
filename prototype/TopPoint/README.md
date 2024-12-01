@@ -5,6 +5,7 @@
 使用 python 来进行一组直线交点算法的验证。所提供的直线实际上交于一点，每条直线由两个端点坐标表示，含一定噪声，需要计算它们的真实交点。
 
 ## 排行榜
+### 无畸变
 **参数**：
 ```python
 args.num_lines = 10    # 线的数量
@@ -12,6 +13,8 @@ args.num_tests = 100     # 测试次数
 args.scope_x = (-300, 300)
 args.scope_y = (-2000, -1000)
 args.alpha = 0.2  # 0~1，越大时两点的距离越接近
+args.k1 = 0
+args.k2 = 0
 args.noise_std = 1  # 高斯噪声标准差
 ```
 
@@ -25,6 +28,27 @@ args.noise_std = 1  # 高斯噪声标准差
 | 6 | [least_square](methods/least_square.py) | 11.570 | (8.128, 15.013) |
 | 7 | [square_weight](methods/square_weight.py) | 45.755 | (31.688, 59.822) |
 
+### 有畸变
+**参数**：
+```python
+args = argparse.ArgumentParser()
+args.num_lines = 10  # 线的数量
+args.num_tests = 3000  # 测试次数
+args.scope_x = (-300, 300)
+args.scope_y = (-2000, -1000)
+args.alpha = 0.2  # 0~1，越大时两点的距离越接近
+args.k1 = 1e-3  # 畸变系数
+args.k2 = 1e-6  # 畸变系数
+args.noise_std = 1  # 高斯噪声标准差
+```
+
+|排名|方法|平均误差|95%置信区间|
+|---|---|---|---|
+| 1 | [sphere](methods/sphere.py) | 48.243 | (46.904, 49.582) |
+| 2 | [median](methods/median.py) | 51.151 | (46.632, 55.671) |
+| 3 | [median2](methods/median2.py) | 51.270 | (46.812, 55.728) |
+| 4 | [matrix_inverse](methods/matrix_inverse.py) | 53.281 | (51.808, 54.753) |
+| 5 | [least_square](methods/least_square.py) | 66.702 | (63.855, 69.549) |
 
 ## 使用方法
 

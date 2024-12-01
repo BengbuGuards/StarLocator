@@ -10,7 +10,10 @@ from utils.rand import rand_range
 from utils.math import vector_angle
 
 
-def generate_points(num_points, scope_x, scope_y):
+def generate_points(args):
+    num_points = args.num_points
+    scope_x = args.scope_x
+    scope_y = args.scope_y
     ## 生成点和夹角（弧度）
     points = []
     thetas = np.zeros((num_points, num_points), dtype=np.float32)
@@ -42,6 +45,9 @@ def generate_points(num_points, scope_x, scope_y):
         ]
     )
 
+    ## 施加径向畸变
+    if args.k1 is not None and args.k2 is not None:
+        points = destort(points, args.k1, args.k2)
     ## 加入高斯噪声
     points += np.random.normal(0, args.noise_std, points.shape)
 
@@ -50,6 +56,19 @@ def generate_points(num_points, scope_x, scope_y):
         "thetas": thetas,
         "des": des,
     }
+
+
+def destort(points, k1, k2):
+    """
+    施加径向畸变
+    params:
+        points: np.array, shape=(n, 2), 2D points
+        k1: float, radial distortion coefficient
+        k2: float, tangential distortion coefficient
+    """
+    r = np.hypot(points[:, 0], points[:, 1]).reshape(-1, 1)
+    points *= 1 + k1 * r**2 + k2 * r**4
+    return points
 
 
 def print_results(results):
@@ -97,7 +116,7 @@ def main(methods, args):
         results[name] = {"error": []}
     for _ in range(args.num_tests):
         ## 生成点和夹角
-        datas = generate_points(args.num_points, args.scope_x, args.scope_y)
+        datas = generate_points(args)
         for name, method in methods.items():
             ## 计算焦距
             z = method(datas)
@@ -114,10 +133,12 @@ def main(methods, args):
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.num_points = 5  # 点的数量
-    args.num_tests = 100  # 测试次数
+    args.num_tests = 1000  # 测试次数
     args.scope_x = (-1000, 1000)
     args.scope_y = (1000, 2000)
     args.z = 3000  # 焦距
+    args.k1 = 1e-10  # 畸变系数k1
+    args.k2 = 1e-20  # 畸变系数k2
     args.noise_std = 1  # 高斯噪声标准差
 
     ## 检测是否有效范围

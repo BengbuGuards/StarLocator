@@ -14,8 +14,12 @@ from methods.square_weight import intersection as square_weight
 from utils.rand import rand_range
 
 
-def generate_lines(num_lines, scope_x, scope_y, alpha):
+def generate_lines(args):
     # 实际的灭点就在原点上
+    num_lines = args.num_lines
+    scope_x = args.scope_x
+    scope_y = args.scope_y
+    alpha = args.alpha
     ## 生成线的两点
     lines = []
     for i in range(num_lines):
@@ -42,9 +46,26 @@ def generate_lines(num_lines, scope_x, scope_y, alpha):
         y2 = y0 / x0 * x2
         lines.append(((x1, y1), (x2, y2)))
     lines = np.array(lines, dtype=np.float32)
-    # print(lines)
+    ## 施加径向畸变
+    if args.k1 is not None and args.k2 is not None:
+        lines = destort(lines, args.k1, args.k2)
     ## 加入高斯噪声
     lines += np.random.normal(0, args.noise_std, lines.shape)
+    return lines
+
+
+def destort(lines, k1, k2):
+    """
+    施加径向畸变
+    params:
+        lines: numpy array, each row contains two points. [((x1, y1), (x2, y2)), ...]
+        k1: float, radial distortion coefficient
+        k2: float, tangential distortion coefficient
+    """
+    lines = lines.reshape(-1, 2)
+    r = np.hypot(lines[:, 0], lines[:, 1]).reshape(-1, 1)
+    lines *= 1 + k1 * r**2 + k2 * r**4
+    lines = lines.reshape(-1, 2, 2)
     return lines
 
 
@@ -111,7 +132,7 @@ def main(methods, args):
         results[name] = {"error": [], "error_x": [], "error_y": []}
     for _ in range(args.num_tests):
         ## 生成线的两点
-        lines = generate_lines(args.num_lines, args.scope_x, args.scope_y, args.alpha)
+        lines = generate_lines(args)
         for name, method in methods.items():
             ## 计算灭点
             point = method(lines)
@@ -130,10 +151,12 @@ def main(methods, args):
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
     args.num_lines = 10  # 线的数量
-    args.num_tests = 100  # 测试次数
+    args.num_tests = 3000  # 测试次数
     args.scope_x = (-300, 300)
     args.scope_y = (-2000, -1000)
     args.alpha = 0.2  # 0~1，越大时两点的距离越接近
+    args.k1 = 1e-3  # 畸变系数
+    args.k2 = 1e-6  # 畸变系数
     args.noise_std = 1  # 高斯噪声标准差
 
     ## 检测是否有效范围
@@ -145,9 +168,9 @@ if __name__ == "__main__":
         "median2": median2,
         "median": median,
         "sphere": sphere,
-        "square_weight": square_weight,
+        # "square_weight": square_weight,
         "least_square": least_square,
-        "nearest_l2": nearest_l2,
+        # "nearest_l2": nearest_l2,
         "matrix_inverse": matrix_inverse,
         # "optim": optim,
     }

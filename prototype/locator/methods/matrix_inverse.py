@@ -1,5 +1,5 @@
 import numpy as np
-from utils.math import sph2cart, cart2sph
+from utils.math import cart2sph, sph2cart
 
 
 def get_geo(data: dict):

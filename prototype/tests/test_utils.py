@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-
 from topPoint.utils.plane import two_line_intersection_point
 
 

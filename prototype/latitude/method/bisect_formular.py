@@ -1,5 +1,6 @@
-import constants
 import numpy as np
+
+import constants
 
 
 def get_geocentric_latitude(geodetic_latitude_in_rad):

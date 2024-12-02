@@ -450,7 +450,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
      */
     if (isFixGravity) {
         avgLat =
-            avgLat +
+            avgLat -
             (0.00032712 * sin(deg2Rad(avgLat)) ** 2 - 0.00000368 * sin(deg2Rad(avgLat)) - 0.099161) *
                 sin(deg2Rad(avgLat) * 2);
     }

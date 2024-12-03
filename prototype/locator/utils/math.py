@@ -21,3 +21,10 @@ def sph2cart(az, elev, r=1):
     y = rcos_theta * np.sin(az)
     z = r * np.sin(elev)
     return x, y, z
+
+
+def sph_dist(az1, elev1, az2, elev2):
+    return np.arccos(
+        np.sin(elev1) * np.sin(elev2)
+        + np.cos(elev1) * np.cos(elev2) * np.cos(az1 - az2)
+    )

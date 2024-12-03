@@ -2,8 +2,10 @@ import argparse
 
 import numpy as np
 import scipy.stats as st
+from copy import deepcopy
 from methods.matrix_inverse import get_geo as matrix_inverse
-from utils.math import cart2sph
+from methods.bi_median import get_geo as bi_median
+from utils.math import cart2sph, sph_dist
 from utils.rand import rand_range
 
 
@@ -140,9 +142,9 @@ def main(methods, args):
         datas, real_geo = generate_datas(args)
         for name, method in methods.items():
             ## 计算地理坐标
-            geo = method(datas)
-            ## 计算误差，使用角度制
-            results[name]["error"].append(np.linalg.norm(geo - real_geo) * 180 / np.pi)
+            geo = method(deepcopy(datas))
+            ## 计算误差，使用球面距离表示
+            results[name]["error"].append(sph_dist(*geo, *real_geo) * 6371.939)
     ## 排序
     results = dict(
         sorted(results.items(), key=lambda x: np.mean(x[1]["error"]), reverse=True)
@@ -153,11 +155,10 @@ def main(methods, args):
 
 if __name__ == "__main__":
     args = argparse.ArgumentParser()
-    ## 默认灭点在(0, 0)
     args.num_points = 5  # 点的数量
-    args.num_tests = 100  # 测试次数
+    args.num_tests = 1000  # 测试次数
     args.scope_x = (-1000, 1000)
-    args.scope_y = (1000, 2000)
+    args.scope_y = (-2000, -1000)
     args.z = 3000  # 焦距
     args.k1 = 1e-9  # 畸变系数k1
     args.k2 = 1e-18  # 畸变系数k2
@@ -170,6 +171,7 @@ if __name__ == "__main__":
     ## 定义所需评测的方法
     methods = {
         "matrix_inverse": matrix_inverse,
+        "bi_median": bi_median,
     }
 
     main(methods, args)

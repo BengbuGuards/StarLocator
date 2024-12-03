@@ -141,7 +141,7 @@ def main(methods, args):
         lines = generate_lines(args)
         for name, method in methods.items():
             ## 计算灭点
-            point = method(lines)
+            point = method(lines.copy())
             ## 计算误差
             results[name]["error"].append(np.hypot(*point))
             results[name]["error_x"].append(point[0])

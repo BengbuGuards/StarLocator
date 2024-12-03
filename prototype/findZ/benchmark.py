@@ -2,6 +2,7 @@ import argparse
 
 import numpy as np
 import scipy.stats as st
+from copy import deepcopy
 from methods.bi_mean import get_z as bi_mean
 from methods.north_len import get_z as north_len
 from methods.trisect import get_z as trisect
@@ -125,7 +126,7 @@ def main(methods, args):
         datas = generate_points(args)
         for name, method in methods.items():
             ## 计算焦距
-            z = method(datas)
+            z = method(deepcopy(datas))
             ## 计算误差
             results[name]["error"].append(np.abs(z - args.z))
     ## 排序

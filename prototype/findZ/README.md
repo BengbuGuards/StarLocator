@@ -11,7 +11,7 @@
 args.num_points = 5  # 点的数量
 args.num_tests = 100  # 测试次数
 args.scope_x = (-1000, 1000)
-args.scope_y = (1000, 2000)
+args.scope_y = (-2000, -1000)
 args.z = 3000  # 焦距
 args.k1 = 0  # 畸变系数k1
 args.k2 = 0  # 畸变系数k2
@@ -30,7 +30,7 @@ args.noise_std = 1  # 高斯噪声标准差
 args.num_points = 5  # 点的数量
 args.num_tests = 100  # 测试次数
 args.scope_x = (-1000, 1000)
-args.scope_y = (1000, 2000)
+args.scope_y = (-2000, -1000)
 args.z = 3000  # 焦距
 args.k1 = 1e-9  # 畸变系数k1
 args.k2 = 1e-18  # 畸变系数k2

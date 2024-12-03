@@ -1,6 +1,5 @@
-import numpy as np
-
 import constants
+import numpy as np
 
 geodetic_latitudes = np.linspace(-90, 90, 100000)
 
@@ -74,21 +73,27 @@ def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree):
     r = n - 1
     while l < r:
         m = (l + r) // 2
-        if astronomic_latitudes[m] < astronomic_latitudes_in_degree:
-            l = m + 1
-        else:
+        if astronomic_latitudes[m] > astronomic_latitudes_in_degree:
             r = m
+        else:
+            l = m + 1
 
-    diff_to_left = np.abs(astronomic_latitudes[l] - astronomic_latitudes_in_degree)
-    diff_to_right = 0
-    if l + 1 < n:
-        diff_to_right = np.abs(
-            astronomic_latitudes[l + 1] - astronomic_latitudes_in_degree
-        )
+    right_key = astronomic_latitudes[l]
+    left_key = right_key
 
-    delta = diff_to_left + diff_to_right
-    if np.abs(delta) < 1e-6:
-        return geodetic_latitudes[l]
+    right_val = geodetic_latitudes[l]
+    left_val = right_val
 
-    ratio = diff_to_left / delta
-    return geodetic_latitudes[l] * (1 - ratio) + geodetic_latitudes[l] * ratio
+    dist_to_right = right_key - astronomic_latitudes_in_degree
+
+    if l > 0:
+        left_key = astronomic_latitudes[l - 1]
+        left_val = geodetic_latitudes[l - 1]
+
+    delta = right_key - left_key
+    if np.abs(delta) < 1e-9:
+        return left_val
+
+    ratio = dist_to_right / delta
+
+    return left_val * ratio + right_val * (1 - ratio)

@@ -1,17 +1,11 @@
 import constants
 import numpy as np
-from matplotlib import pyplot as plt
-from method.bisect_formular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_formular,
-)
-from method.bisect_tabular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_tabular,
-)
-from method.naive import astronomic_latitude_to_geodetic_latitude as naive
-from method.series import astronomic_latitude_to_geodetic_latitude as series
-from method.series2 import astronomic_latitude_to_geodetic_latitude as series2
 
-geodetic_latitudes = np.linspace(-90, 90, 10001)
+np.set_printoptions(precision=15)
+
+cnt = 10001
+
+geodetic_latitudes = np.linspace(-90, 90, cnt)
 
 
 def get_geocentric_latitude(geodetic_latitude_in_rad):
@@ -77,35 +71,14 @@ for geodetic_latitude in geodetic_latitudes:
     astronomic_latitudes.append(astronomic_latitude)
     geocentric_latitudes.append(np.rad2deg(geocentric_latitude))
 
-# ===============================
-#         对比算法
-# ===============================
+A = np.zeros((cnt, 5))
+for i in range(5):
+    A[:, i] = np.sin(2 * (i + 1) * np.deg2rad(astronomic_latitudes))
 
-methods = {
-    # "naive": naive,
-    # "bisect_formular": bisect_formular,
-    # "bisect_tabular": bisect_tabular,
-    # "series": series,
-    "series2": series2,
-}
+B = np.array(np.deg2rad(geodetic_latitudes)) - np.array(
+    np.deg2rad(astronomic_latitudes)
+)
 
-
-diff = dict()
-for method_name, method in methods.items():
-    diff[method_name] = []
-
-for geodetic_latitude, astronomic_latitude in zip(
-    geodetic_latitudes, astronomic_latitudes
-):
-    for method_name, method in methods.items():
-        solved_geodetic_latitude = method(astronomic_latitude)
-        diff[method_name].append(solved_geodetic_latitude - geodetic_latitude)
-
-for method_name, method_diff in diff.items():
-    plt.plot(geodetic_latitudes, diff[method_name], label=method_name)
-
-plt.grid(True)
-plt.xlabel("real geodetic latitude in degree")
-plt.ylabel("error in degree")
-plt.legend(loc="best")
-plt.show()
+A_inv = np.linalg.pinv(A)
+x = A_inv @ B
+print(x.tolist())

@@ -1,10 +1,10 @@
 import argparse
+from copy import deepcopy
 
 import numpy as np
 import scipy.stats as st
-from copy import deepcopy
-from methods.matrix_inverse import get_geo as matrix_inverse
 from methods.bi_median import get_geo as bi_median
+from methods.matrix_inverse import get_geo as matrix_inverse
 from utils.math import cart2sph, sph_dist
 from utils.rand import rand_range
 

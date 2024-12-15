@@ -58,6 +58,6 @@ python benchmark.py
 
 ## 贡献方法
 1. 在 `methods` 目录下新建一个文件，实现一个算法。  
-    需实现一个函数`intersection`，接受一个`numpy.ndarray`的`shape=(n, 2)`的直线两点数组，返回一个`numpy.ndarray`的`shape=(2,)`的交点坐标数组。
+    需实现一个函数`intersection`，接受一个`numpy.ndarray`的`shape=(n, 2, 2)`的直线两点数组，返回一个`numpy.ndarray`的`shape=(2,)`的交点坐标数组。
 2. 在 `benchmark.py` 的`methods`列表中添加你的方法。
 3. 运行 `python benchmark.py` 来测试你的方法。

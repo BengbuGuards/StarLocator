@@ -1,5 +1,5 @@
 import numpy as np
-from utils.math import cart2sph, sph2cart, vector_angle
+from ..utils.math import cart2sph, sph2cart, vector_angle
 
 
 def get_geo(data: dict):
@@ -10,7 +10,7 @@ def get_geo(data: dict):
         datas: a dict including:
             points: (n, 3), star points
             top_point: (3，) top point
-            hour_des: (n, 2), hour angle and declination
+            hour_decs: (n, 2), hour angle and declination
             z: (1,), focal length
     return:
         geo: (2,), geographical position about longitude and latitude
@@ -64,8 +64,8 @@ def getPlane(data, i):
     根据星点计算平面方程
     """
     cos_theta = data["cos_theta"][i]
-    hour_angle = data["hour_des"][i][0]
-    declination = data["hour_des"][i][1]
+    hour_angle = data["hour_decs"][i][0]
+    declination = data["hour_decs"][i][1]
 
     a = cos_theta * np.cos(hour_angle) * np.cos(declination)
     b = np.sin(hour_angle) * cos_theta * np.cos(declination)
@@ -464,7 +464,7 @@ def squareMedianAverage(crudePositions, data):
         for i in range(data["n_points"]):
             ## 计算该文职的实际天顶角
             angle = vector_angle(
-                np.array(sph2cart(*data["hour_des"][i])), np.array(sph2cart(*pos, 1))
+                np.array(sph2cart(*data["hour_decs"][i])), np.array(sph2cart(*pos, 1))
             )
             diff = angle - np.arccos(data["cos_theta"][i])
             sum += diff**2

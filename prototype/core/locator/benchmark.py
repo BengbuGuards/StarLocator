@@ -3,10 +3,10 @@ from copy import deepcopy
 
 import numpy as np
 import scipy.stats as st
-from methods.bi_median import get_geo as bi_median
-from methods.matrix_inverse import get_geo as matrix_inverse
-from utils.math import cart2sph, sph_dist
-from utils.rand import rand_range
+from .methods.bi_median import get_geo as bi_median
+from .methods.matrix_inverse import get_geo as matrix_inverse
+from .utils.math import cart2sph, sph_dist
+from .utils.rand import rand_range
 
 
 def generate_datas(args):
@@ -44,7 +44,7 @@ def generate_datas(args):
     geo_cart = x[0]
     points_cart = x[1:]
     geo = np.array(cart2sph(*geo_cart)[:2])
-    hour_des = np.array([cart2sph(*point)[:2] for point in points_cart])
+    hour_decs = np.array([cart2sph(*point)[:2] for point in points_cart])
 
     ## 施加径向畸变
     if args.k1 is not None and args.k2 is not None:
@@ -64,7 +64,7 @@ def generate_datas(args):
         {
             "points": points,
             "top_point": top_point,
-            "hour_des": hour_des,
+            "hour_decs": hour_decs,
             "z": args.z,
         },
         geo,

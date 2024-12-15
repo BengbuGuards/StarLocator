@@ -2,3 +2,5 @@ numpy
 scipy
 pytest
 matplotlib
+fastapi
+uvicorn[standard]

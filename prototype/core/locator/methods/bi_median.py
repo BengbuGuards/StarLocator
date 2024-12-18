@@ -1,8 +1,9 @@
 import numpy as np
-from ..utils.math import cart2sph, sph2cart, vector_angle
+import astronomy as ast
+from ..utils.math import cart2sph, sph2cart, vector_angle, rad2deg, deg2rad
 
 
-def get_geo(data: dict):
+def get_geo(data: dict, isFixRefraction: bool = False):
     """
     Find the geographical position.
 
@@ -12,6 +13,7 @@ def get_geo(data: dict):
             top_point: (3，) top point
             hour_decs: (n, 2), hour angle and declination
             z: (1,), focal length
+        isFixRefraction: whether to fix refraction
     return:
         geo: (2,), geographical position about longitude and latitude
     """
@@ -23,6 +25,17 @@ def get_geo(data: dict):
 
     ## 计算各星天顶角余弦值
     cos_theta = points @ top_point
+    if isFixRefraction:
+        star_altitudes = 90 - rad2deg(np.acos(cos_theta))  # 高度角（角度）
+        real_star_altitudes = deg2rad(
+            np.array(
+                [
+                    angle + ast.InverseRefractionAngle(ast.Refraction.Normal, angle)
+                    for angle in star_altitudes
+                ]
+            )
+        )  # 去折射的高度角（弧度）
+        cos_theta = np.cos(np.pi / 2 - real_star_altitudes)
     data["cos_theta"] = cos_theta
 
     ## 每双星计算得出双解
@@ -462,7 +475,7 @@ def squareMedianAverage(crudePositions, data):
         """
         sum = 0
         for i in range(data["n_points"]):
-            ## 计算该文职的实际天顶角
+            ## 计算该位置的实际天顶角
             angle = vector_angle(
                 np.array(sph2cart(*data["hour_decs"][i])), np.array(sph2cart(*pos, 1))
             )

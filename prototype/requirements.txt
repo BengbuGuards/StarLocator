@@ -4,3 +4,4 @@ pytest
 matplotlib
 fastapi
 uvicorn[standard]
+astronomy-engine

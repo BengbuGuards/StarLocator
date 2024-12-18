@@ -1,4 +1,4 @@
-import { SphereFromVector, Vector, InverseRefraction } from 'astronomy-engine';
+import { SphereFromVector, Vector } from 'astronomy-engine';
 import { rad2Deg, deg2Rad } from './math.js';
 import { getElevationAngle } from './getZ.js';
 import { squareMedianAverage } from './algorithm/squareMedianAverage.js';
@@ -389,12 +389,13 @@ function solve(plane1, plane2) {
  * @param {Star} star2 星星2
  * @param {number} z 像素焦距
  * @param {Array<number>} zenithVector 天顶向量
+ * @param {boolean} isFixRefraction 是否修正大气折射
  * @returns {Array<number>} 两组经纬度（角度制）
  */
-function dualStarPositioning(star1, star2, z, zenithVector) {
+function dualStarPositioning(star1, star2, z, zenithVector, isFixRefraction) {
     // 计算平面方程
-    let plane1 = getPlane(star1, getElevationAngle(star1, z, zenithVector));
-    let plane2 = getPlane(star2, getElevationAngle(star2, z, zenithVector));
+    let plane1 = getPlane(star1, getElevationAngle(star1, z, zenithVector, isFixRefraction));
+    let plane2 = getPlane(star2, getElevationAngle(star2, z, zenithVector, isFixRefraction));
 
     // 联立求解
     return solve(plane1, plane2);
@@ -418,7 +419,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     for (let i = 0; i < stars.length; ++i) {
         for (let j = i + 1; j < stars.length; ++j) {
             try {
-                crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector));
+                crudePositions.push(dualStarPositioning(stars[i], stars[j], z, zenithVector, isFixRefraction));
             } catch {
                 // 抛异常
                 console.error('存在两星平面不相交', stars[i], stars[j]);
@@ -432,11 +433,7 @@ function calc(stars, z, zenith, isFixGravity = false, isFixRefraction = false) {
     }
 
     // 计算各星高度角
-    let starAngles = stars.map((star) => rad2Deg(getElevationAngle(star, z, zenithVector)));
-    // 去折射修正
-    if (isFixRefraction) {
-        starAngles = starAngles.map((angle) => angle + InverseRefraction('normal', angle));
-    }
+    let starAngles = stars.map((star) => rad2Deg(getElevationAngle(star, z, zenithVector, isFixRefraction)));
     // 计算各星的天顶角
     let zenithAngles = starAngles.map((angle) => 90 - angle);
 

@@ -3,11 +3,11 @@ from copy import deepcopy
 
 import numpy as np
 import scipy.stats as st
-from methods.bi_mean import get_z as bi_mean
-from methods.north_len import get_z as north_len
-from methods.trisect import get_z as trisect
-from utils.math import vector_angle
-from utils.rand import rand_range
+from .methods.bi_mean import get_z as bi_mean
+from .methods.north_len import get_z as north_len
+from .methods.trisect import get_z as trisect
+from .utils.math import vector_angle
+from .utils.rand import rand_range
 
 
 def generate_points(args):

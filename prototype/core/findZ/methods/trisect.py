@@ -1,4 +1,5 @@
 import numpy as np
+from ..utils.math import minimize
 
 
 def calculate_angle(p1, p2, z) -> np.ndarray:
@@ -22,28 +23,14 @@ def get_z(datas: tuple) -> float:
     points = datas["points"]
     thetas = datas["thetas"]
 
-    f_left = 0
-    f_right = 1e9
+    z = minimize(
+        lambda z: sum(
+            (calculate_angle(points[i], points[j], z) - thetas[i, j]) ** 2
+            for i in range(len(points))
+            for j in range(i + 1, len(points))
+        ),
+        0,
+        1e9,
+    )
 
-    cnt = len(points)
-    for _ in range(100):
-        delta = (f_right - f_left) / 3
-        f_mid_left = f_left + delta
-        f_mid_right = f_right - delta
-
-        sum1 = 0
-        sum2 = 0
-        for i in range(cnt):
-            for j in range(i + 1, cnt):
-                angle1 = calculate_angle(points[i], points[j], f_mid_left)
-                sum1 += (angle1 - thetas[i, j]) ** 2
-
-                angle2 = calculate_angle(points[i], points[j], f_mid_right)
-                sum2 += (angle2 - thetas[i, j]) ** 2
-
-        if sum1 < sum2:
-            f_right = f_mid_right
-        else:
-            f_left = f_mid_left
-
-    return (f_left + f_right) / 2
+    return z

@@ -93,10 +93,15 @@ function getAnalyticalZ(stars) {
  * @param {Star} star 星星
  * @param {number} z 像素焦距
  * @param {Array<number>} zenithVector 天顶向量
+ * @param {boolean} isFixRefraction 是否修正折射
  * @returns {number} 高度角（弧度）
  */
-function getElevationAngle(star, z, zenithVector) {
-    return Math.PI / 2 - deg2Rad(AngleBetween(new Vector(star.x, star.y, z, 0), zenithVector));
+function getElevationAngle(star, z, zenithVector, isFixRefraction = false) {
+    let angle = Math.PI / 2 - deg2Rad(AngleBetween(new Vector(star.x, star.y, z, 0), zenithVector));
+    if (isFixRefraction) {
+        angle = angle + deg2Rad(InverseRefraction('normal', rad2Deg(angle)));
+    }
+    return angle;
 }
 
 /**

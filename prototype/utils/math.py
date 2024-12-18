@@ -29,3 +29,15 @@ def angles_on_sphere(dec_ras):
             thetas[j, i] = thetas[i, j]
 
     return thetas
+
+
+def normalize(vec):
+    return vec / np.linalg.norm(vec, axis=-1, keepdims=True)
+
+
+def deg2Rad(deg):
+    return deg * np.pi / 180
+
+
+def rad2Deg(rad):
+    return rad * 180 / np.pi

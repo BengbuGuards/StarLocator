@@ -28,3 +28,11 @@ def sph_dist(az1, elev1, az2, elev2):
         np.sin(elev1) * np.sin(elev2)
         + np.cos(elev1) * np.cos(elev2) * np.cos(az1 - az2)
     )
+
+
+def rad2deg(rad):
+    return rad * 180 / np.pi
+
+
+def deg2rad(deg):
+    return deg * np.pi / 180

@@ -13,6 +13,19 @@ router = APIRouter()
 def calc_geo(
     data: locator.PointLines, isFixRefraction: bool = False, isFixGravity: bool = False
 ):
+    """
+    Find the geographical position.
+
+    params:
+        datas: a dict including:
+            points: (n, 2), star points
+            lines: (n, 2, 2), plumb lines
+        isFixRefraction: whether to fix refraction
+        isFixGravity: whether to fix gravity
+    return:
+        geo: dict, geographical position about longitude and latitude
+    """
+
     num_points = len(data.stars)
     points, hour_decs = stars_convert(data.stars)
     lines = np.array(data.lines)
@@ -49,5 +62,4 @@ def calc_geo(
             0.00032712 * np.sin(geo[1]) ** 2 - 0.00000368 * np.sin(geo[1]) - 0.099161
         ) * np.sin(geo[1] * 2) / 180 * np.pi
 
-    return {"lon": rad2Deg(geo[0].item()), "lat": rad2Deg(geo[1].item())}
-    # return {"lon": geo[0].item(), "lat": geo[1].item()}
+    return {"lon": geo[0].item(), "lat": geo[1].item()}

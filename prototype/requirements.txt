@@ -5,3 +5,5 @@ matplotlib
 fastapi
 uvicorn[standard]
 astronomy-engine
+httpx
+async_lru

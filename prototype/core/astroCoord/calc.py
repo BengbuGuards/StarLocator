@@ -2,6 +2,7 @@ import asyncio
 import astronomy as ast
 from .data import starZH2EN, solar_bodies
 from .remote import get_RaDec_by_names
+from .utils import stamp2ast_time
 
 
 def get_HaDec_by_RaDec(raDec, date, observer=ast.Observer(0, 0, 0)):
@@ -44,21 +45,22 @@ def get_HaDec_in_solar(star_name, date, observer=ast.Observer(0, 0, 0)):
     return [hour_angle, equ_ofdate.dec]
 
 
-def get_HaDec_by_names(star_names, date, observer=ast.Observer(0, 0, 0)):
+def get_HaDec_by_names(star_names, timestamp, observer=ast.Observer(0, 0, 0)):
     """
     根据恒星名称数组获取其时角和赤纬
 
     param:
         star_names: 恒星名称数组
-        date: 日期
+        timestamp: 时间戳
         observer: 观察者地理坐标
     return:
-        haDec: 时角和赤纬数组（角度）
+        haDec: 时角和赤纬字典（角度）
     """
 
     ha_desc = dict()  # 时角和赤纬数组（角度）
     fixed_star_names = dict()  # 太阳系外要查询的恒星名（查询名: 操作名）
     solar_star_names = dict()  # 太阳系内要查询的天体名（查询名: 操作名）
+    ast_time = stamp2ast_time(timestamp)
 
     for star_name in star_names:
         operate_name = star_name
@@ -77,11 +79,11 @@ def get_HaDec_by_names(star_names, date, observer=ast.Observer(0, 0, 0)):
     # 计算太阳系外天体的时角和赤纬
     for star_name in fixed_star_names.keys():
         ha_desc[star_name] = get_HaDec_by_RaDec(
-            ra_decs[fixed_star_names[star_name]], date, observer
+            ra_decs[fixed_star_names[star_name]], ast_time, observer
         )
 
     # 计算太阳系内天体的时角和赤纬
     for star_name, operate_name in solar_star_names.items():
-        ha_desc[star_name] = get_HaDec_in_solar(operate_name, date, observer)
+        ha_desc[star_name] = get_HaDec_in_solar(operate_name, ast_time, observer)
 
     return ha_desc

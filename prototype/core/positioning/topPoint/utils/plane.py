@@ -11,11 +11,11 @@ def two_line_intersection_point(l1, l2):
     v2 = p4 - p3
     v3 = p3 - p1
 
-    det = np.cross(v1, v2)
+    det = v1[0] * v2[1] - v1[1] * v2[0]
     if det == 0:
         return False, np.array([0, 0])
 
-    t = np.cross(v3, v2) / det
+    t = (v3[0] * v2[1] - v3[1] * v2[0]) / det
     res = p1 + t * v1
     return True, res
 

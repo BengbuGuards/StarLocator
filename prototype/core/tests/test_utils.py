@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from topPoint.utils.plane import two_line_intersection_point
+from core.positioning.topPoint.utils.plane import two_line_intersection_point
 
 
 def test_two_line_intersection_point():

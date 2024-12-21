@@ -60,8 +60,8 @@ def get_z(data, z0, zenith):
         )
         # 计算夹角总误差
         error = np.sum(
-            np.abs(angles_real - thetas[np.triu_indices(len(points), k=1)])
-        )  # TODO: L1还是L2？
+            (angles_real - thetas[np.triu_indices(len(points), k=1)]) ** 2
+        )
 
         return error
 

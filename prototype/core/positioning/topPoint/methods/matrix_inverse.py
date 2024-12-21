@@ -15,7 +15,8 @@ def intersection(lines: list) -> tuple:
     A[:, 0] = V[:, 1]
     A[:, 1] = -V[:, 0]
 
-    b = np.cross(lines[:, 0], lines[:, 1])
+    lines_3d = np.dstack((lines, np.zeros((lines.shape[0], 2, 1))))
+    b = np.cross(lines_3d[:, 0], lines_3d[:, 1])[:, 2]
 
     A_inv = np.linalg.pinv(A)
 

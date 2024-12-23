@@ -3,9 +3,10 @@ import re
 import httpx
 import asyncio
 from async_lru import alru_cache
+from config import CACHE_SIZE
 
 
-@alru_cache(maxsize=128)
+@alru_cache(maxsize=CACHE_SIZE)
 async def get_RaDec_by_name(star_name: str):
     """
     根据恒星名称获取其赤经和赤纬
@@ -27,7 +28,7 @@ async def get_RaDec_by_name(star_name: str):
         )
         if response.status_code != 200:
             raise ValueError(
-                f"Failed request astroCoord with status code {response.status_code}"
+                f"Failed request astrocoord with status code {response.status_code}"
             )
         data = response.json()
         ra = data[0]["ra"] / 15
@@ -35,7 +36,7 @@ async def get_RaDec_by_name(star_name: str):
         return (star_name, [ra, dec])
 
 
-async def get_RaDec_by_names(star_names):
+async def get_RaDecs_by_names(star_names):
     """
     根据恒星名称数组获取其赤经和赤纬
     param:
@@ -50,8 +51,8 @@ async def get_RaDec_by_names(star_names):
         try:
             raDec = await task
             raDecs_tmp.append(raDec)
-        except ValueError as e:
-            print(e)
+        except ValueError:
+            pass
     raDecs_tmp = dict(raDecs_tmp)
 
     raDecs_dict = dict()

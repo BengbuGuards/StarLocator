@@ -2,7 +2,7 @@ import numpy as np
 
 
 def vector_angle(vec1, vec2):
-    cos_theta = np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+    cos_theta = np.dot(vec1, vec2.T) / (np.linalg.norm(vec1, axis=-1) * np.linalg.norm(vec2, axis=-1))
     cos_theta = np.clip(cos_theta, -1, 1)
     return np.arccos(cos_theta)
 

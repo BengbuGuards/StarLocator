@@ -1,15 +1,14 @@
 from pydantic import BaseModel
-from schemas.stars import Stars
-from typing import List
-
-Coordinate = List[float]
+from .base import PointLines
 
 
-class PointLines(BaseModel):
-    stars: List[Stars]
-    lines: List[List[Coordinate]]
+class LocatorRequest(BaseModel):
+    data: PointLines
+    isFixRefraction: bool = False
+    isFixGravity: bool = False
 
 
 class Position(BaseModel):
+    detail: str
     lat: float
     lon: float

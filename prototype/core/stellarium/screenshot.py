@@ -2,7 +2,7 @@ import os
 import re
 from datetime import datetime, timezone
 
-import requests
+import httpx
 
 HOST = "http://127.0.0.1"
 PORT = 8090
@@ -13,7 +13,7 @@ BASE_URL = "{}:{}".format(HOST, PORT)
 def execute_code(code):
     url = "{}/api/scripts/direct".format(BASE_URL)
     data = {"code": code}
-    resp = requests.post(url, data=data)
+    resp = httpx.post(url, data=data)
     res = resp.text
     return res
 

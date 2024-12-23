@@ -1,6 +1,7 @@
 import numpy as np
 import astronomy as ast
-from ..utils.math import minimize, vector_angle, normalize, rad2deg, deg2rad
+from ..utils.math import minimize, normalize
+from core.positioning.locator.utils.math import vector_angle, rad2deg, deg2rad
 
 
 def get_z(data, z0, zenith):
@@ -74,22 +75,22 @@ def get_z(data, z0, zenith):
     return z
 
 
-def rotate(vector, zenithVector, angle):
+def rotate(vector, zenith_vec, angle):
     """
     Rotate a vector towards a zenith vector by a given angle.
 
     params:
         vector: vector to rotate
-        zenithVector: zenith vector
+        zenith_vec: zenith vector
         angle: angle to rotate in degrees
     return:
         rotated element vector
     """
     # 单位化
     vector = normalize(vector)
-    zenithVector = normalize(zenithVector)
+    zenith_vec = normalize(zenith_vec)
     # 旋转轴
-    axis = np.cross(vector, zenithVector)
+    axis = np.cross(vector, zenith_vec)
     # 旋转角度
     angle = deg2rad(angle)
     # 罗德里格斯旋转公式

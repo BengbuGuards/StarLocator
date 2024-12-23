@@ -3,7 +3,7 @@ import astronomy as ast
 from ..utils.math import cart2sph, sph2cart, vector_angle, rad2deg, deg2rad
 
 
-def get_geo(data: dict, isFixRefraction: bool = False):
+def get_geo(data: dict, is_fix_refraction: bool = False):
     """
     Find the geographical position.
 
@@ -13,7 +13,7 @@ def get_geo(data: dict, isFixRefraction: bool = False):
             top_point: (3，) top point
             hour_decs: (n, 2), hour angle and declination
             z: (1,), focal length
-        isFixRefraction: whether to fix refraction
+        is_fix_refraction: whether to fix refraction
     return:
         geo: (2,), geographical position about longitude and latitude
     """
@@ -25,7 +25,7 @@ def get_geo(data: dict, isFixRefraction: bool = False):
 
     ## 计算各星天顶角余弦值
     cos_theta = points @ top_point
-    if isFixRefraction:
+    if is_fix_refraction:
         star_altitudes = 90 - rad2deg(np.acos(cos_theta))  # 高度角（角度）
         real_star_altitudes = deg2rad(
             np.array(
@@ -39,40 +39,40 @@ def get_geo(data: dict, isFixRefraction: bool = False):
     data["cos_theta"] = cos_theta
 
     ## 每双星计算得出双解
-    crudePositions = []
+    crude_positions = []
     for i in range(n_points):
         for j in range(i + 1, n_points):
             # 忽略sqrt负数的警告
             with np.errstate(invalid="ignore"):
-                results = dualStarPositioning(data, i, j)
+                results = dual_star_positioning(data, i, j)
             if (
                 np.isnan(results[0]).any() == False
                 and np.isnan(results[1]).any() == False
             ):
-                crudePositions.append(results)
+                crude_positions.append(results)
 
     ## 检查是否有解
-    if len(crudePositions) == 0:
-        return np.zeros(2)
+    if len(crude_positions) == 0:
+        raise Exception("无解")
 
     ## 加权平均
-    geo = squareMedianAverage(crudePositions, data)
+    geo = square_median_average(crude_positions, data)
 
     return geo
 
 
-def dualStarPositioning(data, i, j):
+def dual_star_positioning(data, i, j):
     """
     根据双星计算地理坐标，返回双解
     """
-    plane1 = getPlane(data, i)
-    plane2 = getPlane(data, j)
+    plane1 = get_plane(data, i)
+    plane2 = get_plane(data, j)
 
     ## 计算两平面与圆的两交点
-    return getPlaneIntersection(plane1, plane2)
+    return get_plane_intersection(plane1, plane2)
 
 
-def getPlane(data, i):
+def get_plane(data, i):
     """
     根据星点计算平面方程
     """
@@ -88,7 +88,7 @@ def getPlane(data, i):
     return np.array([a, b, c, d])
 
 
-def getPlaneIntersection(plane1, plane2):
+def get_plane_intersection(plane1, plane2):
     """
     计算两平面交点
     """
@@ -464,7 +464,7 @@ def getPlaneIntersection(plane1, plane2):
     ]  # 先经度后纬度
 
 
-def squareMedianAverage(crudePositions, data):
+def square_median_average(crude_positions, data):
     """
     计算加权平均
     """
@@ -485,37 +485,37 @@ def squareMedianAverage(crudePositions, data):
 
     # 评估，保留一对解中的正确的位置和评估值
     positions = []
-    avgPosition = []
-    for pair in crudePositions:
+    avg_position = []
+    for pair in crude_positions:
         s1 = evaluate(pair[0])
         s2 = evaluate(pair[1])
         true_pair = pair[0] if s1 > s2 else pair[1]
         positions.append(true_pair)
         true_pair = sph2cart(*true_pair, 1)
-        avgPosition.append(true_pair)
+        avg_position.append(true_pair)
 
     # 计算平均向量
-    avgPosition = np.array(avgPosition)
-    avgPosition = np.mean(avgPosition, axis=0)
+    avg_position = np.array(avg_position)
+    avg_position = np.mean(avg_position, axis=0)
 
     # 根据平均值消除经纬度的周期性，防止中位数在0经线附近计算错误
     positions2 = []
     for pos in positions:
-        lon = adjustAngle(pos[0], avgPosition[0])
-        lat = adjustAngle(pos[1], avgPosition[1])
+        lon = adjust_angle(pos[0], avg_position[0])
+        lat = adjust_angle(pos[1], avg_position[1])
         positions2.append([lon, lat])
     positions2 = np.array(positions2)
 
     # 求positions中位数，相比于平均值，中位数鲁棒性更好
-    median_Geo = np.median(positions2, axis=0)
+    median_geo = np.median(positions2, axis=0)
 
-    return median_Geo
+    return median_geo
 
 
-def adjustAngle(angle, avgAngle):
-    if angle - avgAngle > 180:
+def adjust_angle(angle, avg_angle):
+    if angle - avg_angle > 180:
         return angle - 360
-    elif angle - avgAngle < -180:
+    elif angle - avg_angle < -180:
         return angle + 360
     else:
         return angle

@@ -5,7 +5,7 @@ from core.positioning.calc import calc_geo
 from core.positioning.locator.utils.math import rad2deg
 
 
-data = {
+photo = {
     "stars": [
         {
             "x": -1201.17,
@@ -56,16 +56,16 @@ target = {
 
 
 def test_local():
-    geo = calc_geo(data, is_fix_refraction, is_fix_gravity)
+    geo = calc_geo(photo, is_fix_refraction, is_fix_gravity)
     geo["lat"] = rad2deg(geo["lat"])
     geo["lon"] = rad2deg(geo["lon"])
     assert geo == pytest.approx(target, abs=2e-1)
 
 
 def test_remote():
-    url = f"{BACKEND_API_BASEURL}/locator"
+    url = f"{BACKEND_API_BASEURL}/positioning"
     post_data = {
-        "data": data,
+        "photo": photo,
         "isFixRefraction": is_fix_refraction,
         "isFixGravity": is_fix_gravity,
     }

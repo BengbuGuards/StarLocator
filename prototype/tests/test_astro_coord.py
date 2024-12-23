@@ -46,7 +46,7 @@ def test_remote():
     result = resp.json()
     assert result["detail"] == "success"
     for star_name in star_names:
-        assert result['haDecs'][star_name] == pytest.approx(target[star_name])
+        assert result["haDecs"][star_name] == pytest.approx(target[star_name])
 
     # 验证缓存功能
     start_time = time.time()
@@ -56,5 +56,5 @@ def test_remote():
     result = resp.json()
     assert result["detail"] == "success"
     for star_name in star_names:
-        assert result['haDecs'][star_name] == pytest.approx(target[star_name])
+        assert result["haDecs"][star_name] == pytest.approx(target[star_name])
     assert end_time - start_time < 0.05

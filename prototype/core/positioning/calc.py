@@ -26,12 +26,12 @@ def calc_z(points, hour_decs, top_point, is_fix_refraction=False):
     return z
 
 
-def calc_geo(data, is_fix_refraction=False, is_fix_gravity=False):
+def calc_geo(photo, is_fix_refraction=False, is_fix_gravity=False):
     """
     Find the geographical position.
 
     params:
-        data: a dict including:
+        photo: a dict including:
             stars: list, star points
             lines: (n, 2, 2), plumb lines
         is_fix_refraction: whether to fix refraction
@@ -40,12 +40,12 @@ def calc_geo(data, is_fix_refraction=False, is_fix_gravity=False):
         geo: dict, geographical position about longitude and latitude, and detail
     """
 
-    num_points = len(data["stars"])
-    points, hour_decs, _ = stars_convert(data["stars"])
+    num_points = len(photo["stars"])
+    points, hour_decs, _ = stars_convert(photo["stars"])
 
     # 计算灭点
     try:
-        top_point = intersection(np.array(data["lines"]))
+        top_point = intersection(np.array(photo["lines"]))
     except:
         return {"detail": "灭点计算失败"}
 

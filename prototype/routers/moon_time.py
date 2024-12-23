@@ -1,18 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from core.moon_time.calc import calc
 from schemas import moon_time
+
+from .limiter import limiter
+from config import MOON_TIME_RATE_LIMIT
 
 router = APIRouter()
 
 
 @router.post("", response_model=moon_time.MoonTimeResponse)
-def calc_time_by_moon(data: moon_time.MoonTimeRequest):
+@limiter.limit(MOON_TIME_RATE_LIMIT)
+def calc_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
     """
     通过月亮与星星的相对位置计算时间
 
     param:
+        request: Request, slowapi必需
         data:
-            data: a dict including:
+            photo: a dict including:
                 stars: list, star points
                 lines: (n, 2, 2), plumb lines
             approxTimestamp: number, approximate timestamp
@@ -27,7 +32,7 @@ def calc_time_by_moon(data: moon_time.MoonTimeRequest):
     detail = "success"
     try:
         time = calc(
-            data.data.model_dump(),
+            data.photo.model_dump(),
             data.approxTimestamp,
             data.scopeDays,
             is_fix_gravity=data.isFixGravity,

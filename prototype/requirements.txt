@@ -7,3 +7,4 @@ uvicorn[standard]
 astronomy-engine
 httpx
 async_lru
+slowapi

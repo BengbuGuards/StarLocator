@@ -11,7 +11,7 @@
 
 ### 运行
 1. 进入本文件夹
-2. 修改[config_example.py](./config_example.py)为config.py
+2. 自定义config.py中的配置
 3. 运行
     ```bash
     python main.py
@@ -32,7 +32,7 @@
 - schemas: FastAPI的数据模型
 - tests: 单元测试
 - main.py: FastAPI的入口
-- config_example.py: 配置文件示例
+- config.py: 配置文件
 - requirements.txt: 依赖
 
 ### 运行
@@ -41,3 +41,5 @@
 ```bash
 pytest tests
 ```
+
+注意需先启动后端。

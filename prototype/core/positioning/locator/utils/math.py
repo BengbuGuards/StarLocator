@@ -2,7 +2,9 @@ import numpy as np
 
 
 def vector_angle(vec1, vec2):
-    cos_theta = np.dot(vec1, vec2.T) / (np.linalg.norm(vec1, axis=-1) * np.linalg.norm(vec2, axis=-1))
+    cos_theta = np.dot(vec1, vec2.T) / (
+        np.linalg.norm(vec1, axis=-1) * np.linalg.norm(vec2, axis=-1)
+    )
     cos_theta = np.clip(cos_theta, -1, 1)
     return np.arccos(cos_theta)
 
@@ -28,11 +30,3 @@ def sph_dist(az1, elev1, az2, elev2):
         np.sin(elev1) * np.sin(elev2)
         + np.cos(elev1) * np.cos(elev2) * np.cos(az1 - az2)
     )
-
-
-def rad2deg(rad):
-    return rad * 180 / np.pi
-
-
-def deg2rad(deg):
-    return deg * np.pi / 180

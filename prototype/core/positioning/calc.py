@@ -3,6 +3,7 @@ from .top_point.methods.matrix_inverse import intersection
 from .find_z.methods import trisect, fix_refraction
 from .locator.methods.bi_median import get_geo
 from .find_z.utils.math import angles_on_sphere, normalize
+from .latitude.method.series2 import astronomic_latitude_to_geodetic_latitude
 
 
 def calc_z(points, hour_decs, top_point, is_fix_refraction=False):
@@ -33,11 +34,21 @@ def calc_geo(photo, is_fix_refraction=False, is_fix_gravity=False):
     params:
         photo: a dict including:
             stars: list, star points
+                    name: str, star name
+                    x: float, x value
+                    y: float, y value
+                    lat: float, declination
+                    lon: float, reverse of hour angle
             lines: (n, 2, 2), plumb lines
         is_fix_refraction: whether to fix refraction
         is_fix_gravity: whether to fix gravity
     return:
-        geo: dict, geographical position about longitude and latitude, and detail
+        a dict:
+            detail: str, success or failed
+            topPoint: (2,), top point
+            z: float, z value
+            lon: float, longitude
+            lat: float, latitude
     """
 
     num_points = len(photo["stars"])
@@ -76,19 +87,17 @@ def calc_geo(photo, is_fix_refraction=False, is_fix_gravity=False):
         return {"detail": "地理位置计算失败"}
 
     if is_fix_gravity:
-        geo[1] = (
-            geo[1]
-            - (
-                0.00032712 * np.sin(geo[1]) ** 2
-                - 0.00000368 * np.sin(geo[1])
-                - 0.099161
-            )
-            * np.sin(geo[1] * 2)
-            / 180
-            * np.pi
+        geo[1] = np.deg2rad(
+            astronomic_latitude_to_geodetic_latitude(np.rad2deg(geo[1]))
         )
 
-    return {"detail": "success", "lon": geo[0].item(), "lat": geo[1].item()}
+    return {
+        "detail": "success",
+        "topPoint": top_point,
+        "z": z,
+        "lon": geo[0].item(),
+        "lat": geo[1].item(),
+    }
 
 
 def stars_convert(stars):

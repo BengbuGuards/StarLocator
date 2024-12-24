@@ -1,8 +1,8 @@
 from pydantic import BaseModel
-from .base import PointLines
+from .base import PointLines, Coordinate
 
 
-class LocatorRequest(BaseModel):
+class PositioningRequest(BaseModel):
     photo: PointLines
     isFixRefraction: bool = False
     isFixGravity: bool = False
@@ -62,7 +62,9 @@ class LocatorRequest(BaseModel):
     }
 
 
-class Position(BaseModel):
+class PositioningResponse(BaseModel):
     detail: str
+    topPoint: Coordinate
+    z: float
     lat: float
     lon: float

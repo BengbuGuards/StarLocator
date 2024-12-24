@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from methods.matrix_inverse import intersection as matrix_inverse_intersection
-from methods.sphere import intersection as sphere_intersection
+from .methods.matrix_inverse import intersection as matrix_inverse_intersection
+from .methods.sphere import intersection as sphere_intersection
 
 two_lines = np.array(
     [

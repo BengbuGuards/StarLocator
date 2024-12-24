@@ -1,5 +1,5 @@
 import numpy as np
-from methods import median
+from . import median
 from scipy.optimize import minimize
 
 

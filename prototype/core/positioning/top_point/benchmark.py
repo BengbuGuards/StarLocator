@@ -2,15 +2,14 @@ import argparse
 
 import numpy as np
 import scipy.stats as st
-from methods.least_square import intersection as least_square
-from methods.matrix_inverse import intersection as matrix_inverse
-from methods.median import intersection as median
-from methods.median2 import intersection as median2
-from methods.nearest_l2 import intersection as nearest_l2
-from methods.optim import intersection as optim
-from methods.sphere import intersection as sphere
-from methods.square_weight import intersection as square_weight
-from utils.rand import rand_range
+from .methods.least_square import intersection as least_square
+from .methods.matrix_inverse import intersection as matrix_inverse
+from .methods.median import intersection as median
+from .methods.median2 import intersection as median2
+from .methods.nearest_l2 import intersection as nearest_l2
+from .methods.optim import intersection as optim
+from .methods.sphere import intersection as sphere
+from .methods.square_weight import intersection as square_weight
 
 
 def generate_lines(args):
@@ -25,10 +24,10 @@ def generate_lines(args):
         ## 生成一个参考点
         x0 = 0
         while np.abs(x0) < 1e-2:
-            x0 = rand_range(*scope_x)
+            x0 = np.random.uniform(*scope_x)
         y0 = 0
         while np.abs(y0) < 1e-2:
-            y0 = rand_range(*scope_y)
+            y0 = np.random.uniform(*scope_y)
         ## 生成范围
         if y0 / x0 > 0:
             limit_x1 = np.max((scope_x[0], scope_y[0] / y0 * x0))

@@ -56,8 +56,8 @@ class InteractPhoto {
         this.buttonFunctioner = this.defaultbuttonFunctioner;
     }
 
-    // 获取当前日期时间时区的Date对象
-    getDateTime() {
+    // 获取当前日期时间时区的时间戳
+    getTimestamp() {
         let timeZoneOffset = this.timeZone.value;
         if (timeZoneOffset.length === 1) {
             timeZoneOffset = '0' + timeZoneOffset + ':00';
@@ -69,14 +69,15 @@ class InteractPhoto {
             this.date.value + 'T' + this.time.value + (this.timeZone.value >= 0 ? '+' : '') + timeZoneOffset
         );
 
-        return date;
+        return date.getTime() / 1000;
     }
 
     /**
      * 设置日期时间时区
-     * @param {Date} datetime 日期时间
+     * @param {Number} timestamp 日期时间
      */
-    setDateTime(datetime) {
+    setDatebyTime(timestamp) {
+        let datetime = new Date(timestamp * 1000);
         let date = datetime.toLocaleDateString().split('/');
         let year = date[0];
         let month = date[1];

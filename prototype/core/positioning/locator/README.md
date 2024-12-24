@@ -42,9 +42,9 @@ args.noise_std = 1  # 高斯噪声标准差
 | 2 | [matrix_inverse](methods/matrix_inverse.py) | 119.923 | (112.895, 126.951) |
 
 ## 使用方法
-1. 运行
+1. 在`core`目录下运行
 ```bash
-python benchmark.py
+python -m positioning.locator.benchmark
 ```
 
 ## 贡献方法

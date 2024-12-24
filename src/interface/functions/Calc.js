@@ -1,12 +1,8 @@
 import { marker } from 'leaflet';
 import { polyline } from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
-import { getVPoint } from '../../core/algorithm/VPoint.js';
-import { getZ } from '../../core/getZ.js';
-import { calc } from '../../core/calc.js';
-import { markStars } from '../../core/mark.js';
-import { getOriginalStars, getGlobalPLPointsCoord } from '../utils.js';
-import { wrapAngleInDeg } from '../../core/math.js';
+import { BACKEND_API } from '../../config.js';
+import { getOriginalStars, getGlobalPLPointsCoord, postJSON } from '../utils.js';
 
 // 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
@@ -63,51 +59,35 @@ class Calc extends DefaultbuttonFunctioner {
         this.interactPhoto.buttonFunctioner = this;
         this.interactPhoto.tips.innerHTML = `计算中...`;
 
-        try {
-            // 计算灭点
-            const vpoint_res = getVPoint(globalPLsPointsCoord);
-            if (!vpoint_res.has_vpoint) {
-                throw new Error('铅垂线的延长线不相交，无法计算灭点');
+        postJSON(`${BACKEND_API}/positioning`, {
+            photo: {
+                stars: originalStars,
+                lines: globalPLsPointsCoord,
+            },
+            isFixRefraction: document.getElementById('check1').checked,
+            isFixGravity: document.getElementById('check2').checked,
+        }).then(([results, detail]) => {
+            if (detail === 'success') {
+                // 显示结果
+                this.addZenithtoTable(results['topPoint']);
+                this.showZ(results['z']);
+                this.showGeoEstimate(results['lon'], results['lat']);
+                this.interactPhoto.tips.innerHTML = '计算地理位置成功';
+            } else {
+                this.interactPhoto.tips.innerHTML = `计算地理位置失败：${detail}`;
             }
-            let zenith = vpoint_res.vpoint;
+        });
 
-            this.addZenithtoTable(zenith);
-
-            // 计算焦距
-            let stars = markStars(originalStars);
-            let isFixRefraction = document.getElementById('check1').checked;
-            let z = getZ(stars, zenith, isFixRefraction);
-            if (isNaN(z)) {
-                throw new Error('无法计算像素焦距');
-            }
-            this.showZ(z);
-
-            // 计算地理坐标
-            let isFixGravity = document.getElementById('check2').checked;
-            let geoEstimate = calc(stars, z, zenith, isFixGravity, isFixRefraction);
-            if (geoEstimate.length == 0 || isNaN(geoEstimate[0]) || isNaN(geoEstimate[1])) {
-                throw new Error('无法计算地理坐标');
-            }
-
-            // 显示结果
-            this.showGeoEstimate(geoEstimate);
-            this.show35mmZ(z);
-
-            // 结束计算
-            this.interactPhoto.tips.innerHTML = '计算地理位置成功';
-        } catch (e) {
-            this.interactPhoto.tips.innerHTML = `计算失败：${e.message}，请检查数据`;
-        } finally {
-            this.interactPhoto.resetbuttonFunctioner();
-        }
+        // 结束计算
+        this.interactPhoto.resetbuttonFunctioner();
     }
 
     // 检查originalStars数组每个子项的数据是否完整
     checkStars(originalStars) {
         let isComplete = true;
         originalStars.forEach((originalStar) => {
-            originalStar.forEach((data) => {
-                if (data === '') {
+            Object.values(originalStar).forEach((data) => {
+                if (!data) {
                     isComplete = false;
                 }
             });
@@ -124,15 +104,23 @@ class Calc extends DefaultbuttonFunctioner {
     // 显示焦距
     showZ(z) {
         document.getElementById('focLenPix').textContent = Math.round(z * 1000) / 1000;
+        let width = this.interactPhoto.img.width;
+        let height = this.interactPhoto.img.height;
+        let tri_long = Math.sqrt(width * width + height * height);
+        let z35 = (z * 43.27) / tri_long;
+        document.getElementById('focLenMm').textContent = Math.round(z35);
     }
 
     // 显示地理坐标
-    showGeoEstimate(geoEstimate) {
+    showGeoEstimate(geoLon, geoLat) {
+        // 转换单位
+        geoLon = (geoLon * 180) / Math.PI;
+        geoLat = (geoLat * 180) / Math.PI;
         // 在地图上显示位置
-        geoEstimate[1] = wrapAngleInDeg(geoEstimate[1]);
+        geoLon = this.wrapAngleInDeg(geoLon);
 
-        document.getElementById('outputLat').textContent = Math.round(geoEstimate[0] * 10000) / 10000 + '°';
-        document.getElementById('outputLong').textContent = Math.round(geoEstimate[1] * 10000) / 10000 + '°';
+        document.getElementById('outputLat').textContent = Math.round(geoLat * 10000) / 10000 + '°';
+        document.getElementById('outputLong').textContent = Math.round(geoLon * 10000) / 10000 + '°';
         let map = this.interactPhoto.map;
         // 清除之前的标记
         if (this.mapMarker) {
@@ -145,7 +133,7 @@ class Calc extends DefaultbuttonFunctioner {
         let addressDiv = document.getElementById('address');
         addressDiv.innerText = '正在获取地理位置信息...';
         // 先申请国内
-        fetch(`https://geocode.xyz/${geoEstimate[0]},${geoEstimate[1]}?json=1`, { method: 'GET' })
+        fetch(`https://geocode.xyz/${geoLat},${geoLon}?json=1`, { method: 'GET' })
             .then((response) => response.json())
             .then((data) => {
                 if (!data.geocode.startsWith('Throttled')) {
@@ -157,7 +145,7 @@ class Calc extends DefaultbuttonFunctioner {
                 } else {
                     // OSM逆地址解析API（镜像）
                     fetch(
-                        `https://map.mapscdn.com/nominatim/reverse?format=json&lat=${geoEstimate[0]}&lon=${geoEstimate[1]}&zoom=18&addressdetails=0`,
+                        `https://map.mapscdn.com/nominatim/reverse?format=json&lat=${geoLat}&lon=${geoLon}&zoom=18&addressdetails=0`,
                         { method: 'GET' }
                     )
                         .then((response) => response.json())
@@ -166,7 +154,7 @@ class Calc extends DefaultbuttonFunctioner {
                             else {
                                 // 原API（需梯子）
                                 fetch(
-                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${geoEstimate[0]}&lon=${geoEstimate[1]}&zoom=18&addressdetails=0`,
+                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${geoLat}&lon=${geoLon}&zoom=18&addressdetails=0`,
                                     { method: 'GET' }
                                 )
                                     .then((response) => response.json())
@@ -181,27 +169,33 @@ class Calc extends DefaultbuttonFunctioner {
                 addressDiv.innerText = '获取地理位置信息失败';
             });
         // 添加新的标记
-        let newMarker = marker([geoEstimate[0], geoEstimate[1]]).addTo(map);
+        let newMarker = marker([geoLat, geoLon]).addTo(map);
         this.mapMarker = newMarker;
         // 误差线
         let shift = 0.125; // TODO: 从界面读取误差值
         this.mapLine = polyline(
             [
-                [geoEstimate[0], ((((geoEstimate[1] - shift + 180) % 360) + 360) % 360) - 180],
-                [geoEstimate[0], ((((geoEstimate[1] + shift + 180) % 360) + 360) % 360) - 180],
+                [geoLat, ((((geoLon - shift + 180) % 360) + 360) % 360) - 180],
+                [geoLat, ((((geoLon + shift + 180) % 360) + 360) % 360) - 180],
             ],
             { color: '#4996d2' }
         ).addTo(map);
-        map.setView([geoEstimate[0], geoEstimate[1]], 3);
+        map.setView([geoLat, geoLon], 3);
     }
 
-    // 显示35mm等效焦距
-    show35mmZ(z) {
-        let width = this.interactPhoto.img.width;
-        let height = this.interactPhoto.img.height;
-        let tri_long = Math.sqrt(width * width + height * height);
-        let z35 = (z * 43.27) / tri_long;
-        document.getElementById('focLenMm').textContent = Math.round(z35);
+    /**
+     * 使得角度位于 [-180,180]
+     * @param {number} deg
+     * @returns {number}
+     */
+    wrapAngleInDeg(deg) {
+        while (deg > 180) {
+            deg -= 360;
+        }
+        while (deg < -180) {
+            deg += 360;
+        }
+        return deg;
     }
 }
 

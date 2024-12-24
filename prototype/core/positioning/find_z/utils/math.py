@@ -1,5 +1,5 @@
 import numpy as np
-from core.positioning.locator.utils.math import sph_dist
+from ...locator.utils.math import sph_dist
 
 
 def normalize(vec):

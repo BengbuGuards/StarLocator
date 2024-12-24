@@ -1,4 +1,4 @@
-import constants
+from .. import constants
 import numpy as np
 
 geodetic_latitudes = np.linspace(-90, 90, 100000)

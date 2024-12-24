@@ -5,19 +5,13 @@ function getOriginalStars(interactPhoto) {
         let coordX = parseFloat(document.getElementById(`coordX${i}`).value);
         let coordY = parseFloat(document.getElementById(`coordY${i}`).value);
         let name = document.getElementById(`name${i}`).value;
-        let hAngleH = document.getElementById(`hAngleH${i}`).textContent;
-        let hAngleM = document.getElementById(`hAngleM${i}`).textContent;
-        let hAngleS = document.getElementById(`hAngleS${i}`).textContent;
-        let declinD = document.getElementById(`declinD${i}`).textContent;
-        let declinM = document.getElementById(`declinM${i}`).textContent;
-        let declinS = document.getElementById(`declinS${i}`).textContent;
-        stars.push([
-            coordX,
-            coordY,
-            name,
-            hAngleH === '' || hAngleM === '' || hAngleS === '' ? '' : hAngleH + 'h' + hAngleM + 'm' + hAngleS + 's',
-            declinD === '' || declinM === '' || declinS === '' ? '' : declinD + '°' + declinM + "'" + declinS + '"',
-        ]);
+        stars.push({
+            x: coordX,
+            y: coordY,
+            name: name,
+            lon: (getHADE(i)[0] / 180) * Math.PI,
+            lat: (getHADE(i)[1] / 180) * Math.PI,
+        });
     }
     return stars;
 }
@@ -36,4 +30,61 @@ function getGlobalPLPointsCoord(interactPhoto) {
     return globalPLPointsCoord;
 }
 
-export { getOriginalStars, getGlobalPLPointsCoord };
+// 设置参考时角和赤纬，将角度数值化为度/时分秒形式
+function setHADE(id, hourAngle, declination) {
+    let sign = hourAngle < 0 ? '-' : '';
+    hourAngle = Math.abs(hourAngle) / 15;
+    document.getElementById(`hAngleH${id}`).textContent = sign + parseInt(hourAngle);
+    hourAngle = (hourAngle - parseInt(hourAngle)) * 60;
+    document.getElementById(`hAngleM${id}`).textContent = parseInt(hourAngle);
+    hourAngle = (hourAngle - parseInt(hourAngle)) * 60;
+    document.getElementById(`hAngleS${id}`).textContent = hourAngle;
+
+    sign = declination < 0 ? '-' : '';
+    declination = Math.abs(declination);
+    document.getElementById(`declinD${id}`).textContent = sign + parseInt(declination);
+    declination = (declination - parseInt(declination)) * 60;
+    document.getElementById(`declinM${id}`).textContent = parseInt(declination);
+    declination = (declination - parseInt(declination)) * 60;
+    document.getElementById(`declinS${id}`).textContent = declination;
+}
+
+// 转换参考时角和赤纬，将度/时分秒形式转化为角度数值
+function getHADE(id) {
+    let hAngleH = parseInt(document.getElementById(`hAngleH${id}`).textContent);
+    let hAngleM = parseInt(document.getElementById(`hAngleM${id}`).textContent);
+    let hAngleS = parseFloat(document.getElementById(`hAngleS${id}`).textContent);
+    let hourSign = hAngleH < 0 ? -1 : 1;
+    let declinD = parseInt(document.getElementById(`declinD${id}`).textContent);
+    let declinM = parseInt(document.getElementById(`declinM${id}`).textContent);
+    let declinS = parseFloat(document.getElementById(`declinS${id}`).textContent);
+    let decSign = declinD < 0 ? -1 : 1;
+    let hourAngle = hourSign * (Math.abs(hAngleH) + hAngleM / 60 + hAngleS / 3600) * 15;
+    let declination = decSign * (Math.abs(declinD) + declinM / 60 + declinS / 3600);
+    return [hourAngle, declination];
+}
+
+// json数据的POST请求
+async function postJSON(url, data) {
+    let detail = 'success';
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        let results = await response.json();
+        if (!response.ok) {
+            results = null;
+            detail = results?.detail ?? `HTTP ${response.status}`;
+        }
+        return [results, detail];
+    } catch (error) {
+        console.error(error.message);
+        return [null, error.message];
+    }
+}
+
+export { getOriginalStars, getGlobalPLPointsCoord, postJSON, setHADE, getHADE };

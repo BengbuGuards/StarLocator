@@ -1,7 +1,7 @@
 import numpy as np
 import astronomy as ast
 from ..utils.math import minimize, normalize
-from core.positioning.locator.utils.math import vector_angle, rad2deg, deg2rad
+from core.positioning.locator.utils.math import vector_angle
 
 
 def get_z(data, z0, zenith):
@@ -40,7 +40,7 @@ def get_z(data, z0, zenith):
         # 计算去折射高度角修正值（添加到zenithAngles上就是未折射时的高度角）
         star_refraction = np.array(
             [
-                ast.InverseRefractionAngle(ast.Refraction.Normal, rad2deg(angle))
+                ast.InverseRefractionAngle(ast.Refraction.Normal, np.rad2deg(angle))
                 for angle in star_angles
             ]
         )
@@ -92,7 +92,7 @@ def rotate(vector, zenith_vec, angle):
     # 旋转轴
     axis = np.cross(vector, zenith_vec)
     # 旋转角度
-    angle = deg2rad(angle)
+    angle = np.deg2rad(angle)
     # 罗德里格斯旋转公式
     rotated = (
         vector * np.cos(angle)

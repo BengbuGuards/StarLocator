@@ -1,15 +1,15 @@
-import constants
+from . import constants
 import numpy as np
 from matplotlib import pyplot as plt
-from method.bisect_formular import (
+from .method.bisect_formular import (
     astronomic_latitude_to_geodetic_latitude as bisect_formular,
 )
-from method.bisect_tabular import (
+from .method.bisect_tabular import (
     astronomic_latitude_to_geodetic_latitude as bisect_tabular,
 )
-from method.naive import astronomic_latitude_to_geodetic_latitude as naive
-from method.series import astronomic_latitude_to_geodetic_latitude as series
-from method.series2 import astronomic_latitude_to_geodetic_latitude as series2
+from .method.naive import astronomic_latitude_to_geodetic_latitude as naive
+from .method.series import astronomic_latitude_to_geodetic_latitude as series
+from .method.series2 import astronomic_latitude_to_geodetic_latitude as series2
 
 geodetic_latitudes = np.linspace(-90, 90, 10001)
 

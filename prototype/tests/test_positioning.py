@@ -1,8 +1,8 @@
 import httpx
 import pytest
+import numpy as np
 from config import BACKEND_API_BASEURL
 from core.positioning.calc import calc_geo
-from core.positioning.locator.utils.math import rad2deg
 
 
 photo = {
@@ -50,16 +50,20 @@ is_fix_gravity = True
 
 target = {
     "detail": "success",
+    "z": 3000,
     "lon": 115,
     "lat": 34.999625,
 }
+target_topPoint = [0.0, -17013.85]
 
 
 def test_local():
     geo = calc_geo(photo, is_fix_refraction, is_fix_gravity)
-    geo["lat"] = rad2deg(geo["lat"])
-    geo["lon"] = rad2deg(geo["lon"])
-    assert geo == pytest.approx(target, abs=2e-1)
+    geo["lat"] = np.rad2deg(geo["lat"])
+    geo["lon"] = np.rad2deg(geo["lon"])
+    assert geo["topPoint"] == pytest.approx(target_topPoint)
+    del geo["topPoint"]
+    assert geo == pytest.approx(target, rel=6e-3)
 
 
 def test_remote():
@@ -72,6 +76,8 @@ def test_remote():
     resp = httpx.post(url, json=post_data)
     assert resp.status_code == 200
     result = resp.json()
-    result["lat"] = rad2deg(result["lat"])
-    result["lon"] = rad2deg(result["lon"])
-    assert result == pytest.approx(target, abs=2e-1)
+    result["lat"] = np.rad2deg(result["lat"])
+    result["lon"] = np.rad2deg(result["lon"])
+    assert result["topPoint"] == pytest.approx(target_topPoint)
+    del result["topPoint"]
+    assert result == pytest.approx(target, rel=6e-3)

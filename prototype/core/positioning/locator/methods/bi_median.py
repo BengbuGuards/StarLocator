@@ -1,6 +1,6 @@
 import numpy as np
 import astronomy as ast
-from ..utils.math import cart2sph, sph2cart, vector_angle, rad2deg, deg2rad
+from ..utils.math import cart2sph, sph2cart, vector_angle
 
 
 def get_geo(data: dict, is_fix_refraction: bool = False):
@@ -26,8 +26,8 @@ def get_geo(data: dict, is_fix_refraction: bool = False):
     ## 计算各星天顶角余弦值
     cos_theta = points @ top_point
     if is_fix_refraction:
-        star_altitudes = 90 - rad2deg(np.acos(cos_theta))  # 高度角（角度）
-        real_star_altitudes = deg2rad(
+        star_altitudes = 90 - np.rad2deg(np.acos(cos_theta))  # 高度角（角度）
+        real_star_altitudes = np.deg2rad(
             np.array(
                 [
                     angle + ast.InverseRefractionAngle(ast.Refraction.Normal, angle)

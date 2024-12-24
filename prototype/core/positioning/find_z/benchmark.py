@@ -6,8 +6,7 @@ import scipy.stats as st
 from .methods.bi_mean import get_z as bi_mean
 from .methods.north_len import get_z as north_len
 from .methods.trisect import get_z as trisect
-from .utils.math import vector_angle
-from .utils.rand import rand_range
+from ..locator.utils.math import vector_angle
 
 
 def generate_points(args):
@@ -19,8 +18,8 @@ def generate_points(args):
     thetas = np.zeros((num_points, num_points), dtype=np.float32)
     for i in range(num_points):
         ## 生成一个参考点
-        points_x = rand_range(*scope_x)
-        points_y = rand_range(*scope_y)
+        points_x = np.random.uniform(*scope_x)
+        points_y = np.random.uniform(*scope_y)
         points.append([points_x, points_y])
     points = np.array(points)
 

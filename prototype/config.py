@@ -1,3 +1,5 @@
+# 前端服务的基础URL
+FRONTEND_BASEURL = "http://localhost:6974"
 # 后端服务的基础URL
 BACKEND_BASEURL = "http://localhost:6975"
 BACKEND_API_BASEURL = BACKEND_BASEURL + "/api"
@@ -22,3 +24,12 @@ MOON_TIME_RATE_LIMIT = "1/5second"
 ASTRO_COORD_RATE_LIMIT = "5/second"
 ## 标星定位的网络请求限流
 POSITIONING_RATE_LIMIT = "5/second"
+
+# CORS
+CORS_ALLOW_ORIGIN = [
+    FRONTEND_BASEURL,
+    BACKEND_BASEURL,
+]
+
+# 日志等级：debug, info, warning, error, critical
+LOG_LEVEL = "info"

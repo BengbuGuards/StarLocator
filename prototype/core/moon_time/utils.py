@@ -4,7 +4,7 @@ import astronomy as ast
 from core.positioning.locator.utils.math import vector_angle
 from core.positioning.calc import calc_geo as geo_calc
 from core.astro_coord.calc import get_HaDecs_by_names
-from core.positioning.locator.utils.math import sph2cart, rad2deg, deg2rad
+from core.positioning.locator.utils.math import sph2cart
 from core.positioning.calc import stars_convert
 
 
@@ -66,8 +66,8 @@ def geo_estimate_by_stars(
     if not is_success:
         raise ValueError("无法获取天体坐标")
     for i, star_name in enumerate(star_names):
-        data["stars"][i]["lon"] = deg2rad(360 - approx_star_HaDecs[star_name][0] * 15)
-        data["stars"][i]["lat"] = deg2rad(approx_star_HaDecs[star_name][1])
+        data["stars"][i]["lon"] = np.deg2rad(360 - approx_star_HaDecs[star_name][0] * 15)
+        data["stars"][i]["lat"] = np.deg2rad(approx_star_HaDecs[star_name][1])
     # 计算大致日期下的地理坐标
     data["stars"].pop(moon_idx)  # 剔除月的数据
     try:
@@ -114,16 +114,16 @@ def angle_error(
 
     # 使用恒星日周期快速计算该时间下观测者地理坐标
     observer_lon = (
-        rad2deg(geo_estimate["lon"])
+        np.rad2deg(geo_estimate["lon"])
         - s2sidereal_days(timestamp - approx_timestamp) * 360
     )
     observer_lon = wrap_angle_in_deg(observer_lon)
     # 得到该时间所计算的观测者地理坐标
-    observer = ast.Observer(rad2deg(geo_estimate["lat"]), observer_lon, 0)
+    observer = ast.Observer(np.rad2deg(geo_estimate["lat"]), observer_lon, 0)
     # 获取该时间、该地理坐标下的天体时角赤纬
     star_HaDecs, _ = get_HaDecs_by_names(star_names, timestamp, observer)
     moon_HaDec = star_HaDecs[star_names[moon_idx]]
-    moon_vec = np.array(sph2cart(deg2rad(moon_HaDec[0] * 15), deg2rad(moon_HaDec[1])))
+    moon_vec = np.array(sph2cart(np.deg2rad(moon_HaDec[0] * 15), np.deg2rad(moon_HaDec[1])))
     # 计算每颗星星（不包含月）与月的角距误差
     error = 0
     for i, star_name in enumerate(star_names):
@@ -131,10 +131,10 @@ def angle_error(
             continue
         star_HaDec = star_HaDecs[star_name]
         star_vec = np.array(
-            sph2cart(deg2rad(star_HaDec[0] * 15), deg2rad(star_HaDec[1]))
+            sph2cart(np.deg2rad(star_HaDec[0] * 15), np.deg2rad(star_HaDec[1]))
         )
         angle = vector_angle(star_vec, moon_vec)
-        error += (rad2deg(angle - target_angles[i])) ** 2
+        error += (np.rad2deg(angle - target_angles[i])) ** 2
     return error
 
 

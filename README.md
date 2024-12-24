@@ -31,29 +31,11 @@ NOTHING to do with astrology, metaphysics and telepathy.
 
 ## 贡献 | CONTRIBUTING
 
-见[CONTRIBUTING.md](./CONTRIBUTING.md)
+见[CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 
-## 构建 | BUILD
+## 安装 | INSTALLATION
 
-1. 安装Node.js和pnpm。
-2. 在项目根目录下安装依赖
-```bash
-pnpm install
-```
-3. 构建项目
-```bash
-pnpm build
-```
-4. 运行项目
-```bash
-pnpm serve
-```
-现在你可以在浏览器中访问`http://localhost:6974`查看项目。
-
-（Optional）如果你想在开发模式下运行项目，可以使用
-```bash
-pnpm dev
-```
+见[INSTALLATION.md](./docs/INSTALLATION.md)
 
 ## 致谢 | CREDITS
 

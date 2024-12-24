@@ -6,7 +6,6 @@ import scipy.stats as st
 from .methods.bi_median import get_geo as bi_median
 from .methods.matrix_inverse import get_geo as matrix_inverse
 from .utils.math import cart2sph, sph_dist
-from ..top_point.utils.rand import rand_range
 
 
 def generate_datas(args):
@@ -17,24 +16,24 @@ def generate_datas(args):
     points = []
     for i in range(num_points):
         ## 生成一个参考点
-        points_x = rand_range(*scope_x)
-        points_y = rand_range(*scope_y)
+        points_x = np.random.uniform(*scope_x)
+        points_y = np.random.uniform(*scope_y)
         points.append([points_x, points_y, -args.z])
     points = np.array(points)
 
     ## 根据一个随机的北天极、一个随机的(0N,0E)轴，生成参考时角&赤纬
     ## 生成一个随机的北天极
-    z_pole = rand_range(-1, 1, 3)
+    z_pole = np.random.uniform(-1, 1, 3)
     z_pole /= np.linalg.norm(z_pole)
     ## 生成一个随机的(0N,0E)轴，与北天极正交
-    x_pole = rand_range(-1, 1, 3)
+    x_pole = np.random.uniform(-1, 1, 3)
     x_pole = x_pole - np.dot(x_pole, z_pole) * z_pole
     x_pole /= np.linalg.norm(x_pole)
     ## 生成一个随机的(0N,90E)轴，与北天极正交
     y_pole = np.cross(z_pole, x_pole)
 
     ## 生成随机灭点矢量
-    top_point = rand_range(-1, 1, 3)
+    top_point = np.random.uniform(-1, 1, 3)
     top_point = top_point * -args.z / top_point[2]
 
     ## 生成参考时角&赤纬，以及真实地理坐标

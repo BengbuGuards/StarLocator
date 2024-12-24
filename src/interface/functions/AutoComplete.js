@@ -1,5 +1,5 @@
 import fuzzysort from 'fuzzysort';
-import { starZH2EN } from '../../core/AstroCoord/starZH2EN.js';
+import { starZH2EN } from '../starZH2EN.js';
 
 const options = { limit: 100, threshold: 0.4, all: false };
 

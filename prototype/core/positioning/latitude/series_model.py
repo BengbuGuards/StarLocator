@@ -1,5 +1,11 @@
-import constants
+from . import constants
 import numpy as np
+
+np.set_printoptions(precision=15)
+
+cnt = 10001
+
+geodetic_latitudes = np.linspace(-90, 90, cnt)
 
 
 def get_geocentric_latitude(geodetic_latitude_in_rad):
@@ -56,22 +62,23 @@ def get_astronomic_latitude(geocentric_latitude_in_rad):
     return astronomic_latitude_in_rad
 
 
-def reverse_solve(geodetic_latitude):
-    geocentric = get_geocentric_latitude(
-        get_geocentric_latitude(np.deg2rad(geodetic_latitude))
-    )
-    astronomic = get_astronomic_latitude(geocentric)
-    return np.rad2deg(astronomic)
+geocentric_latitudes = []
+astronomic_latitudes = []
+for geodetic_latitude in geodetic_latitudes:
+    geocentric_latitude = get_geocentric_latitude(np.deg2rad(geodetic_latitude))
+    astronomic_latitude_in_rad = get_astronomic_latitude(geocentric_latitude)
+    astronomic_latitude = np.rad2deg(astronomic_latitude_in_rad)
+    astronomic_latitudes.append(astronomic_latitude)
+    geocentric_latitudes.append(np.rad2deg(geocentric_latitude))
 
+A = np.zeros((cnt, 5))
+for i in range(5):
+    A[:, i] = np.sin(2 * (i + 1) * np.deg2rad(astronomic_latitudes))
 
-def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree):
-    l = -90
-    r = 90
-    for _ in range(100):
-        m = (l + r) / 2
-        angle = reverse_solve(m)
-        if angle > astronomic_latitudes_in_degree:
-            r = m
-        else:
-            l = m
-    return (l + r) / 2
+B = np.array(np.deg2rad(geodetic_latitudes)) - np.array(
+    np.deg2rad(astronomic_latitudes)
+)
+
+A_inv = np.linalg.pinv(A)
+x = A_inv @ B
+print(x.tolist())

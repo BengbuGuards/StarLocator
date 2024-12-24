@@ -1,5 +1,5 @@
 import numpy as np
-from utils.plane import all_points_of_lines_intersection
+from ..utils.plane import all_points_of_lines_intersection
 
 
 def intersection(lines: list) -> tuple:

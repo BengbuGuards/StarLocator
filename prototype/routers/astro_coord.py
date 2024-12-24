@@ -12,7 +12,7 @@ router = APIRouter()
 @limiter.limit(ASTRO_COORD_RATE_LIMIT)
 def calc_astro_coord(request: Request, data: astro_coord.AstroTime):
     """
-    获取指定时间的天体坐标
+    获取指定时间的天体时角和赤纬
 
     param:
         request: Request, slowapi必需
@@ -21,8 +21,8 @@ def calc_astro_coord(request: Request, data: astro_coord.AstroTime):
             timestamp: number 时间戳
     return:
         a dict:
-            is_success: bool 是否成功
-            haDecs: list[float | None] 天体坐标列表
+            detail: str, 计算情况
+            haDecs: list[float | None] 各天体的时角和赤纬列表（角度）
     """
 
     haDecs, detail = get_HaDecs_by_names(data.starNames, data.timestamp)

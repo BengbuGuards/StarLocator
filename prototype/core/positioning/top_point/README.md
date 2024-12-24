@@ -51,9 +51,9 @@ args.noise_std = 1  # 高斯噪声标准差
 
 ## 使用方法
 
-2. 运行
+1. 在`core`目录下运行
 ```bash
-python benchmark.py
+python -m positioning.top_point.benchmark
 ```
 
 ## 贡献方法

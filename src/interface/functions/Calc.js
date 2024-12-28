@@ -2,7 +2,7 @@ import { marker } from 'leaflet';
 import { polyline } from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
 import { BACKEND_API } from '../../config.js';
-import { getOriginalStars, getGlobalPLPointsCoord, postJSON } from '../utils.js';
+import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
 
 // 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
@@ -59,14 +59,18 @@ class Calc extends DefaultbuttonFunctioner {
         this.interactPhoto.buttonFunctioner = this;
         this.interactPhoto.tips.innerHTML = `计算中...`;
 
-        postJSON(`${BACKEND_API}/positioning`, {
-            photo: {
-                stars: originalStars,
-                lines: globalPLsPointsCoord,
+        post(
+            `${BACKEND_API}/positioning`,
+            {
+                photo: {
+                    stars: originalStars,
+                    lines: globalPLsPointsCoord,
+                },
+                isFixRefraction: document.getElementById('check1').checked,
+                isFixGravity: document.getElementById('check2').checked,
             },
-            isFixRefraction: document.getElementById('check1').checked,
-            isFixGravity: document.getElementById('check2').checked,
-        }).then(([results, detail]) => {
+            'json'
+        ).then(([results, detail]) => {
             if (detail === 'success') {
                 // 显示结果
                 this.addZenithtoTable(results['topPoint']);

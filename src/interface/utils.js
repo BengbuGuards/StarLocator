@@ -65,16 +65,30 @@ function getHADE(id) {
 }
 
 // json数据的POST请求
-async function postJSON(url, data) {
+async function post(url, data, Type) {
     let detail = 'success';
     try {
-        let response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
+        let response;
+        if (Type === 'form') {
+            let formData = new FormData();
+            for (let key in data) {
+                formData.append(key, data[key]);
+            }
+            response = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+        } else if (Type === 'json') {
+            response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+        } else {
+            throw new Error('Invalid POST request type');
+        }
         let results = await response.json();
         if (!response.ok) {
             results = null;
@@ -87,4 +101,4 @@ async function postJSON(url, data) {
     }
 }
 
-export { getOriginalStars, getGlobalPLPointsCoord, postJSON, setHADE, getHADE };
+export { getOriginalStars, getGlobalPLPointsCoord, post, setHADE, getHADE };

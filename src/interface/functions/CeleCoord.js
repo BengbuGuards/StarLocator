@@ -1,5 +1,5 @@
 import { BACKEND_API } from '../../config.js';
-import { postJSON, setHADE } from '../utils.js';
+import { post, setHADE } from '../utils.js';
 
 // 计算天体坐标功能类
 class CeleCoord {
@@ -19,10 +19,14 @@ class CeleCoord {
         }
 
         // 开始计算
-        let [results, detail] = await postJSON(`${BACKEND_API}/astrocoord`, {
-            starNames: starNames,
-            timestamp: timestamp,
-        });
+        let [results, detail] = await post(
+            `${BACKEND_API}/astrocoord`,
+            {
+                starNames: starNames,
+                timestamp: timestamp,
+            },
+            'json'
+        );
         if (results === null) {
             this.interactPhoto.tips.innerHTML = `自动计算天体坐标失败：${detail}`;
             return -1;

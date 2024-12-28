@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("", response_model=positioning.PositioningResponse)
 @limiter.limit(POSITIONING_RATE_LIMIT)
-def calc_geo_by_data(request: Request, data: positioning.PositioningRequest):
+def http_geo_by_data(request: Request, data: positioning.PositioningRequest):
     """
     Find the geographical position.
 

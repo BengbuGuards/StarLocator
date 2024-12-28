@@ -16,6 +16,9 @@ MAX_NUM_OF_LINES = 16
 # 标月定时的最大时间搜索范围（天）
 MAX_MOON_SEARCH_RANGE = 365
 
+### 限制上传图片的大小
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024
+
 # 网络请求是否限流
 RATE_LIMIT = False
 ## 标月定时的网络请求限流
@@ -24,6 +27,8 @@ MOON_TIME_RATE_LIMIT = "1/5second"
 ASTRO_COORD_RATE_LIMIT = "5/second"
 ## 标星定位的网络请求限流
 POSITIONING_RATE_LIMIT = "5/second"
+## 自动识星的网络请求限流
+ASTROMETRY_RATE_LIMIT = "1/5second"
 
 # CORS
 CORS_ALLOW_ORIGIN = [
@@ -33,3 +38,6 @@ CORS_ALLOW_ORIGIN = [
 
 # 日志等级：debug, info, warning, error, critical
 LOG_LEVEL = "info"
+
+# astrometry API_KEY
+ASTROMETRY_API_KEY = "xxxxxx"

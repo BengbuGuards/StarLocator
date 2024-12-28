@@ -86,6 +86,9 @@ function initializeEvents(eventManager) {
     document
         .getElementById('moonTime')
         .addEventListener('click', eventManager.moonTime.onClick.bind(eventManager.moonTime));
+    document
+        .getElementById('selectStars')
+        .addEventListener('click', eventManager.selectStars.onClick.bind(eventManager.selectStars));
 
     //为星体名称输入框启用自动补全
     for (let i = 1; i <= 5; i++) {

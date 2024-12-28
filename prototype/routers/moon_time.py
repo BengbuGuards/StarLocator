@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("", response_model=moon_time.MoonTimeResponse)
 @limiter.limit(MOON_TIME_RATE_LIMIT)
-def calc_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
+def http_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
     """
     通过月亮与星星的相对位置计算时间
 

@@ -17,7 +17,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 ## 特点 | FEATURES
 
 - 😀**交互简单**：标星、标铅垂线、设置拍摄时间，然后就是点击按钮的事了，熟练掌握后整个过程不到**5分钟**。原本的耗时步骤，如查询天体天文数据，已被API和按钮所实现。
-- 🔒**隐私友好**：项目仅用前端技术实现，核心步骤均在本地运行，可自行部署。
+- 🔒**隐私友好**：项目采用前后端分离架构，服务器后端只在核心计算时获取必要信息，并在结束计算后删除所有信息。
 - 🎯**精度良好**：我们在各个模块中采用了强稳健性的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
 - ✅**完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
 - 😀**Simple interaction**: Marking stars and plumblines, setting the time and then simply click a button. Can finish within **5 minutes** when familiar. All time-consuming steps, like searching for data of celestial bodies, have been achieved with API and buttons.

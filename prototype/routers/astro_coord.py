@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("", response_model=astro_coord.AstroCoord)
 @limiter.limit(ASTRO_COORD_RATE_LIMIT)
-def calc_astro_coord(request: Request, data: astro_coord.AstroTime):
+def http_astro_coord(request: Request, data: astro_coord.AstroTime):
     """
     获取指定时间的天体时角和赤纬
 

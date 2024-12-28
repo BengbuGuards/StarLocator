@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { getOriginalStars, getGlobalPLPointsCoord, postJSON } from '../utils.js';
+import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
 class MoonTime extends DefaultbuttonFunctioner {
@@ -61,16 +61,20 @@ class MoonTime extends DefaultbuttonFunctioner {
         let scopeDays = parseFloat(document.getElementById('setTimeScope').value);
 
         // 计算拍摄时间
-        postJSON(`${BACKEND_API}/moontime`, {
-            photo: {
-                stars: stars,
-                lines: globalPLsPointsCoord,
+        post(
+            `${BACKEND_API}/moontime`,
+            {
+                photo: {
+                    stars: stars,
+                    lines: globalPLsPointsCoord,
+                },
+                approxTimestamp: approxTimestamp,
+                scopeDays: scopeDays,
+                isFixRefraction: isFixRefraction,
+                isFixGravity: isFixGravity,
             },
-            approxTimestamp: approxTimestamp,
-            scopeDays: scopeDays,
-            isFixRefraction: isFixRefraction,
-            isFixGravity: isFixGravity,
-        }).then(([results, detail]) => {
+            'json'
+        ).then(([results, detail]) => {
             if (detail === 'success') {
                 // 显示结果
                 this.interactPhoto.setDatebyTime(results['time']);

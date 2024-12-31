@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import astro_coord, moon_time, positioning, astrometry
+from routers import astro_coord, moon_time, positioning, astrometry, bmap
 from routers.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -28,9 +28,10 @@ app.include_router(positioning.router, prefix="/api/positioning", tags=["positio
 app.include_router(astro_coord.router, prefix="/api/astrocoord", tags=["astrocoord"])
 app.include_router(moon_time.router, prefix="/api/moontime", tags=["moontime"])
 app.include_router(astrometry.router, prefix="/api/astrometry", tags=["astrometry"])
+app.include_router(bmap.router, prefix="/api/_BMapService", tags=["_BMapService"])
 
 
-@app.get("/api")
+@app.get("/api/")
 def read_root():
     return {"Hello": "World"}
 

@@ -3,6 +3,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const Handlebars = require('handlebars');
+const { BACKEND_API } = require('./src/config');
+const version = require('./package.json').version;
 
 module.exports = {
     entry: {
@@ -28,6 +31,22 @@ module.exports = {
             {
                 test: /\.html$/i,
                 loader: 'html-loader',
+                options: {
+                    preprocessor: (content, loaderContext) => {
+                        // 文本替换
+                        let result;
+                        try {
+                            result = Handlebars.compile(content)({
+                                back_host: BACKEND_API,
+                                version: version,
+                            });
+                        } catch (error) {
+                            loaderContext.emitError(error);
+                            return content;
+                        }
+                        return result;
+                    },
+                },
             },
         ],
     },

@@ -1,5 +1,3 @@
-import { marker } from 'leaflet';
-import { polyline } from 'leaflet';
 import { DefaultbuttonFunctioner } from './Default.js';
 import { BACKEND_API } from '../../config.js';
 import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
@@ -9,8 +7,6 @@ class Calc extends DefaultbuttonFunctioner {
     constructor(interactPhoto, celeCoord) {
         super(interactPhoto);
         this.celeCoord = celeCoord;
-        this.mapMarker = null;
-        this.mapLine = null;
     }
 
     onClick() {
@@ -117,74 +113,50 @@ class Calc extends DefaultbuttonFunctioner {
 
     // 显示地理坐标
     showGeoEstimate(geoLon, geoLat) {
+        /*global BMapGL*/
         // 转换单位
         geoLon = (geoLon * 180) / Math.PI;
         geoLat = (geoLat * 180) / Math.PI;
         // 在地图上显示位置
         geoLon = this.wrapAngleInDeg(geoLon);
-
         document.getElementById('outputLat').textContent = Math.round(geoLat * 10000) / 10000 + '°';
         document.getElementById('outputLong').textContent = Math.round(geoLon * 10000) / 10000 + '°';
+
         let map = this.interactPhoto.map;
         // 清除之前的标记
-        if (this.mapMarker) {
-            map.removeLayer(this.mapMarker);
-        }
-        if (this.mapLine) {
-            map.removeLayer(this.mapLine);
-        }
+        map.clearOverlays();
         // 逆地址解析
         let addressDiv = document.getElementById('address');
         addressDiv.innerText = '正在获取地理位置信息...';
-        // 先申请国内
-        fetch(`https://geocode.xyz/${geoLat},${geoLon}?json=1`, { method: 'GET' })
-            .then((response) => response.json())
-            .then((data) => {
-                if (!data.geocode.startsWith('Throttled')) {
-                    function info2str(info) {
-                        return typeof info == 'string' ? info + ', ' : '';
-                    }
-                    let address = `${info2str(data.staddress) + info2str(data.city) + info2str(data.region) + info2str(data.state) + info2str(data.country)}`;
-                    addressDiv.innerText = address.slice(0, -2);
-                } else {
-                    // OSM逆地址解析API（镜像）
-                    fetch(
-                        `https://map.mapscdn.com/nominatim/reverse?format=json&lat=${geoLat}&lon=${geoLon}&zoom=18&addressdetails=0`,
-                        { method: 'GET' }
-                    )
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (data.display_name != undefined) addressDiv.innerText = data.display_name;
-                            else {
-                                // 原API（需梯子）
-                                fetch(
-                                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${geoLat}&lon=${geoLon}&zoom=18&addressdetails=0`,
-                                    { method: 'GET' }
-                                )
-                                    .then((response) => response.json())
-                                    .then((data) => {
-                                        if (data.display_name != undefined) addressDiv.innerText = data.display_name;
-                                    });
-                            }
-                        });
-                }
-            })
-            .catch(() => {
+        // 创建地理编码实例
+        let myGeo = new BMapGL.Geocoder();
+        // 根据坐标得到地址描述
+        myGeo.getLocation(new BMapGL.Point(geoLon, geoLat), function (result) {
+            if (result) {
+                addressDiv.innerText = result.address;
+            } else {
                 addressDiv.innerText = '获取地理位置信息失败';
-            });
+            }
+        });
         // 添加新的标记
-        let newMarker = marker([geoLat, geoLon]).addTo(map);
-        this.mapMarker = newMarker;
+        let geoPoint = new BMapGL.Point(geoLon, geoLat);
+        let newMarker = new BMapGL.Marker(geoPoint);
+        map.addOverlay(newMarker);
         // 误差线
         let shift = 0.125; // TODO: 从界面读取误差值
-        this.mapLine = polyline(
+        let polyline = new BMapGL.Polyline(
             [
-                [geoLat, ((((geoLon - shift + 180) % 360) + 360) % 360) - 180],
-                [geoLat, ((((geoLon + shift + 180) % 360) + 360) % 360) - 180],
+                new BMapGL.Point(this.wrapAngleInDeg(geoLon - shift), geoLat),
+                new BMapGL.Point(this.wrapAngleInDeg(geoLon + shift), geoLat),
             ],
-            { color: '#4996d2' }
-        ).addTo(map);
-        map.setView([geoLat, geoLon], 3);
+            {
+                strokeColor: 'red',
+                strokeWeight: 2,
+                strokeOpacity: 0.5,
+            }
+        );
+        map.addOverlay(polyline);
+        map.centerAndZoom(geoPoint, 10);
     }
 
     /**

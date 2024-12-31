@@ -2,7 +2,6 @@ This project uses the following open source projects and follows their respectiv
 
 frontend:
 - [Fabric](https://github.com/fabric/fabric)：Custom License
-- [Leaflet](https://github.com/Leaflet/Leaflet)：BSD 2-Clause License
 - [fuzzysort](https://github.com/farzher/fuzzysort): MIT License
 
 backend:

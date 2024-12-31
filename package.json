@@ -16,8 +16,7 @@
 	"license": "AGPL-3.0-only",
 	"dependencies": {
 		"fabric": "^6.4.3",
-		"fuzzysort": "^3.1.0",
-		"leaflet": "^1.9.4"
+		"fuzzysort": "^3.1.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.13.0",
@@ -27,6 +26,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"globals": "^15.11.0",
+		"handlebars": "^4.7.8",
 		"html-loader": "^5.1.0",
 		"html-webpack-plugin": "^5.6.3",
 		"http-server": "^14.1.1",

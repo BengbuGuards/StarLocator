@@ -6,13 +6,13 @@ from io import BytesIO
 from PIL import Image
 
 from .limiter import limiter
-from config import ASTROMETRY_RATE_LIMIT, MAX_UPLOAD_SIZE
+from config import EXTRACT_STARS_RATE_LIMIT, MAX_UPLOAD_SIZE
 
 router = APIRouter()
 
 
 @router.post("/extractstars", response_model=astrometry.ExtractStarResponse)
-@limiter.limit(ASTROMETRY_RATE_LIMIT)
+@limiter.limit(EXTRACT_STARS_RATE_LIMIT)
 def http_extract_stars(
     request: Request, data: Annotated[astrometry.ExtractStarRequest, Form()]
 ):

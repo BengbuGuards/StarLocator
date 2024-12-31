@@ -25,6 +25,10 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - 🎯**Good accuracy**: We applied robust algorithms in modules, making it resilient to environmental noises and marking errors. The error can usually be limited to **30km**.
 - ✅**Fully open sourced**: AGPL v3 open source protocol adopted. Aiming to make the approach as transparent as possible and to welcome community contributions.
 
+## 安装 | INSTALLATION
+
+见[INSTALLATION.md](./docs/INSTALLATION.md)
+
 ## 使用方法 | HOW TO USE
 
 见<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
@@ -32,10 +36,6 @@ NOTHING to do with astrology, metaphysics and telepathy.
 ## 贡献 | CONTRIBUTING
 
 见[CONTRIBUTING.md](./docs/CONTRIBUTING.md)
-
-## 安装 | INSTALLATION
-
-见[INSTALLATION.md](./docs/INSTALLATION.md)
 
 ## 致谢 | CREDITS
 

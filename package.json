@@ -7,7 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --config webpack.prod.js",
 		"dev": "webpack-dev-server --config webpack.dev.js",
-		"serve": "http-server ./dist -p 6974",
+		"serve": "http-server ./dist -p 6974 -s",
 		"lintfix": "eslint . --fix",
 		"format": "prettier --write '**/*.js'"
 	},

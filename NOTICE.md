@@ -7,8 +7,6 @@ frontend:
 backend:
 - [numpy](https://numpy.org/): Custom License
 - [scipy](https://scipy.org/): BSD 3-Clause License
-- [pytest](https://github.com/pytest-dev/pytest/): MIT License
-- [matplotlib](https://matplotlib.org): Custom License
 - [fastapi](https://fastapi.tiangolo.com/): MIT License
 - [uvicorn](https://www.uvicorn.org/): BSD-3-Clause license
 - [python-multipart](https://github.com/Kludex/python-multipart): Apache-2.0 License

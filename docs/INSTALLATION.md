@@ -48,6 +48,11 @@
     pip install -r requirements.txt
     ```
 
+    （Optional）安装开发依赖：
+    ```bash
+    pip install -r requirements-dev.txt
+    ```
+
     运行后端：
     ```bash
     python main.py

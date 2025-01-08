@@ -22,6 +22,12 @@ class RecognizeStars extends DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
 
         if (this.status === recognitionStatus.READY) {
+            // 检查数据
+            if (this.interactPhoto.CeleArray.num() < 3) {
+                this.interactPhoto.tips.innerHTML = '请至少选择三颗星';
+                return;
+            }
+
             this.interactPhoto.buttonFunctioner = this;
             this.status === recognitionStatus.SUBMITTING;
         } else {

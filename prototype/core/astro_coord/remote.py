@@ -1,28 +1,37 @@
-from .data import solar_bodies
 import re
 import httpx
 import asyncio
+from .data import solar_bodies
 from async_lru import alru_cache
-from config import CACHE_SIZE
+from config import CACHE_SIZE, MAX_CONNECTIONS
+
+# 设置最大并发数
+limits = httpx.Limits(
+    max_connections=MAX_CONNECTIONS,
+    max_keepalive_connections=MAX_CONNECTIONS,
+)
 
 
 @alru_cache(maxsize=CACHE_SIZE)
-async def get_RaDec_by_name(star_name: str):
+async def get_RaDec_by_name(
+    star_name: str,
+) -> tuple[str | None, tuple[float, float] | None]:
     """
     根据恒星名称获取其赤经和赤纬
-    param:
+    Params:
         starName: 恒星名称
-    return:
+    
+    Returns:
         raDec: J2000赤经（时）和赤纬（角度）
     """
 
     # 不查询太阳系天体
     if star_name in solar_bodies:
-        return [None, None]
+        return (None, None)
 
     star_name_base64 = re.sub(r"\s+", "+", star_name)
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(limits=limits) as client:
         response = await client.get(
             f"https://simbad.u-strasbg.fr/simbad/sim-nameresolver?ident={star_name_base64}&output=json&data=J&option=strict"
         )
@@ -33,15 +42,18 @@ async def get_RaDec_by_name(star_name: str):
         data = response.json()
         ra = data[0]["ra"] / 15
         dec = data[0]["dec"]
-        return (star_name, [ra, dec])
+        return (star_name, (ra, dec))
 
 
-async def get_RaDecs_by_names(star_names):
+async def get_RaDecs_by_names(
+    star_names: list[str],
+) -> dict[str, tuple[float | None, float | None]]:
     """
     根据恒星名称数组获取其赤经和赤纬
-    param:
+    Params:
         star_names: 恒星名称列表
-    return:
+    
+    Returns:
         raDecs: 赤经和赤纬字典（角度）
     """
 
@@ -57,6 +69,6 @@ async def get_RaDecs_by_names(star_names):
 
     raDecs_dict = dict()
     for star_name in star_names:
-        raDecs_dict[star_name] = raDecs_tmp.get(star_name, [None, None])
+        raDecs_dict[star_name] = raDecs_tmp.get(star_name, (None, None))
 
     return raDecs_dict

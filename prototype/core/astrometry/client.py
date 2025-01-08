@@ -11,6 +11,7 @@ import sys
 import time
 import base64
 import shutil
+import logging
 
 try:
     # py3
@@ -30,6 +31,12 @@ from email.mime.application import MIMEApplication
 from email.encoders import encode_noop
 
 import json
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stdout)],
+)
 
 
 def json2python(data):
@@ -68,11 +75,11 @@ class Client(object):
         """
         if self.session is not None:
             args.update({"session": self.session})
-        print("Python:", args)
+        logging.info(f"Python: {args}")
         json = python2json(args)
-        print("Sending json:", json)
+        logging.info(f"Sending json: {json}")
         url = self.get_url(service)
-        print("Sending to URL:", url)
+        logging.info(f"Sending to URL: {url}")
 
         # If we're sending a file, format a multipart/form-data
         if file_args is not None:
@@ -107,38 +114,38 @@ class Client(object):
         else:
             # Else send x-www-form-encoded
             data = {"request-json": json}
-            print("Sending form data:", data)
+            logging.info(f"Sending form data: {data}")
             data = urlencode(data)
             data = data.encode("utf-8")
-            print("Sending data:", data)
+            logging.info(f"Sending data: {data}")
             headers = {}
 
         request = Request(url=url, headers=headers, data=data)
 
         try:
             f = urlopen(request)
-            print("Got reply HTTP status code:", f.status)
+            logging.info(f"Got reply HTTP status code: {f.status}")
             txt = f.read()
-            print("Got json:", txt)
+            logging.info(f"Got json: {txt}")
             result = json2python(txt)
-            print("Got result:", result)
+            logging.info(f"Got result: {result}")
             stat = result.get("status")
-            print("Got status:", stat)
+            logging.info(f"Got status: {stat}")
             if stat == "error":
                 errstr = result.get("errormessage", "(none)")
                 raise RequestError("server error message: " + errstr)
             return result
         except HTTPError as e:
-            print("HTTPError", e)
+            logging.info(f"HTTPError {e}")
             txt = e.read()
             open("err.html", "wb").write(txt)
-            print("Wrote error text to err.html")
+            logging.info("Wrote error text to err.html")
 
     def login(self, apikey):
         args = {"apikey": apikey}
         result = self.send_request("login", args)
         sess = result.get("session")
-        print("Got session:", sess)
+        logging.info(f"Got session: {sess}")
         if not sess:
             raise RequestError("no session in result")
         self.session = sess
@@ -176,7 +183,7 @@ class Client(object):
                 args.update({key: val})
             elif default is not None:
                 args.update({key: default})
-        print("Upload args:", args)
+        logging.info(f"Upload args: {args}")
         return args
 
     def url_upload(self, url, **kwargs):
@@ -193,7 +200,7 @@ class Client(object):
                 f = open(fn, "rb")
                 file_args = (fn, f.read())
             except IOError:
-                print("File %s does not exist" % fn)
+                logging.info("File %s does not exist" % fn)
                 raise
         return self.send_request("upload", args, file_args)
 
@@ -218,11 +225,11 @@ class Client(object):
             imageh=wcs.imageh,
         )
         result = self.send_request(service, {"wcs": params})
-        print("Result status:", result["status"])
+        logging.info(f"Result status: {result["status"]}")
         plotdata = result["plot"]
         plotdata = base64.b64decode(plotdata)
         open(outfn, "wb").write(plotdata)
-        print("Wrote", outfn)
+        logging.info(f"Wrote {outfn}")
 
     def sdss_plot(self, outfn, wcsfn, wcsext=0):
         return self.overlay_plot("sdss_image_for_wcs", outfn, wcsfn, wcsext)
@@ -241,17 +248,17 @@ class Client(object):
         stat = result.get("status")
         if stat == "success":
             result = self.send_request("jobs/%s/calibration" % job_id)
-            print("Calibration:", result)
+            logging.info(f"Calibration: {result}")
             result = self.send_request("jobs/%s/tags" % job_id)
-            print("Tags:", result)
+            logging.info(f"Tags: {result}")
             result = self.send_request("jobs/%s/machine_tags" % job_id)
-            print("Machine Tags:", result)
+            logging.info(f"Machine Tags: {result}")
             result = self.send_request("jobs/%s/objects_in_field" % job_id)
-            print("Objects in field:", result)
+            logging.info(f"Objects in field: {result}")
             result = self.send_request("jobs/%s/annotations" % job_id)
-            print("Annotations:", result)
+            logging.info(f"Annotations: {result}")
             result = self.send_request("jobs/%s/info" % job_id)
-            print("Calibration:", result)
+            logging.info(f"Calibration: {result}")
 
         return stat
 
@@ -345,108 +352,40 @@ def run_client(opt):
         if opt.upload:
             upres = c.upload(opt.upload, **kwargs)
         if opt.upload_xy:
-            from astrometry.util.fits import fits_table
-
-            T = fits_table(opt.upload_xy)
-            kwargs.update(x=[float(x) for x in T.x], y=[float(y) for y in T.y])
+            kwargs.update(x=opt.upload_xy[0], y=opt.upload_xy[1])
             upres = c.upload(**kwargs)
         if opt.upload_url:
             upres = c.url_upload(opt.upload_url, **kwargs)
 
         stat = upres["status"]
         if stat != "success":
-            print("Upload failed: status", stat)
-            print(upres)
-            sys.exit(-1)
+            logging.info(f"Upload failed: status {stat}")
+            logging.info(upres)
+            return "Astrometry提交任务失败：状态" + stat, None
 
         opt.sub_id = upres["subid"]
 
-    if opt.wait:
-        if opt.solved_id is None:
-            if opt.sub_id is None:
-                print("Can't --wait without a submission id or job id!")
-                sys.exit(-1)
-
-            while True:
-                stat = c.sub_status(opt.sub_id, justdict=True)
-                print("Got status:", stat)
-                jobs = stat.get("jobs", [])
-                if len(jobs):
-                    for j in jobs:
-                        if j is not None:
-                            break
-                    if j is not None:
-                        print("Selecting job id", j)
-                        opt.solved_id = j
-                        break
-                time.sleep(5)
+    if opt.solved_id is None:
+        if opt.sub_id is None:
+            logging.info("Can't --wait without a submission id or job id!")
+            return "Can't --wait without a submission id or job id!", None
 
         while True:
-            stat = c.job_status(opt.solved_id, justdict=True)
-            print("Got job status:", stat)
-            if stat.get("status", "") in ["success"]:
-                success = stat["status"] == "success"
-                break
-            elif stat.get("status", "") in ["failure"]:
-                print("Image solving failed")
-                sys.exit(-1)
-            time.sleep(5)
+            stat = c.sub_status(opt.sub_id, justdict=True)
+            logging.info(f"Got status: {stat}")
+            jobs = stat.get("jobs", [])
+            if len(jobs):
+                for j in jobs:
+                    if j is not None:
+                        break
+                if j is not None:
+                    logging.info(f"Selecting job id {j}")
+                    opt.solved_id = j
+                    break
+            time.sleep(1)
 
-    if opt.solved_id:
-        # we have a jobId for retrieving results
-        retrieveurls = []
-        if opt.wcs:
-            # We don't need the API for this, just construct URL
-            url = opt.server.replace("/api/", "/wcs_file/%i" % opt.solved_id)
-            retrieveurls.append((url, opt.wcs))
-        if opt.kmz:
-            url = opt.server.replace("/api/", "/kml_file/%i/" % opt.solved_id)
-            retrieveurls.append((url, opt.kmz))
-        if opt.newfits:
-            url = opt.server.replace("/api/", "/new_fits_file/%i/" % opt.solved_id)
-            retrieveurls.append((url, opt.newfits))
-        if opt.corr:
-            url = opt.server.replace("/api/", "/corr_file/%i" % opt.solved_id)
-            retrieveurls.append((url, opt.corr))
-
-        for url, fn in retrieveurls:
-            print("Retrieving file from", url, "to", fn)
-            with urlopen(url) as r:
-                with open(fn, "wb") as w:
-                    shutil.copyfileobj(r, w)
-            print("Wrote to", fn)
-
-        if opt.annotate:
-            result = c.annotate_data(opt.solved_id)
-            with open(opt.annotate, "w") as f:
-                f.write(python2json(result))
-
-    if opt.wait:
-        # behaviour as in old implementation
-        opt.sub_id = None
-
-    if opt.sdss_wcs:
-        (wcsfn, outfn) = opt.sdss_wcs
-        c.sdss_plot(outfn, wcsfn)
-    if opt.galex_wcs:
-        (wcsfn, outfn) = opt.galex_wcs
-        c.galex_plot(outfn, wcsfn)
-
-    if opt.sub_id:
-        print(c.sub_status(opt.sub_id))
-    if opt.job_id:
-        print(c.job_status(opt.job_id))
-
-    if opt.jobs_by_tag:
-        tag = opt.jobs_by_tag
-        print(c.jobs_by_tag(tag, None))
-    if opt.jobs_by_exact_tag:
-        tag = opt.jobs_by_exact_tag
-        print(c.jobs_by_tag(tag, "yes"))
-
-    if opt.myjobs:
-        jobs = c.myjobs()
-        print(jobs)
+    # 提交完任务后返回job_id
+    return "success", opt.solved_id
 
 
 def get_args():
@@ -467,14 +406,9 @@ def get_args():
     )
     parser.add_option("--upload", "-u", dest="upload", help="Upload a file")
     parser.add_option(
-        "--upload-xy", dest="upload_xy", help="Upload a FITS x,y table as JSON"
-    )
-    parser.add_option(
-        "--wait",
-        "-w",
-        dest="wait",
-        action="store_true",
-        help="After submitting, monitor job status",
+        "--upload-xy",
+        dest="upload_xy",
+        help="Upload a list including x,y positions respectively",
     )
     parser.add_option(
         "--wcs",
@@ -654,15 +588,14 @@ def get_args():
         opt.apikey = os.environ.get("AN_API_KEY", None)
     if opt.apikey is None:
         parser.print_help()
-        print()
-        print("You must either specify --apikey or set AN_API_KEY")
+        logging.info("You must either specify --apikey or set AN_API_KEY")
         sys.exit(-1)
 
     return opt
 
 
 if __name__ == "__main__":
-    print("Running with args %s" % sys.argv)
+    logging.info("Running with args %s" % sys.argv)
 
     opt = get_args()
 

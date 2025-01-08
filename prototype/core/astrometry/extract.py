@@ -1,9 +1,17 @@
 import numpy as np
+from PIL import Image
 import sep_pjw as sep
 
 
-def extract_stars(image, thresh=30, min_area=1, clean=True, clean_param=1.0):
-    """Extract stars from an image.
+def extract_stars(
+    image: Image.Image,
+    thresh: float = 30,
+    min_area: int = 1,
+    clean: bool = True,
+    clean_param: float = 1.0,
+) -> tuple[str, list | None]:
+    """
+    Extract stars from an image.
 
     Args:
         image (PIL.Image): The image to extract stars from.
@@ -20,10 +28,10 @@ def extract_stars(image, thresh=30, min_area=1, clean=True, clean_param=1.0):
     # 转换为灰度图像
     image = image.convert("L")
     # 转换为numpy数组
-    image = np.array(image, dtype=np.float64)
+    image_array = np.array(image, dtype=np.float64)
     # 背景提取
-    bkg = sep.Background(image)
-    image_sub = image - bkg
+    bkg = sep.Background(image_array)
+    image_sub = image_array - bkg
     # 检测星星
     try:
         objects = sep.extract(
@@ -40,4 +48,5 @@ def extract_stars(image, thresh=30, min_area=1, clean=True, clean_param=1.0):
         np.array([objects["x"], objects["y"]]),
         decimals=2,
     ).T.tolist()
+    assert type(positions) == list
     return detail, positions

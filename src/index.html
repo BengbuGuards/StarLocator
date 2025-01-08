@@ -42,6 +42,10 @@
                 <img src="img\icon\selectStars.png" alt="天体框选" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
+            <button type="button" class="actionButton" id="recognizeStars" title="天体识别">
+                <img src="img\icon\starRecognize.png" alt="天体识别" width="48" height="48"
+                    style="margin-left:-4px; margin-top:-3px">
+            </button>
             <button type="button" class="actionButton" id="vaniZen" title="铅垂线标记">
                 <img src="img\icon\vaniZen.png" alt="铅垂线标记" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
@@ -283,7 +287,9 @@
                 <label for="setTimeScope" class="tooltip">标月定时搜索区间 <span class="tooltiptext">以大致的拍摄时间为中心，前后搜索确切拍摄时间的区间大小</span></label>
                 <input id="setTimeScope" type="number" min="0" value="30" style="width: 8%; text-align: right;">天
                 <label for="setStarThresh" class="tooltip" style="padding-left: 8%">检测星点阈值 <span class="tooltiptext">判断一个光点是否为星的阈值</span></label>
-                <input id="setStarThresh" type="number" min="0" value="30" style="width: 8%; text-align: right;">
+                <input id="setStarThresh" type="number" min="0" value="30" style="width: 8%; text-align: right;"><br/>
+                <label for="setScopeAngle" class="tooltip">自动识星：视场宽度角估计 <span class="tooltiptext">对图片视场宽度角估计其范围，估计越准确求解速度越快</span></label>
+                <input id="setScopeAngle1" type="number" min="0.1" max="180" value="0.1" style="width: 8%; text-align: right;">° — <input id="setScopeAngle2" type="number" min="0.1" max="180" value="180" style="width: 8%; text-align: right;">°
             </div>
         </div>
         <div style="margin-top:65px">

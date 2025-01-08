@@ -2,7 +2,7 @@
 1. 克隆仓库，安装Node.js、pnpm和Python（版本尽量较新）。
 2. 前端构建
 
-    自定义前端配置文件[config.ts](../src/config.js)。
+    自定义前端配置文件[config.js](../src/config.js)。其中，百度地图API key申请见[百度地图开放平台](https://lbsyun.baidu.com/)，Astrometry.net API key申请见[Astrometry.net](https://nova.astrometry.net/api_help)。
 
     安装依赖：
     ```bash

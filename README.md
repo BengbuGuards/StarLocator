@@ -1,6 +1,6 @@
 # StarLocator
 
-💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">在线版镜像链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
+💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">最新版链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
 
 > StarLocator 是什么 | WHAT IS STARLOCATOR
 
@@ -31,7 +31,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 
 ## 使用方法 | HOW TO USE
 
-见<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
+见<a href="https://caveallegory.cn/StarLocator/help.html">使用帮助</a>
 
 ## 贡献 | CONTRIBUTING
 

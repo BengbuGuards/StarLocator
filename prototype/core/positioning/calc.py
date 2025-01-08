@@ -6,16 +6,22 @@ from .find_z.utils.math import angles_on_sphere, normalize
 from .latitude.method.series2 import astronomic_latitude_to_geodetic_latitude
 
 
-def calc_z(points, hour_decs, top_point, is_fix_refraction=False):
+def calc_z(
+    points: np.ndarray,
+    hour_decs: np.ndarray,
+    top_point: np.ndarray,
+    is_fix_refraction: bool = False,
+) -> float:
     """
     Find the z value.
 
-    params:
+    Params:
         points: (n, 2), star points
         hour_decs: (n, 2), hour & declinations
         top_point: (2,), top point
         is_fix_refraction: whether to fix refraction
-    return:
+
+    Returns:
         z: float, z value
     """
 
@@ -27,7 +33,9 @@ def calc_z(points, hour_decs, top_point, is_fix_refraction=False):
     return z
 
 
-def calc_geo(photo, is_fix_refraction=False, is_fix_gravity=False):
+def calc_geo(
+    photo: dict, is_fix_refraction: bool = False, is_fix_gravity: bool = False
+) -> dict:
     """
     Find the geographical position.
 
@@ -100,7 +108,7 @@ def calc_geo(photo, is_fix_refraction=False, is_fix_gravity=False):
     }
 
 
-def stars_convert(stars):
+def stars_convert(stars: list[dict]) -> tuple[np.ndarray, np.ndarray, list[str]]:
     """
     Convert the stars to numpy arrays of (lon, lat) coordinates.
     """

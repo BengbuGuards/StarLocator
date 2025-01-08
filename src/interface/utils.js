@@ -66,13 +66,18 @@ function getHADE(id) {
 
 // json数据的POST请求
 async function post(url, data, Type) {
-    let detail = 'success';
     try {
         let response;
         if (Type === 'form') {
             let formData = new FormData();
             for (let key in data) {
-                formData.append(key, data[key]);
+                if (data[key] instanceof Array) {
+                    for (let item of data[key]) {
+                        formData.append(key, item);
+                    }
+                } else {
+                    formData.append(key, data[key]);
+                }
             }
             response = await fetch(url, {
                 method: 'POST',
@@ -90,6 +95,7 @@ async function post(url, data, Type) {
             throw new Error('Invalid POST request type');
         }
         let results = await response.json();
+        let detail = results?.detail ?? 'success';
         if (!response.ok) {
             results = null;
             detail = results?.detail ?? `HTTP ${response.status}`;

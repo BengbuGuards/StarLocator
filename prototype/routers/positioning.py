@@ -3,13 +3,13 @@ from schemas import positioning
 from core.positioning.calc import calc_geo
 
 from .limiter import limiter
-from config import POSITIONING_RATE_LIMIT
+from config import LIGHT_RATE_LIMIT
 
 router = APIRouter()
 
 
 @router.post("", response_model=positioning.PositioningResponse)
-@limiter.limit(POSITIONING_RATE_LIMIT)
+@limiter.limit(LIGHT_RATE_LIMIT)
 def http_geo_by_data(request: Request, data: positioning.PositioningRequest):
     """
     Find the geographical position.

@@ -11,6 +11,19 @@ solar_bodies = [
     "pluto",
 ]
 
+solar_body_mags = {
+    "sun": -26.74,
+    "moon": -3.27,
+    "mercury": -1.62,
+    "venus": -3.91,
+    "mars": 0.44,
+    "jupiter": -2.47,
+    "saturn": 0.66,
+    "uranus": 5.69,
+    "neptune": 7.69,
+    "pluto": 14.42,
+}
+
 starZH2EN = {
     "太阳": "sun",
     "日": "sun",
@@ -7895,3 +7908,8 @@ starZH2EN = {
     "狐狸座 34": "34 vul",
     "狐狸座 35": "35 vul",
 }
+
+starEN2ZH = dict()
+# starZH2EN中靠前的星名较常用些
+for k, v in reversed(starZH2EN.items()):
+    starEN2ZH[v] = k

@@ -8,3 +8,4 @@ httpx
 async_lru
 slowapi
 sep-pjw
+astropy

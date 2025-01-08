@@ -2,7 +2,7 @@ import astronomy as ast
 from datetime import datetime
 
 
-def stamp2ast_time(timestamp):
+def stamp2ast_time(timestamp: float) -> ast.Time:
     """
     Convert the timestamp to astropy time.
     """

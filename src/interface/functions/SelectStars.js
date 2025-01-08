@@ -120,7 +120,7 @@ class SelectStars extends DefaultbuttonFunctioner {
                     this.interactPhoto.tips.innerHTML = `寻星失败：${detail}`;
                 }
             });
-        }, 'image/jpeg');
+        });
     }
 
     // 显示天体

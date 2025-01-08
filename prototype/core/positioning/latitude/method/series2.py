@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree):
+def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree: np.ndarray) -> np.ndarray:
     bn = [
         0.0016248797304581834,
         -1.5959025318697836e-06,

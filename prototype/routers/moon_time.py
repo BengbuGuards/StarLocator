@@ -3,18 +3,18 @@ from core.moon_time.calc import calc
 from schemas import moon_time
 
 from .limiter import limiter
-from config import MOON_TIME_RATE_LIMIT
+from config import HEAVY_RATE_LIMIT
 
 router = APIRouter()
 
 
 @router.post("", response_model=moon_time.MoonTimeResponse)
-@limiter.limit(MOON_TIME_RATE_LIMIT)
+@limiter.limit(HEAVY_RATE_LIMIT)
 def http_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
     """
     通过月亮与星星的相对位置计算时间
 
-    param:
+    Params:
         request: Request, slowapi必需
         data:
             photo: a dict including:
@@ -24,7 +24,8 @@ def http_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
             scopeDays: number, date search range size (in days)
             isFixRefraction: whether to fix refraction
             isFixGravity: whether to fix gravity
-    return:
+    
+    Returns:
         a dict:
             time: float, the timestamp
             detail: str, the detail of the calculation

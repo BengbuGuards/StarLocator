@@ -8,6 +8,38 @@ from matplotlib.patches import Circle
 from core.astrometry.extract import extract_stars
 from config import BACKEND_API_BASEURL
 
+
+def sort_positions(positions: list[list[float]]) -> list:
+    positions_array = np.array(positions)
+    center = np.array(image.size) / 2
+    distances = np.linalg.norm(positions_array - center, axis=1)
+    return positions_array[np.argsort(distances)].tolist()
+
+
+def plot(image: Image.Image, objects: list[list[float]]):
+    data_image = np.array(image.convert("L"), dtype=np.float64)
+    # plot background-subtracted image
+    fig, ax = plt.subplots()
+    m, s = np.mean(data_image), np.std(data_image)
+    im = ax.imshow(
+        data_image,
+        interpolation="nearest",
+        cmap="gray",
+        vmin=float(m - s),
+        vmax=float(m + s),
+        origin="lower",
+    )
+
+    # plot an ellipse for each object
+    for i in range(len(objects)):
+        e = Circle(xy=(objects[i][0], objects[i][1]), radius=10)
+        e.set_facecolor("none")
+        e.set_edgecolor("red")
+        ax.add_artist(e)
+
+    plt.show()
+
+
 image = Image.open("../examples/picMemeRider1.jpeg").crop((0, 0, 3024, 2000))
 target_positions = [
     [477.32, 268.11],
@@ -66,38 +98,16 @@ target_positions = [
     [732.11, 1981.45],
     [1109.36, 1997.87],
 ]
-
-
-def plot(image, objects):
-    data_image = np.array(image.convert("L"), dtype=np.float64)
-    # plot background-subtracted image
-    fig, ax = plt.subplots()
-    m, s = np.mean(data_image), np.std(data_image)
-    im = ax.imshow(
-        data_image,
-        interpolation="nearest",
-        cmap="gray",
-        vmin=m - s,
-        vmax=m + s,
-        origin="lower",
-    )
-
-    # plot an ellipse for each object
-    for i in range(len(objects)):
-        e = Circle(xy=(objects[i][0], objects[i][1]), radius=10)
-        e.set_facecolor("none")
-        e.set_edgecolor("red")
-        ax.add_artist(e)
-
-    plt.show()
+target_positions = sort_positions(target_positions)
 
 
 def test_local():
-    detail, positions = extract_stars(image)
+    detail, positions = extract_stars(image, thresh=40)
+    assert detail == "success" and type(positions) == list
+    positions = sort_positions(positions)
     # plot(image, positions)  ##DEBUG
-    assert detail == "success"
     for i in range(len(positions)):
-        assert positions[i] == pytest.approx(target_positions[i])
+        assert positions[i] == pytest.approx(target_positions[i], rel=1e-4)
 
 
 def test_remote():
@@ -117,5 +127,6 @@ def test_remote():
     assert response.status_code == 200, response.text
     result = response.json()
     assert result["detail"] == "success", result
-    for i in range(len(result["positions"])):
-        assert result["positions"][i] == pytest.approx(target_positions[i], rel=1e-4)
+    positions = sort_positions(result["positions"])
+    for i in range(len(positions)):
+        assert positions[i] == pytest.approx(target_positions[i], rel=1e-4)

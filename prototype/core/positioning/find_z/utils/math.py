@@ -1,12 +1,13 @@
 import numpy as np
+from typing import Callable
 from ...locator.utils.math import sph_dist
 
 
-def normalize(vec):
+def normalize(vec: np.ndarray) -> np.ndarray:
     return vec / np.linalg.norm(vec, axis=-1, keepdims=True)
 
 
-def angles_on_sphere(dec_ras):
+def angles_on_sphere(dec_ras: np.ndarray) -> np.ndarray:
     """
     Calculate the angles between points on a sphere. The dec_ras are represented as
         arrays of (lon, lat) coordinates.
@@ -21,7 +22,17 @@ def angles_on_sphere(dec_ras):
     return thetas
 
 
-def minimize(func, lower_bound, upper_bound, tolerance=1e-6, max_iter=100):
+# def minimize(func, lower_bound, upper_bound, tolerance=1e-6, max_iter=100):
+def minimize(
+    func: Callable,
+    lower_bound: float,
+    upper_bound: float,
+    tolerance: float = 1e-6,
+    max_iter: int = 100,
+) -> float:
+    """
+    Find the minimum of a function using the ternary search algorithm.
+    """
     for _ in range(max_iter):
         delta = (upper_bound - lower_bound) / 3
         mid_left = lower_bound + delta

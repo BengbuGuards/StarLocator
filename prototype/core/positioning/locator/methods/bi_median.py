@@ -3,7 +3,7 @@ import astronomy as ast
 from ..utils.math import cart2sph, sph2cart, vector_angle
 
 
-def get_geo(data: dict, is_fix_refraction: bool = False):
+def get_geo(data: dict, is_fix_refraction: bool = False) -> np.ndarray:
     """
     Find the geographical position.
 
@@ -61,7 +61,7 @@ def get_geo(data: dict, is_fix_refraction: bool = False):
     return geo
 
 
-def dual_star_positioning(data, i, j):
+def dual_star_positioning(data: dict, i: int, j: int) -> list[list[float]]:
     """
     根据双星计算地理坐标，返回双解
     """
@@ -72,7 +72,7 @@ def dual_star_positioning(data, i, j):
     return get_plane_intersection(plane1, plane2)
 
 
-def get_plane(data, i):
+def get_plane(data: dict, i: int) -> np.ndarray:
     """
     根据星点计算平面方程
     """
@@ -88,7 +88,7 @@ def get_plane(data, i):
     return np.array([a, b, c, d])
 
 
-def get_plane_intersection(plane1, plane2):
+def get_plane_intersection(plane1: np.ndarray, plane2: np.ndarray) -> list[list[float]]:
     """
     计算两平面交点
     """
@@ -464,12 +464,12 @@ def get_plane_intersection(plane1, plane2):
     ]  # 先经度后纬度
 
 
-def square_median_average(crude_positions, data):
+def square_median_average(crude_positions: list[np.ndarray], data: dict) -> np.ndarray:
     """
     计算加权平均
     """
 
-    def evaluate(pos):
+    def evaluate(pos: np.ndarray) -> float:
         """
         评估解的合理性
         """
@@ -477,7 +477,8 @@ def square_median_average(crude_positions, data):
         for i in range(data["n_points"]):
             ## 计算该位置的实际天顶角
             angle = vector_angle(
-                np.array(sph2cart(*data["hour_decs"][i])), np.array(sph2cart(*pos, 1))
+                np.array(sph2cart(*data["hour_decs"][i])),
+                np.array(sph2cart(pos[0], pos[1], 1)),
             )
             diff = angle - np.arccos(data["cos_theta"][i])
             sum += diff**2
@@ -491,7 +492,7 @@ def square_median_average(crude_positions, data):
         s2 = evaluate(pair[1])
         true_pair = pair[0] if s1 > s2 else pair[1]
         positions.append(true_pair)
-        true_pair = sph2cart(*true_pair, 1)
+        true_pair = sph2cart(true_pair[0], true_pair[1], 1)
         avg_position.append(true_pair)
 
     # 计算平均向量
@@ -512,7 +513,7 @@ def square_median_average(crude_positions, data):
     return median_geo
 
 
-def adjust_angle(angle, avg_angle):
+def adjust_angle(angle: float, avg_angle: float) -> float:
     if angle - avg_angle > 180:
         return angle - 360
     elif angle - avg_angle < -180:

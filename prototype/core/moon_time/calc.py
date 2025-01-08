@@ -12,19 +12,23 @@ from core.positioning.top_point.methods.matrix_inverse import intersection
 
 
 def calc(
-    photo, approx_timestamp, scope_days, is_fix_gravity=False, is_fix_refraction=False
-):
+    photo: dict,
+    approx_timestamp: float,
+    scope_days: float,
+    is_fix_gravity: bool = False,
+    is_fix_refraction: bool = False,
+) -> float:
     """
     根据星星（含月）相互角距计算对应时间
 
     params:
-        photo: dict，数据，第一个是月亮:
+        photo: 数据，第一个是月亮:
             stars: list, star points
             lines: (n, 2, 2), plumb lines
-        approx_timestamp: float 大致时间戳
-        scope_days: number 日期搜索范围大小（单位天）
-        is_fix_gravity: boolean 是否修正重力
-        is_fix_refraction: boolean 是否修正大气折射
+        approx_timestamp: 大致时间戳
+        scope_days: 日期搜索范围大小（单位天）
+        is_fix_gravity: 是否修正重力
+        is_fix_refraction: 是否修正大气折射
     return:
         float 返回对应时间戳
     """

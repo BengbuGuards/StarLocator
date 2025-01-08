@@ -1,4 +1,3 @@
-from datetime import datetime
 import numpy as np
 import astronomy as ast
 from core.positioning.locator.utils.math import vector_angle
@@ -8,14 +7,14 @@ from core.positioning.locator.utils.math import sph2cart
 from core.positioning.calc import stars_convert
 
 
-def find_moon_idx(stars):
+def find_moon_idx(stars: list[dict]) -> int:
     """
     找到月亮的索引
 
     params:
-        stars: list, star points
+        stars: star points
     return:
-        number 返回月亮的索引
+        返回月亮的索引
     """
 
     for i, star in enumerate(stars):
@@ -24,16 +23,16 @@ def find_moon_idx(stars):
     return -1
 
 
-def angle_btw_moon_stars(points, moon_idx, z):
+def angle_btw_moon_stars(points: np.ndarray, moon_idx: int, z: float) -> np.ndarray:
     """
     计算月亮与星星的角距
 
     params:
         points: (n, 2), star points
-        moon_idx: int 月的索引
-        z: number 焦距
+        moon_idx: 月的索引
+        z: 焦距
     return:
-        list 返回角距列表
+        返回角距列表
     """
 
     points_3d = np.concatenate([points, np.ones((len(points), 1)) * z], axis=1)
@@ -42,8 +41,12 @@ def angle_btw_moon_stars(points, moon_idx, z):
 
 
 def geo_estimate_by_stars(
-    data, approx_timestamp, moon_idx, is_fix_gravity, is_fix_refraction
-):
+    data: dict,
+    approx_timestamp: float,
+    moon_idx: int,
+    is_fix_gravity: bool,
+    is_fix_refraction: bool,
+) -> dict:
     """
     根据星星信息计算大致日期下的地理坐标
 
@@ -51,12 +54,12 @@ def geo_estimate_by_stars(
         data: a dict including:
             stars: (n, 2), star points
             lines: (n, 2, 2), plumb lines
-        approx_timestamp: number 大致时间戳
-        moon_idx: int 月的索引
-        is_fix_gravity: boolean 是否修正重力
-        is_fix_refraction: boolean 是否修正大气折射
+        approx_timestamp: 大致时间戳
+        moon_idx: 月的索引
+        is_fix_gravity: 是否修正重力
+        is_fix_refraction: 是否修正大气折射
     return:
-        list 返回地理位置列表
+        返回地理位置列表
     """
 
     # 数据转换
@@ -66,8 +69,10 @@ def geo_estimate_by_stars(
     if not is_success:
         raise ValueError("无法获取天体坐标")
     for i, star_name in enumerate(star_names):
-        data["stars"][i]["lon"] = np.deg2rad(360 - approx_star_HaDecs[star_name][0] * 15)
-        data["stars"][i]["lat"] = np.deg2rad(approx_star_HaDecs[star_name][1])
+        data["stars"][i]["lon"] = np.deg2rad(
+            360 - approx_star_HaDecs[star_name][0] * 15  # type: ignore
+        )
+        data["stars"][i]["lat"] = np.deg2rad(approx_star_HaDecs[star_name][1])  # type: ignore
     # 计算大致日期下的地理坐标
     data["stars"].pop(moon_idx)  # 剔除月的数据
     try:
@@ -81,7 +86,7 @@ def geo_estimate_by_stars(
     return geo_estimate
 
 
-def s2sidereal_days(s):
+def s2sidereal_days(s: float) -> float:
     """
     将秒转换为恒星天
 
@@ -96,18 +101,23 @@ def s2sidereal_days(s):
 
 
 def angle_error(
-    timestamp, approx_timestamp, star_names, geo_estimate, moon_idx, target_angles
+    timestamp: float,
+    approx_timestamp: float,
+    star_names: list[str],
+    geo_estimate: dict,
+    moon_idx: int,
+    target_angles: np.ndarray,
 ):
     """
     误差函数，计算每一天的星星（含月）相互角距，输出误差
 
     params:
-        timestamp: number 时间戳
-        approx_timestamp: number 大致日期
-        star_names: list 星星名字列表
-        geo_estimate: dict 地理坐标
-        moon_idx: number 月的索引
-        target_angles: list 目标角距
+        timestamp: 时间戳
+        approx_timestamp: 大致日期
+        star_names: 星星名字列表
+        geo_estimate: 地理坐标
+        moon_idx: 月的索引
+        target_angles: 目标角距
     return:
         number 返回星角距误差和
     """
@@ -123,13 +133,17 @@ def angle_error(
     # 获取该时间、该地理坐标下的天体时角赤纬
     star_HaDecs, _ = get_HaDecs_by_names(star_names, timestamp, observer)
     moon_HaDec = star_HaDecs[star_names[moon_idx]]
-    moon_vec = np.array(sph2cart(np.deg2rad(moon_HaDec[0] * 15), np.deg2rad(moon_HaDec[1])))
+    assert moon_HaDec[0] and moon_HaDec[1]
+    moon_vec = np.array(
+        sph2cart(np.deg2rad(moon_HaDec[0] * 15), np.deg2rad(moon_HaDec[1]))
+    )
     # 计算每颗星星（不包含月）与月的角距误差
     error = 0
     for i, star_name in enumerate(star_names):
         if i == moon_idx:
             continue
         star_HaDec = star_HaDecs[star_name]
+        assert star_HaDec[0] and star_HaDec[1]
         star_vec = np.array(
             sph2cart(np.deg2rad(star_HaDec[0] * 15), np.deg2rad(star_HaDec[1]))
         )

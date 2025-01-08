@@ -12,6 +12,9 @@ class ImageChange extends DefaultbuttonFunctioner {
         let file = e.target.files[0];
         let reader = new FileReader();
         reader.onload = function (e) {
+            let img = new Image();
+            img.src = e.target.result;
+            this.interactPhoto.img = img;
             FabricImage.fromURL(e.target.result).then((img) => {
                 let width = img.width,
                     height = img.height;

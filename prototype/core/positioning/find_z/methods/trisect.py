@@ -2,7 +2,7 @@ import numpy as np
 from ..utils.math import minimize
 
 
-def calculate_angle(p1, p2, z) -> np.ndarray:
+def calculate_angle(p1: np.ndarray, p2: np.ndarray, z: float) -> np.ndarray:
     v1 = np.array([*p1, z])
     v2 = np.array([*p2, z])
     cos_theta = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
@@ -11,7 +11,7 @@ def calculate_angle(p1, p2, z) -> np.ndarray:
     return np.arccos(cos_theta)
 
 
-def get_z(datas: tuple) -> float:
+def get_z(datas: dict) -> float:
     """
     Find the zenith point.
 

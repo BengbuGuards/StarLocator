@@ -4,15 +4,19 @@ from ..utils.math import minimize, normalize
 from core.positioning.locator.utils.math import vector_angle
 
 
-def get_z(data, z0, zenith):
+def get_z(data: dict, z0: float, zenith: np.ndarray) -> float:
     """
     Find the zenith point considering refraction.
 
-    params:
-        data: (points, thetas, ra_decs). points: x/y list of points. thetas: list of angles in radians. ra_decs: list of ra and dec in radians.
+    Args:
+        data: (points, thetas, ra_decs).
+            points: x/y list of points.
+            thetas: list of angles in radians.
+            ra_decs: list of ra and dec in radians.
         z0: initial guess of zenith point
         zenith: zenith point, 2d array
-    return:
+    
+    Returns:
         z: zenith point
     """
     points = data["points"]
@@ -60,9 +64,7 @@ def get_z(data, z0, zenith):
             ]
         )
         # 计算夹角总误差
-        error = np.sum(
-            (angles_real - thetas[np.triu_indices(len(points), k=1)]) ** 2
-        )
+        error = np.sum((angles_real - thetas[np.triu_indices(len(points), k=1)]) ** 2)
 
         return error
 
@@ -75,15 +77,16 @@ def get_z(data, z0, zenith):
     return z
 
 
-def rotate(vector, zenith_vec, angle):
+def rotate(vector: np.ndarray, zenith_vec: np.ndarray, angle: float) -> np.ndarray:
     """
     Rotate a vector towards a zenith vector by a given angle.
 
-    params:
+    Params:
         vector: vector to rotate
         zenith_vec: zenith vector
         angle: angle to rotate in degrees
-    return:
+    
+    Returns:
         rotated element vector
     """
     # 单位化

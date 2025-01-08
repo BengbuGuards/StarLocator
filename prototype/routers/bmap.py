@@ -2,7 +2,6 @@ import httpx
 from fastapi import APIRouter, Query, Request, Response
 import re
 
-from .limiter import limiter
 from config import BACKEND_API_BASEURL, BMAP_API_KEY
 
 router = APIRouter()

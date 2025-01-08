@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from config import MAX_NUM_OF_STARS, MAX_NUM_OF_LINES
 
-Coordinate = list[float, float]
-Line = list[Coordinate, Coordinate]
+Coordinate = tuple[float, float]
+Line = tuple[Coordinate, Coordinate]
 
 
 class Stars(BaseModel):

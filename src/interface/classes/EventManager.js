@@ -7,6 +7,7 @@ import { Calc } from '../functions/Calc.js';
 import { MoonTime } from '../functions/MoonTime.js';
 import { CeleCoord } from '../functions/CeleCoord.js';
 import { SelectStars } from '../functions/SelectStars.js';
+import { RecognizeStars } from '../functions/CeleRecognition.js';
 
 // 事件管理器，管理鼠标事件、按钮事件与照片的交互
 class EventManager {
@@ -24,6 +25,7 @@ class EventManager {
         this.calc = new Calc(this.interactPhoto, this.celeCoord);
         this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator, this.celeCoord);
         this.selectStars = new SelectStars(this.interactPhoto);
+        this.recognizeStars = new RecognizeStars(this.interactPhoto);
 
         // 页面加载完成事件
         window.onload = function () {

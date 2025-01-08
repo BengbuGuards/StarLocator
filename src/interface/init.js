@@ -87,6 +87,9 @@ function initializeEvents(eventManager) {
     document
         .getElementById('selectStars')
         .addEventListener('click', eventManager.selectStars.onClick.bind(eventManager.selectStars));
+    document
+        .getElementById('recognizeStars')
+        .addEventListener('click', eventManager.recognizeStars.onClick.bind(eventManager.recognizeStars));
 
     //为星体名称输入框启用自动补全
     for (let i = 1; i <= 5; i++) {

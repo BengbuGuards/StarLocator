@@ -4,25 +4,28 @@
 <head>
     <meta charset="utf-8">
     <title>照片测星定位</title>
-    <link rel="shortcut icon" href="img/icon/favicon.ico" type="image/x-icon" crossorigin="">
+    <link rel="shortcut icon" href="/src/img/icon/favicon.ico" type="image/x-icon" crossorigin="">
+    <link rel="stylesheet" href="/src/css/site.css">
     <!-- 加载BMap初始化脚本 -->
     <script type="text/javascript">
         window._BMapSecurityConfig = {
-            serviceHost: '{{back_host}}/_BMapService'
+            serviceHost: 'http://localhost:6975/api/_BMapService'
         }
     </script>
-    <script type="text/javascript" src="{{back_host}}/_BMapService/api?v=3.0&type=webgl"></script>
+    <script type="text/javascript" src="http://localhost:6975/api/_BMapService/api?v=3.0&type=webgl"></script>
+    <!-- TODO: 替换 -->
     <!-- TODO: 移动端适配 -->
+    <script type="module" src="/src/index.js"></script>
 </head>
 
 <body>
     <div class="header">
         <h1>
-            <img src="img\icon\starLocator-2.png" style="margin-bottom:-10px; user-select: none;" alt="StarLocator"
+            <img src="/src/img/icon/starLocator-2.png" style="margin-bottom:-10px; user-select: none;" alt="StarLocator"
                 width="36" height="36" />
             StarLocator 照片测星定位 <a href="https://qm.qq.com/q/nlFqV4jVfO">点击加入交流群</a>
             <a href="https://github.com/BengbuGuards/StarLocator" title="项目地址">
-                <img src="img\icon\gitcat.png" style="float: right; margin-bottom:-10px;  margin-right: 10px"
+                <img src="/src/img/icon/gitcat.png" style="float: right; margin-bottom:-10px;  margin-right: 10px"
                     alt="GitHub" width="36" height="36" />
             </a>
         </h1>
@@ -31,42 +34,42 @@
         <div class="col-toolbar">
             <h2>工具</h2>
             <button type="button" class="resetButton" id="resetPick" title="重置标注">
-                <img src="img\icon\resetPick.png" alt="重置标注" width="48" height="48"
+                <img src="/src/img/icon/resetPick.png" alt="重置标注" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <button type="button" class="actionButton" id="celePick" title="天体选择">
-                <img src="img\icon\celePick.png" alt="天体选择" width="48" height="48"
+                <img src="/src/img/icon/celePick.png" alt="天体选择" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <button type="button" class="actionButton" id="selectStars" title="天体框选">
-                <img src="img\icon\selectStars.png" alt="天体框选" width="48" height="48"
+                <img src="/src/img/icon/selectStars.png" alt="天体框选" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <button type="button" class="actionButton" id="recognizeStars" title="天体识别">
-                <img src="img\icon\starRecognize.png" alt="天体识别" width="48" height="48"
+                <img src="/src/img/icon/starRecognize.png" alt="天体识别" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <button type="button" class="actionButton" id="vaniZen" title="铅垂线标记">
-                <img src="img\icon\vaniZen.png" alt="铅垂线标记" width="48" height="48"
+                <img src="/src/img/icon/vaniZen.png" alt="铅垂线标记" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <!-- <button type="button" class="actionButton" id="horiZen" title="地平线标记">
-            <img src="img\icon\horiZen.png" alt="地平线标记" width="48" height="48"
+            <img src="/src/img/icon/horiZen.png" alt="地平线标记" width="48" height="48"
                  style="margin-left:-4px; margin-top:-3px">
             </button> -->
             <button type="button" class="actionButton" id="moonTime" title="标月定时">
-                <img src="img\icon\moonTime.png" alt="标月定时" width="48" height="48"
+                <img src="/src/img/icon/moonTime.png" alt="标月定时" width="48" height="48"
                     style="margin-left:-4px; margin-top:-3px">
             </button>
             <a href="https://stellarium-web.org/" target="_blank" style="text-decoration: none;" rel="noopener">
                 <button type="button" class="helpButton" id="stellariumWeb" title="Stellarium在线星图">
-                    <img src="img\icon\stellariumweb.svg" alt="Stellarium" width="46" height="46"
+                    <img src="/src/img/icon/stellariumweb.svg" alt="Stellarium" width="46" height="46"
                         style="margin-left:-4px; margin-top:-3px; margin-bottom: 2px">
                 </button>
             </a>
-            <a href="help.html" target="_blank">
+            <a href="/src/help.html" target="_blank">
                 <button type="button" class="helpButton" id="howToUse" title="怎么用啊">
-                    <img src="img\icon\emojiThinking.png" alt="怎么用啊" width="48" height="48"
+                    <img src="/src/img/icon/emojiThinking.png" alt="怎么用啊" width="48" height="48"
                         style="margin-left:-4px; margin-top:-3px">
                 </button>
             </a>
@@ -257,9 +260,9 @@
                     </div>
                     <div class="col-calcul">
                         <button type="button" class="calculButton" id="actionCalcul" title="计算">
-                            <img src="img\icon\calcu1.png" alt="计算" width="48" height="96"
+                            <img src="/src/img/icon/calcu1.png" alt="计算" width="48" height="96"
                                 style="margin-left:-4px; margin-top:-3px" class="calculIcon">
-                            <img src="img\icon\calcu2.gif" alt="计算" width="48" height="96"
+                            <img src="/src/img/icon/calcu2.gif" alt="计算" width="48" height="96"
                                 style="margin-left:-48px; margin-top:-3px" class="calculAnim">
                         </button>
                         <br />
@@ -325,8 +328,9 @@
                     </ul>
                 </div>
                 <div class="col-logo">
-                    <img src="img\icon\starLocator.png" alt="StarLocator" width="140" height="152"/>
-                    {{version}}
+                    <img src="/src/img/icon/starLocator.png" alt="StarLocator" width="140" height="152"/>
+                    2.1.0
+                    <!-- TODO: 替换 -->
                 </div>
             </div>
         </div>

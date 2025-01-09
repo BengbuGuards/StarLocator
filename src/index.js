@@ -1,6 +1,5 @@
-import { InteractPhoto } from './interface/classes/interact.js';
-import { EventManager } from './interface/classes/EventManager.js';
+import './css/site.css';
+import { createApp } from 'vue';
+import InteractPhoto from './components/InteractivePhoto.vue';
 
-let interactPhoto = new InteractPhoto();
-// eslint-disable-next-line no-unused-vars
-let eventManager = new EventManager(interactPhoto);
+createApp(InteractPhoto).mount('#interactivephoto');

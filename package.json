@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "fabric": "^6.4.3",
-    "fuzzysort":"^3.1.0",
+    "fuzzysort": "^3.1.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -23,6 +23,7 @@
     "eslint-plugin-vue": "^9.30.0",
     "prettier": "^3.3.3",
     "vite": "^6.0.5",
+    "vite-plugin-html": "^3.2.2",
     "vite-plugin-vue-devtools": "^7.6.8"
   }
 }

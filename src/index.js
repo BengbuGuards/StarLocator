@@ -1,5 +1,5 @@
 import './css/site.css';
 import { createApp } from 'vue';
-import InteractPhoto from './components/InteractivePhoto.vue';
+import App from './components/App.vue';
 
-createApp(InteractPhoto).mount('#interactivephoto');
+createApp(App).mount('#app');

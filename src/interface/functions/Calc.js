@@ -52,7 +52,7 @@ class Calc extends DefaultbuttonFunctioner {
         }
 
         // 开始计算
-        this.interactPhoto.buttonFunctioner = this;
+        this.buttonFunStore.changeButtonFun('Calc');
         this.interactPhoto.tips.innerHTML = `计算中...`;
 
         post(

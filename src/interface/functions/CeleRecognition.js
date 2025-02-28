@@ -28,7 +28,7 @@ class RecognizeStars extends DefaultbuttonFunctioner {
                 return;
             }
 
-            this.interactPhoto.buttonFunctioner = this;
+            this.buttonFunStore.changeButtonFun('RecognizeStars');
             this.status === recognitionStatus.SUBMITTING;
         } else {
             // 自动识星可能比较耗时，可以让用户取消

@@ -1,10 +1,12 @@
 import { Point } from 'fabric';
+import { useButtonFunStore } from '@/store/buttonFun';
 
 // 默认按钮功能类，所有按钮功能类的父类
 class DefaultbuttonFunctioner {
     constructor(interactPhoto) {
         this.interactPhoto = interactPhoto;
         this.panning = false; // 是否正在移动画布
+        this.buttonFunStore = useButtonFunStore();  // 按钮功能变量在类上存储
     }
 
     // 点击事件逻辑
@@ -29,7 +31,7 @@ class DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
         // 画布缩放移动
         if (
-            this.interactPhoto.buttonFunctioner === this.interactPhoto.defaultbuttonFunctioner &&
+            this.buttonFunStore.buttonFunc === this.buttonFunStore.defaultbuttonFunctioner &&
             this.interactPhoto.canvas.getActiveObject() === undefined
         ) {
             if (!this.panning) {
@@ -47,7 +49,7 @@ class DefaultbuttonFunctioner {
         if (!this.interactPhoto.movable) return;
         // 画布移动
         if (
-            this.interactPhoto.buttonFunctioner === this.interactPhoto.defaultbuttonFunctioner &&
+            this.buttonFunStore.buttonFunc === this.buttonFunStore.defaultbuttonFunctioner &&
             this.interactPhoto.canvas.getActiveObject() === undefined
         ) {
             this.panning = false;
@@ -59,7 +61,7 @@ class DefaultbuttonFunctioner {
     // 处理鼠标移动事件
     handleMouseMove(e) {
         // 星体及铅垂线取消选择
-        if (this.interactPhoto.buttonFunctioner != this.interactPhoto.defaultbuttonFunctioner) {
+        if (this.buttonFunStore.buttonFunc != this.buttonFunStore.defaultbuttonFunctioner) {
             this.CancelPicking(e);
         }
 

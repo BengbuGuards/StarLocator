@@ -1,4 +1,4 @@
-import { DefaultbuttonFunctioner } from '../functions/Default.js';
+// import { DefaultbuttonFunctioner } from '../functions/Default.js';
 import { CeleArray } from '../elements/CelestialBody.js';
 import { PLArray } from '../elements/PlumbLine.js';
 
@@ -28,10 +28,6 @@ class InteractPhoto {
         // 鼠标事件变量
         this.lmbDown = false; // 鼠标左键是否按下
         this.cancelOp = false; // 是否取消选择星体or铅垂线的操作
-
-        // 按钮功能状态变量
-        this.defaultbuttonFunctioner = new DefaultbuttonFunctioner(this);
-        this.buttonFunctioner = this.defaultbuttonFunctioner; // 当前按钮事件对象
     }
 
     // 调整画布的缩放和视图位置
@@ -49,11 +45,6 @@ class InteractPhoto {
     // 鼠标模式
     setCanvasCursor(cursor) {
         this.canvasInst.style.cursor = cursor;
-    }
-
-    // 重置按钮功能状态
-    resetbuttonFunctioner() {
-        this.buttonFunctioner = this.defaultbuttonFunctioner;
     }
 
     // 获取当前日期时间时区的时间戳

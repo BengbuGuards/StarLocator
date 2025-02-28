@@ -31,7 +31,7 @@ class SelectStars extends DefaultbuttonFunctioner {
         }
 
         if (this.status === selectStatus.READY) {
-            this.interactPhoto.buttonFunctioner = this;
+            this.buttonFunStore.changeButtonFun('SelectStars');
         } else if (this.status === selectStatus.IDLE) {
             this.interactPhoto.resetbuttonFunctioner();
         }
@@ -80,7 +80,7 @@ class SelectStars extends DefaultbuttonFunctioner {
             this.status = selectStatus.IDLE;
             this.interactPhoto.tips.innerHTML = '';
             this.interactPhoto.setCanvasCursor('grab');
-            this.interactPhoto.buttonFunctioner = this.interactPhoto.defaultbuttonFunctioner;
+            this.buttonFunStore.changeButtonFun();
         }
     }
 

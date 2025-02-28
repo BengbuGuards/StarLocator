@@ -1,24 +1,32 @@
 <script setup>
-import { ref } from 'vue';
-import InteractPhoto from './InteractPhoto.vue';
+import { ref, onMounted } from 'vue';
+import { initializeElements, initializeCanvas, initializeEvents, initializeMap } from '@/interface/init';
+import InteractPhotoUnit from './InteractPhoto.vue';
 import InteractData from './InteractData.vue';
 
-class StarCoord {
-    constructor(id, name = null, hAngle = null, declin = null, x = null, y = null) {
-        this.id = id;
-        this.name = name;
-        this.hAngle = hAngle;
-        this.declin = declin;
-        this.x = x;
-        this.y = y;
-    }
-}
-const stars = ref(Array.from({ length: 5 }, (_, i) => new StarCoord(i + 1)));
+import { InteractPhoto } from '@/interface/classes/interact';
+
+import { useButtonFunStore } from '@/store/buttonFun';
+
+const interactPhoto = new InteractPhoto();
+
+// 天体表格数据定义
+const celeArray = ref(interactPhoto.CeleArray);
+
+const buttonFunStore = useButtonFunStore();
+buttonFunStore.init(interactPhoto);
+
+onMounted(() => {
+    initializeElements(interactPhoto);
+    initializeCanvas(interactPhoto);
+    initializeEvents(interactPhoto);
+    initializeMap(interactPhoto);
+});
 </script>
 
 <template>
     <div class="col-measure">
-        <InteractPhoto />
-        <InteractData :stars="stars" />
+        <InteractPhotoUnit />
+        <InteractData :celeArray="celeArray" />
     </div>
 </template>

@@ -3,9 +3,8 @@ import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
 class MoonTime extends DefaultbuttonFunctioner {
-    constructor(interactPhoto, astroCalculator, celeCoord) {
+    constructor(interactPhoto, celeCoord) {
         super(interactPhoto);
-        this.astroCalculator = astroCalculator;
         this.celeCoord = celeCoord;
     }
 
@@ -51,7 +50,7 @@ class MoonTime extends DefaultbuttonFunctioner {
     // 计算拍摄时间
     calc(stars, globalPLsPointsCoord) {
         // 开始计算
-        this.interactPhoto.buttonFunctioner = this;
+        this.buttonFunStore.changeButtonFun('MoonTime');
         this.interactPhoto.tips.innerHTML = `计算中...`;
 
         // 读取设置

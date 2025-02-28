@@ -1,6 +1,12 @@
+<script setup>
+import { useButtonFunStore } from '@/store/buttonFun';
+
+const buttonFunStore = useButtonFunStore();
+</script>
+
 <template>
     <h2>测量</h2>
-    <input type="file" id="srcFile" accept="image/*" aria-label="上传文件" />
+    <input type="file" id="srcFile" @change="(e) => buttonFunStore.imageChange.onClick(e)" accept="image/*" aria-label="上传文件" />
     <button type="button" id="resetZoom" style="float: right">重置缩放</button>
     <div id="box" style="min-width: 450px; height: 600px; width: 100%">
         <canvas id="canvas"></canvas>

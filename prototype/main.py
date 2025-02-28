@@ -22,7 +22,7 @@ app.add_middleware(
 
 # 限流
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler) # type: ignore
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore
 
 # 分发路由
 app.include_router(positioning.router, prefix="/api/positioning", tags=["positioning"])

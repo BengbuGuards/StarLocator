@@ -15,7 +15,7 @@ class PickCele extends DefaultbuttonFunctioner {
         this.interactPhoto.tips.innerHTML = `${this.isPickingCele ? '单击要选择的天体。' : ''}`;
 
         if (this.isPickingCele) {
-            this.interactPhoto.buttonFunctioner = this;
+            this.buttonFunStore.changeButtonFun('PickCele');
         } else {
             this.interactPhoto.resetbuttonFunctioner();
         }
@@ -43,7 +43,7 @@ class PickCele extends DefaultbuttonFunctioner {
         this.interactPhoto.tips.innerHTML = '';
         this.interactPhoto.setCanvasCursor('grab');
 
-        this.interactPhoto.buttonFunctioner = this.interactPhoto.defaultbuttonFunctioner;
+        this.buttonFunStore.changeButtonFun();
     }
 
     // 添加星星点的函数

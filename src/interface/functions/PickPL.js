@@ -15,7 +15,7 @@ class PickPL extends DefaultbuttonFunctioner {
         this.interactPhoto.tips.innerHTML = `${this.isPickingPL ? '单击添加铅垂线端点。' : ''}`;
 
         if (this.isPickingPL) {
-            this.interactPhoto.buttonFunctioner = this;
+            this.buttonFunStore.changeButtonFun('PickPL');
         } else {
             this.interactPhoto.resetbuttonFunctioner();
         }

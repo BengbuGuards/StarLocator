@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    stars: {
+    celeArray: {
         type: Array,
         required: true,
     },
@@ -62,7 +62,7 @@ defineProps({
                                     />
                                 </td>
                             </tr>
-                            <tr v-for="star in stars" :key="star.id">
+                            <tr v-for="star in celeArray.Array" :key="star.id">
                                 <td>{{ star.id }}</td>
                                 <td>
                                     <input

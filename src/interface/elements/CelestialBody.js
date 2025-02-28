@@ -11,6 +11,9 @@ class CelestialBody extends ShapeObject {
         this.addToTable();
         // 绑定事件
         this.bindEvents();
+        // hAngle, declin
+        this.hAngle = NaN;
+        this.declin = NaN;
     }
 
     /**

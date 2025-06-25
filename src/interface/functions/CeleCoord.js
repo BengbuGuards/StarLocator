@@ -1,5 +1,5 @@
 import { BACKEND_API } from '../../config.js';
-import { post, setHADE } from '../utils.js';
+import { post } from '../utils.js';
 
 // 计算天体坐标功能类
 class CeleCoord {
@@ -39,7 +39,8 @@ class CeleCoord {
                 this.interactPhoto.tips.innerHTML = `无法自动计算${starNames[i]}坐标，请检查天体名称是否正确`;
                 return -1;
             } else {
-                setHADE(i + 1, 360 - ha * 15, dec); // 时角变参考时角
+                this.interactPhoto.CeleArray[i].hAngle = 360 - ha * 15;
+                this.interactPhoto.CeleArray[i].declin = dec;
             }
         }
 

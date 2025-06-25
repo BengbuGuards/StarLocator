@@ -1,10 +1,40 @@
 <script setup>
-defineProps({
-    celeArray: {
-        type: Array,
-        required: true,
-    },
+import { computed } from 'vue';
+import { hourAngleFormat, declinFormat, hourAngleUnformat, declinUnformat } from '@/interface/utils.js';
+
+const celeArray = defineModel('celeArray', {
+    required: true,
+    type: Array,
 });
+
+const formatStar = (star) => {
+    let hAngleH, hAngleM, hAngleS, declinD, declinM, declinS;
+    [hAngleH, hAngleM, hAngleS] = hourAngleFormat(star.hAngle);
+    [declinD, declinM, declinS] = declinFormat(star.declin);
+    return {
+        ...star,
+        hAngleH,
+        hAngleM,
+        hAngleS,
+        declinD,
+        declinM,
+        declinS,
+    };
+};
+
+const celeArrayFormated = computed(() => celeArray.value.array.map(formatStar));
+
+const updateStar = (index, field, value) => {
+    const star = celeArray.value[index];
+    if (field.startsWith('hAngle')) {
+        const hAngleFields = ['hAngleH', 'hAngleM', 'hAngleS'];
+        star.hAngle = hourAngleUnformat(hAngleFields.map(f => celeArrayFormated[f]));
+    } else if (field.startsWith('declin')) {
+        const declinFields = ['declinD', 'declinM', 'declinS'];
+        star.declin = declinUnformat(declinFields.map(f => celeArrayFormated[f]));
+    }
+    star[field] = value;
+};
 </script>
 
 <template>
@@ -62,7 +92,7 @@ defineProps({
                                     />
                                 </td>
                             </tr>
-                            <tr v-for="star in celeArray.Array" :key="star.id">
+                            <tr v-for="(star, index) in celeArrayFormated" :key="star.id">
                                 <td>{{ star.id }}</td>
                                 <td>
                                     <input
@@ -71,25 +101,26 @@ defineProps({
                                         style="flex: 1"
                                         :id="'name' + star.id"
                                         aria-label="name"
+                                        v-model="celeArray[index].name"
                                     />
                                 </td>
                                 <td>
                                     <div class="formatedInput">
-                                        <div contenteditable="true" :id="'hAngleH' + star.id"></div>
+                                        <div contenteditable="true" :id="'hAngleH' + star.id" @input="updateStar(index, 'hAngleH', $event.target.innerText)">{{ star.hAngleH }}</div>
                                         h
-                                        <div contenteditable="true" :id="'hAngleM' + star.id"></div>
+                                        <div contenteditable="true" :id="'hAngleM' + star.id" @input="updateStar(index, 'hAngleM', $event.target.innerText)">{{ star.hAngleM }}</div>
                                         m
-                                        <div contenteditable="true" :id="'hAngleS' + star.id"></div>
+                                        <div contenteditable="true" :id="'hAngleS' + star.id" @input="updateStar(index, 'hAngleS', $event.target.innerText)">{{ star.hAngleS }}</div>
                                         s
                                     </div>
                                 </td>
                                 <td>
                                     <div class="formatedInput">
-                                        <div contenteditable="true" :id="'declinD' + star.id"></div>
+                                        <div contenteditable="true" :id="'declinD' + star.id" @input="updateStar(index, 'declinD', $event.target.innerText)">{{ star.declinD }}</div>
                                         °
-                                        <div contenteditable="true" :id="'declinM' + star.id"></div>
+                                        <div contenteditable="true" :id="'declinM' + star.id" @input="updateStar(index, 'declinM', $event.target.innerText)">{{ star.declinM }}</div>
                                         ′
-                                        <div contenteditable="true" :id="'declinS' + star.id"></div>
+                                        <div contenteditable="true" :id="'declinS' + star.id" @input="updateStar(index, 'declinS', $event.target.innerText)">{{ star.declinS }}</div>
                                         ″
                                     </div>
                                 </td>
@@ -99,6 +130,7 @@ defineProps({
                                         class="coordsInput table"
                                         :id="'coordX' + star.id"
                                         aria-label="x"
+                                        v-model="celeArray[index].x"
                                     />
                                 </td>
                                 <td>
@@ -107,6 +139,7 @@ defineProps({
                                         class="coordsInput table"
                                         :id="'coordY' + star.id"
                                         aria-label="y"
+                                        v-model="celeArray[index].y"
                                     />
                                 </td>
                             </tr>

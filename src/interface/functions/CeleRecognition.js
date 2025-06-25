@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { post, setHADE } from '../utils.js';
+import { post } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
 const recognitionStatus = {
@@ -184,7 +184,8 @@ class RecognizeStars extends DefaultbuttonFunctioner {
         const hd_names = results['hd_names'];
         for (let i = 0; i < this.interactPhoto.CeleArray.num(); i++) {
             const star_id = this.interactPhoto.CeleArray.array[i].id;
-            setHADE(star_id, 360 - hd_names[i][0] * 15, hd_names[i][1]);
+            this.interactPhoto.CeleArray[star_id].hAngle = 360 - hd_names[i][0] * 15;
+            this.interactPhoto.CeleArray[star_id].declin = hd_names[i][1];
             document.getElementById(`name${star_id}`).value = hd_names[i][2];
             // 手动触发输入事件，以便更新图上文字
             document.getElementById(`name${star_id}`).dispatchEvent(new Event('input'));

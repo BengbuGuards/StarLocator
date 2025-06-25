@@ -1,6 +1,5 @@
 import { Canvas, IText } from 'fabric';
 import { TouchEventAdapter } from '@/interface/classes/TouchEventAdapter.js';
-import { autoCompleteStarName } from './functions/AutoComplete.js';
 import { useButtonFunStore } from '@/store/buttonFun';
 
 // 初始化页面元素
@@ -69,11 +68,6 @@ function initializeEvents(interactPhoto) {
 
     // 窗口事件绑定
     window.onresize = buttonFunStore.handleResize.bind(interactPhoto);
-
-    //为星体名称输入框启用自动补全
-    for (let i = 1; i <= 5; i++) {
-        autoCompleteStarName(document.getElementById(`name${i}`));
-    }
 }
 
 // 初始化地图

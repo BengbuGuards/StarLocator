@@ -9,8 +9,8 @@ function getOriginalStars(interactPhoto) {
             x: coordX,
             y: coordY,
             name: name,
-            lon: (getHADE(i)[0] / 180) * Math.PI,
-            lat: (getHADE(i)[1] / 180) * Math.PI,
+            lon: (interactPhoto.CeleArray[i].hAngle / 180) * Math.PI,
+            lat: (interactPhoto.CeleArray[i].declin / 180) * Math.PI,
         });
     }
     return stars;
@@ -30,38 +30,82 @@ function getGlobalPLPointsCoord(interactPhoto) {
     return globalPLPointsCoord;
 }
 
-// 设置参考时角和赤纬，将角度数值化为度/时分秒形式
-function setHADE(id, hourAngle, declination) {
+/**
+ * 计算参考时角，将角度数值化为度/时分秒形式
+ * @param {Number} hourAngle 参考时角，单位：度
+ * @returns {Array} [时, 分, 秒]，都是字符串
+ */
+function hourAngleFormat(hourAngle) {
+    if (isNaN(hourAngle)) {
+        return ['', '', ''];
+    }
     let sign = hourAngle < 0 ? '-' : '';
     hourAngle = Math.abs(hourAngle) / 15;
-    document.getElementById(`hAngleH${id}`).textContent = sign + parseInt(hourAngle);
-    hourAngle = (hourAngle - parseInt(hourAngle)) * 60;
-    document.getElementById(`hAngleM${id}`).textContent = parseInt(hourAngle);
-    hourAngle = (hourAngle - parseInt(hourAngle)) * 60;
-    document.getElementById(`hAngleS${id}`).textContent = hourAngle;
-
-    sign = declination < 0 ? '-' : '';
-    declination = Math.abs(declination);
-    document.getElementById(`declinD${id}`).textContent = sign + parseInt(declination);
-    declination = (declination - parseInt(declination)) * 60;
-    document.getElementById(`declinM${id}`).textContent = parseInt(declination);
-    declination = (declination - parseInt(declination)) * 60;
-    document.getElementById(`declinS${id}`).textContent = declination;
+    let resultFormated = [];
+    let hoursInt = parseInt(hourAngle);
+    resultFormated.push(sign + hoursInt.toString());
+    hourAngle = (hourAngle - hoursInt) * 60;
+    let minutesInt = parseInt(hourAngle);
+    resultFormated.push(minutesInt.toString());
+    hourAngle = (hourAngle - minutesInt) * 60;
+    resultFormated.push(hourAngle.toString());
+    return resultFormated;
 }
 
-// 转换参考时角和赤纬，将度/时分秒形式转化为角度数值
-function getHADE(id) {
-    let hAngleH = parseInt(document.getElementById(`hAngleH${id}`).textContent);
-    let hAngleM = parseInt(document.getElementById(`hAngleM${id}`).textContent);
-    let hAngleS = parseFloat(document.getElementById(`hAngleS${id}`).textContent);
-    let hourSign = hAngleH < 0 ? -1 : 1;
-    let declinD = parseInt(document.getElementById(`declinD${id}`).textContent);
-    let declinM = parseInt(document.getElementById(`declinM${id}`).textContent);
-    let declinS = parseFloat(document.getElementById(`declinS${id}`).textContent);
-    let decSign = declinD < 0 ? -1 : 1;
-    let hourAngle = hourSign * (Math.abs(hAngleH) + hAngleM / 60 + hAngleS / 3600) * 15;
-    let declination = decSign * (Math.abs(declinD) + declinM / 60 + declinS / 3600);
-    return [hourAngle, declination];
+/**
+ * 计算赤纬，将角度数值化为度/时分秒形式
+ * @param {Number} declination 赤纬，单位：度
+ * @returns {Array} [度, 分, 秒]，都是字符串
+ */
+function declinFormat(declination) {
+    if (isNaN(declination)) {
+        return ['', '', ''];
+    }
+    let sign = declination < 0 ? '-' : '';
+    declination = Math.abs(declination);
+    let degrees = parseInt(declination);
+    declination = (declination - degrees) * 60;
+    let minutes = parseInt(declination);
+    declination = (declination - minutes) * 60;
+    let seconds = declination;
+    let resultFormated = [];
+    resultFormated.push(sign + degrees.toString());
+    resultFormated.push(minutes.toString());
+    resultFormated.push(seconds.toString());
+    return resultFormated;
+}
+
+/**
+ * 转换参考时角，将度/时分秒形式转化为角度数值
+ * @param {Array} hourAngleFormated [时, 分, 秒]，都是字符串
+ * @returns {Number} 参考时角，单位：度
+ */
+function hourAngleUnformat(hourAngleFormated) {
+    let hourAngle = 0;
+    for (let i = 0; i < hourAngleFormated.length; i++) {
+        hourAngle += parseFloat(hourAngleFormated[i]) / Math.pow(60, i);
+    }
+    hourAngle *= 15;
+    if (hourAngleFormated[0].startsWith('-')) {
+        hourAngle *= -1;
+    }
+    return hourAngle;
+}
+
+/**
+ * 转换赤纬，将度/时分秒形式转化为角度数值
+ * @param {Array} declinFormated [度, 分, 秒]，都是字符串
+ * @returns {Number} 赤纬，单位：度
+ */
+function declinUnformat(declinFormated) {
+    let declination = 0;
+    for (let i = 0; i < declinFormated.length; i++) {
+        declination += parseFloat(declinFormated[i]) / Math.pow(60, i);
+    }
+    if (declinFormated[0].startsWith('-')) {
+        declination *= -1;
+    }
+    return declination;
 }
 
 // json数据的POST请求
@@ -107,4 +151,12 @@ async function post(url, data, Type) {
     }
 }
 
-export { getOriginalStars, getGlobalPLPointsCoord, post, setHADE, getHADE };
+export {
+    getOriginalStars,
+    getGlobalPLPointsCoord,
+    post,
+    hourAngleFormat,
+    declinFormat,
+    hourAngleUnformat,
+    declinUnformat,
+};

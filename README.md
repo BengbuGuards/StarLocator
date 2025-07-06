@@ -52,7 +52,7 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - 小流汗黄豆 | BengbuGuards
 - 鬼蝉 | Hiroshi1993
 - 无限远点的辩证法 | cheanus
-- MC着火的冰块 | zhdbk3
+- 着火的冰块nya | zhdbk3
 - 薛定谔的按钮
 - hanran
 - Charmian

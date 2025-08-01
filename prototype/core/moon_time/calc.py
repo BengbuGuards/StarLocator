@@ -8,7 +8,7 @@ from .utils import (
 )
 from core.positioning.calc import stars_convert, calc_z
 from core.positioning.find_z.utils.math import minimize
-from core.positioning.top_point.methods.matrix_inverse import intersection
+from core.positioning.top_point.methods.matrix_inverse_normalized import intersection
 
 
 def calc(

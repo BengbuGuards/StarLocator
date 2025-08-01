@@ -1,5 +1,5 @@
 import numpy as np
-from .top_point.methods.matrix_inverse import intersection
+from .top_point.methods.matrix_inverse_normalized import intersection
 from .find_z.methods import trisect, fix_refraction
 from .locator.methods.bi_median import get_geo
 from .find_z.utils.math import angles_on_sphere, normalize

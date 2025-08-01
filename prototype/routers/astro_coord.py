@@ -19,7 +19,7 @@ def http_astro_coord(request: Request, data: astro_coord.AstroTime):
         data:
             star_names: list[str] 天体名称列表
             timestamp: number 时间戳
-    
+
     Returns:
         a dict:
             detail: str, 计算情况

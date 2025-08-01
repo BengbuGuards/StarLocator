@@ -17,7 +17,7 @@ def get_HaDec_by_RaDec(
         raDec: 赤经赤纬J2000
         date: 日期
         observer: 观测者地理坐标
-    
+
     Returns:
         haDec: 时角和赤纬（角度）
     """
@@ -40,7 +40,7 @@ def get_HaDec_in_solar(
         starName: 天体名称
         date: 日期
         observer: 观察者地理坐标
-    
+
     Returns:
         haDec: 时角和赤纬（角度）
     """
@@ -65,7 +65,7 @@ def get_HaDecs_by_names(
         star_names: 恒星名称数组
         timestamp: 时间戳
         observer: 观察者地理坐标
-    
+
     Returns:
         haDec: 时角和赤纬字典（角度）
         is_success: 是否成功获取恒星赤经赤纬

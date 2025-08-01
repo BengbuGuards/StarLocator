@@ -211,9 +211,7 @@ def get_fixed_stars(
                 timeout=10,
             )
             # 处理返回结果
-            ra, dec = (
-                field_rd.split("-") if "-" in field_rd else field_rd.split("+")
-            )
+            ra, dec = field_rd.split("-") if "-" in field_rd else field_rd.split("+")
 
             if response.text.startswith("!! No astronomical object found :"):
                 # 如果找不到，就返回原来的坐标
@@ -343,7 +341,7 @@ def recognize(
         content = httpx.get(rdls_url).content
         xy2field_rd = dict()  # 星点坐标到图中赤道坐标的映射
         with fits.open(BytesIO(content)) as hdul:
-            hdul_data = hdul[1].data # type: ignore
+            hdul_data = hdul[1].data  # type: ignore
             for i in range(len(xy)):
                 xy2field_rd[
                     (
@@ -363,7 +361,7 @@ def recognize(
             hd_names = []
             assert type(round_xy) == list
             for xy_item in round_xy:
-                rd_name = xy2rd_names[(float(xy_item[0]), float(xy_item[1]))] # type: ignore
+                rd_name = xy2rd_names[(float(xy_item[0]), float(xy_item[1]))]  # type: ignore
                 ra, dec = rd_name[:2]
                 hour_ra = get_HaDec_by_RaDec((ra / 15, dec), stamp2ast_time(timestamp))
                 star_name = rd_name[2]

@@ -10,6 +10,7 @@ from .methods.nearest_l2 import intersection as nearest_l2
 from .methods.optim import intersection as optim
 from .methods.sphere import intersection as sphere
 from .methods.square_weight import intersection as square_weight
+from .methods.matrix_inverse_normalized import intersection as matrix_inverse_normalized
 
 
 def generate_lines(args):
@@ -178,6 +179,7 @@ if __name__ == "__main__":
         # "nearest_l2": nearest_l2,
         "matrix_inverse": matrix_inverse,
         # "optim": optim,
+        "matrix_inverse_normalized": matrix_inverse_normalized,
     }
 
     main(methods, args)

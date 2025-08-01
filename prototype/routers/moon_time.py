@@ -24,7 +24,7 @@ def http_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
             scopeDays: number, date search range size (in days)
             isFixRefraction: whether to fix refraction
             isFixGravity: whether to fix gravity
-    
+
     Returns:
         a dict:
             time: float, the timestamp

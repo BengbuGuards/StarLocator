@@ -20,7 +20,7 @@ async def get_RaDec_by_name(
     根据恒星名称获取其赤经和赤纬
     Params:
         starName: 恒星名称
-    
+
     Returns:
         raDec: J2000赤经（时）和赤纬（角度）
     """
@@ -52,7 +52,7 @@ async def get_RaDecs_by_names(
     根据恒星名称数组获取其赤经和赤纬
     Params:
         star_names: 恒星名称列表
-    
+
     Returns:
         raDecs: 赤经和赤纬字典（角度）
     """

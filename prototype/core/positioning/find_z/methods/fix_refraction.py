@@ -15,7 +15,7 @@ def get_z(data: dict, z0: float, zenith: np.ndarray) -> float:
             ra_decs: list of ra and dec in radians.
         z0: initial guess of zenith point
         zenith: zenith point, 2d array
-    
+
     Returns:
         z: zenith point
     """
@@ -85,7 +85,7 @@ def rotate(vector: np.ndarray, zenith_vec: np.ndarray, angle: float) -> np.ndarr
         vector: vector to rotate
         zenith_vec: zenith vector
         angle: angle to rotate in degrees
-    
+
     Returns:
         rotated element vector
     """

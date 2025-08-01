@@ -69,7 +69,7 @@ def destort(lines, k1, k2, scope_x, scope_y):
     center = np.array([scope_x[0] + scope_x[1], scope_y[0] + scope_y[1]]) / 2
     lines_relative = lines - center
     r = np.hypot(lines_relative[:, 0], lines_relative[:, 1]).reshape(-1, 1)
-    lines_relative *= 1 + k1 * r ** 2 + k2 * r ** 4
+    lines_relative *= 1 + k1 * r**2 + k2 * r**4
     lines = lines_relative + center
     lines = lines.reshape(-1, 2, 2)
     return lines
@@ -179,7 +179,7 @@ if __name__ == "__main__":
         # "nearest_l2": nearest_l2,
         "matrix_inverse": matrix_inverse,
         # "optim": optim,
-        "matrix_inverse_normalized": matrix_inverse_normalized
+        "matrix_inverse_normalized": matrix_inverse_normalized,
     }
 
     main(methods, args)

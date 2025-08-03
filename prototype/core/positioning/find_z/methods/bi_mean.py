@@ -1,17 +1,17 @@
 import numpy as np
 
 
-def get_z(datas: tuple) -> float:
+def get_z(data: dict) -> float:
     """
-    Find the zenith point.
+    Find the focal length.
 
     params:
-        datas: (points, thetas). points: list of points. thetas: list of angles in radians
+        data: (points, thetas). points: list of points. thetas: list of angles in radians
     return:
-        z: zenith point
+        z: focal length
     """
-    points = datas["points"]
-    thetas = datas["thetas"]
+    points = data["points"]
+    thetas = data["thetas"]
     n = len(points)
     z_list = []
     for i in range(n):
@@ -23,16 +23,16 @@ def get_z(datas: tuple) -> float:
     return np.mean(z)
 
 
-def get_z_from_2_points(p1: tuple, p2: tuple, theta: float) -> float:
+def get_z_from_2_points(p1: tuple, p2: tuple, theta: float) -> list[float]:
     """
-    Find the zenith point from 2 points and the angle between them.
+    Find the focal length from 2 points and the angle between them.
 
     params:
         p1: point 1
         p2: point 2
         theta: angle between p1 and p2 in radians
     return:
-        z: zenith point
+        z: focal length
     """
 
     x1, y1 = p1

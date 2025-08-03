@@ -19,17 +19,17 @@ def north_len(points: np.ndarray, des: np.ndarray, f: float) -> float:
     return np.linalg.norm(N)
 
 
-def get_z(datas: tuple) -> float:
+def get_z(data: dict) -> float:
     """
-    Find the zenith point.
+    Find the focal length.
 
     params:
-        datas: (points, thetas). points: list of points. thetas: list of angles in radians
+        data: (points, thetas). points: list of points. thetas: list of angles in radians
     return:
-        z: zenith point
+        z: focal length
     """
-    points = datas["points"]
-    des = datas["des"]
+    points = data["points"]
+    des = data["des"]
 
     f_left = 0
     f_right = 1e9

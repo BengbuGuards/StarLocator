@@ -6,18 +6,18 @@ from core.positioning.locator.utils.math import vector_angle
 
 def get_z(data: dict, z0: float, zenith: np.ndarray) -> float:
     """
-    Find the zenith point considering refraction.
+    Find the focal length considering refraction.
 
     Args:
         data: (points, thetas, ra_decs).
             points: x/y list of points.
             thetas: list of angles in radians.
             ra_decs: list of ra and dec in radians.
-        z0: initial guess of zenith point
+        z0: initial guess of focal length
         zenith: zenith point, 2d array
 
     Returns:
-        z: zenith point
+        z: focal length
     """
     points = data["points"]
     thetas = data["thetas"]

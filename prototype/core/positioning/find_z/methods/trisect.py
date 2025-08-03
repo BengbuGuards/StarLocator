@@ -11,17 +11,17 @@ def calculate_angle(p1: np.ndarray, p2: np.ndarray, z: float) -> np.ndarray:
     return np.arccos(cos_theta)
 
 
-def get_z(datas: dict) -> float:
+def get_z(data: dict) -> float:
     """
-    Find the zenith point.
+    Find the focal length.
 
     params:
-        datas: (points, thetas). points: list of points. thetas: list of angles in radians
+        data: (points, thetas). points: list of points. thetas: list of angles in radians
     return:
-        z: zenith point
+        z: focal length
     """
-    points = datas["points"]
-    thetas = datas["thetas"]
+    points = data["points"]
+    thetas = data["thetas"]
 
     z = minimize(
         lambda z: sum(

@@ -78,6 +78,24 @@ function initializeEvents(eventManager) {
     document
         .getElementById('srcFile')
         .addEventListener('change', (e) => eventManager.imageChange.onClick.call(eventManager.imageChange, e));
+    interactPhoto.container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        interactPhoto.container.classList.add('drag-over');
+    });
+    interactPhoto.container.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!interactPhoto.container.contains(e.relatedTarget)) {
+            interactPhoto.container.classList.remove('drag-over');
+        }
+    });
+    interactPhoto.container.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        interactPhoto.container.classList.remove('drag-over');
+        eventManager.imageChange.loadFile(e.dataTransfer.files[0]);
+    });
     document
         .getElementById('actionCalcul')
         .addEventListener('click', eventManager.calc.onClick.bind(eventManager.calc));

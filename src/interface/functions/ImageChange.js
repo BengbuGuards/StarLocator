@@ -8,8 +8,9 @@ class ImageChange extends DefaultbuttonFunctioner {
         this.clearAllData = clearAllData;
     }
 
-    onClick(e) {
-        let file = e.target.files[0];
+    loadFile(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+
         let reader = new FileReader();
         reader.onload = function (e) {
             let img = new Image();
@@ -42,6 +43,10 @@ class ImageChange extends DefaultbuttonFunctioner {
         this.interactPhoto.canvas.selection = true;
         this.interactPhoto.canvas.defaultCursor = 'grab';
         this.interactPhoto.canvas.remove(this.interactPhoto.text);
+    }
+
+    onClick(e) {
+        this.loadFile(e.target.files[0]);
     }
 }
 

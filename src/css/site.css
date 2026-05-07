@@ -18,6 +18,31 @@ td:hover {
 	background-color: #1d2430;
 }
 
+.inputTable .col-seq {
+	width: 5%;
+}
+
+.inputTable .col-name {
+	width: 17%;
+}
+
+.inputTable .col-hour-angle {
+	width: 23%;
+}
+
+.inputTable .col-declination {
+	width: 18%;
+}
+
+.inputTable .col-x,
+.inputTable .col-y {
+	width: 13%;
+}
+
+.inputTable .col-action {
+	width: 10%;
+}
+
 h1 {
 	font-size: 24px;
 	padding-left: 5px;
@@ -37,7 +62,7 @@ input.table {
 	text-align: center;
 	background-color: #1d2d46;
 	border: 0px;
-	color: white
+	color: white;
 }
 
 input.table:hover {
@@ -52,7 +77,7 @@ input[type=text] {
 	text-align: center;
 	background-color: #1d2d46;
 	border: 0px;
-	color: white
+	color: white;
 }
 
 a:link {
@@ -191,6 +216,48 @@ a:visited {
 	outline-offset: -8px;
 }
 
+.canvasInfoBar {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	min-height: 44px;
+	margin-bottom: 30px;
+}
+
+.canvasMetaBar,
+.canvasStatusBar {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	min-width: 0;
+}
+
+.canvasMetaBar {
+	justify-content: space-between;
+	width: 100%;
+}
+
+.canvasStatusBar {
+	flex-wrap: wrap;
+}
+
+#picInfo,
+#canvasStatus,
+#celeStatus {
+	min-height: 20px;
+}
+
+#picInfo {
+	flex: 1;
+}
+
+#cursorCrd {
+	flex: 0 0 150px;
+	min-height: 20px;
+	text-align: right;
+	white-space: nowrap;
+}
+
 .outputColumn {
 	margin-top: 15px;
 	margin-bottom: 15px;
@@ -243,6 +310,39 @@ a:visited {
 
 .actionButton:active {
 	background-color: #194837;
+}
+
+.actionButton.is-disabled {
+	opacity: 0.45;
+	filter: grayscale(65%);
+}
+
+.actionButton.is-disabled:hover {
+	background-color: #187C54;
+}
+
+.tableActionButton,
+.addCeleRowButton {
+	border: 1px solid #189c65;
+	border-radius: 4px;
+	background-color: #187C54;
+	color: white;
+	cursor: pointer;
+}
+
+.tableActionButton {
+	padding: 2px 6px;
+	font-size: 12px;
+}
+
+.tableActionButton:hover,
+.addCeleRowButton:hover {
+	background-color: #189c65;
+}
+
+.addCeleRowButton {
+	margin-top: 6px;
+	padding: 4px 12px;
 }
 
 .helpButton {
@@ -318,12 +418,26 @@ a:visited {
 	width: 90%;
 }
 
+.celesNameInput {
+	display: block;
+	box-sizing: border-box;
+	width: 90%;
+	margin: 0 auto;
+	padding: 2px 4px;
+}
+
 .formatedInput {
 	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+	height: 100%;
+	white-space: nowrap;
 }
 
 .formatedInput div {
-	flex: 1;
+	min-width: 22px;
+	text-align: center;
 	overflow: hidden;
 	text-overflow: clip;
 	white-space: nowrap;
@@ -443,14 +557,14 @@ a:visited {
 	-ms-flex: 0 0 90%;
 	flex: 0 0 90%;
 	max-width: 90%;
-	margin-left: -1px
+	margin-left: -1px;
 }
 
 .col-calcul {
 	-ms-flex: 0 0 10%;
 	flex: 0 0 10%;
 	max-width: 10%;
-	margin: 0px
+	margin: 0px;
 }
 
 .col-acknow {

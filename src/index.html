@@ -78,25 +78,40 @@
             <div id="box" style="min-width:450px; height: 600px; width:100%">
                 <canvas id="canvas"></canvas>
             </div>
-            <div style="margin-bottom: 30px;">
-                <div id="picInfo" style="float: left;"></div>
-                <div id="canvasStatus" style="float: left;"></div>
-                <div id="cursorCrd" style="float: right;"></div>
+            <div class="canvasInfoBar">
+                <div class="canvasMetaBar">
+                    <div id="picInfo"></div>
+                    <div id="cursorCrd"></div>
+                </div>
+                <div class="canvasStatusBar">
+                    <div id="canvasStatus"></div>
+                    <div id="celeStatus"></div>
+                </div>
             </div>
             <div style="margin-top: 15px;">
                 <div class="row">
                     <div class="col-input">
                         <table class="inputTable" id="inputTable">
+                            <colgroup>
+                                <col class="col-seq">
+                                <col class="col-name">
+                                <col class="col-hour-angle">
+                                <col class="col-declination">
+                                <col class="col-x">
+                                <col class="col-y">
+                                <col class="col-action">
+                            </colgroup>
                             <tr>
-                                <th style="width: 8%" class="tooltip">序号<span class="tooltiptext">天体的序号</span></th>
-                                <th style="width: 20%" class="tooltip">天体名称<span
+                                <th class="tooltip">序号<span class="tooltiptext">天体的序号</span></th>
+                                <th class="tooltip">天体名称<span
                                         class="tooltiptext">天体的名称，中英文皆可；中文在星座名和希腊字母之间需要加上空格</span></th>
-                                <th style="width: 25%" class="tooltip">参考时角<span
+                                <th class="tooltip">参考时角<span
                                         class="tooltiptext">在0°经线读取的天体时角，可以用于计算GP点经度</span></th>
-                                <th style="width: 20%" class="tooltip">赤纬<span class="tooltiptext">天体的赤纬，即GP点的纬度</span>
+                                <th class="tooltip">赤纬<span class="tooltiptext">天体的赤纬，即GP点的纬度</span>
                                 </th>
-                                <th style="width: 12%" class="tooltip">x<span class="tooltiptext">天体在照片中的横坐标</span></th>
-                                <th style="width: 12%" class="tooltip">y<span class="tooltiptext">天体在照片中的纵坐标</span></th>
+                                <th class="tooltip">x<span class="tooltiptext">天体在照片中的横坐标</span></th>
+                                <th class="tooltip">y<span class="tooltiptext">天体在照片中的纵坐标</span></th>
+                                <th class="tooltip">操作<span class="tooltiptext">添加或删除天体行</span></th>
                             </tr>
                             <tr>
                                 <td class="zenith">0</td>
@@ -107,11 +122,12 @@
                                 </td>
                                 <td><input type="number" class="coordsInput zenith table" id="zenY" aria-label="天顶y" />
                                 </td>
+                                <td class="zenith">N/A</td>
                             </tr>
                             <tr>
                                 <td>1</td>
                                 <td>
-                                    <input type="text" autocomplete="new-password" style="flex: 1;" id="name1"
+                                    <input type="text" autocomplete="new-password" class="celesNameInput table" id="name1"
                                         aria-label="name">
                                 </td>
                                 <td>
@@ -136,11 +152,12 @@
                                 </td>
                                 <td><input type="number" class="coordsInput table" id="coordX1" aria-label="x" /></td>
                                 <td><input type="number" class="coordsInput table" id="coordY1" aria-label="y" /></td>
+                                <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="1">删除</button></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>
-                                    <input type="text" autocomplete="new-password" style="flex: 1;" id="name2"
+                                    <input type="text" autocomplete="new-password" class="celesNameInput table" id="name2"
                                         aria-label="name">
                                 </td>
                                 <td>
@@ -165,11 +182,12 @@
                                 </td>
                                 <td><input type="number" class="coordsInput table" id="coordX2" aria-label="x" /></td>
                                 <td><input type="number" class="coordsInput table" id="coordY2" aria-label="y" /></td>
+                                <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="2">删除</button></td>
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td>
-                                    <input type="text" autocomplete="new-password" style="flex: 1;" id="name3"
+                                    <input type="text" autocomplete="new-password" class="celesNameInput table" id="name3"
                                         aria-label="name">
                                 </td>
                                 <td>
@@ -194,66 +212,10 @@
                                 </td>
                                 <td><input type="number" class="coordsInput table" id="coordX3" aria-label="x" /></td>
                                 <td><input type="number" class="coordsInput table" id="coordY3" aria-label="y" /></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>
-                                    <input type="text" autocomplete="new-password" style="flex: 1;" id="name4"
-                                        aria-label="name">
-                                </td>
-                                <td>
-                                    <div class="formatedInput">
-                                        <div contenteditable="true" id="hAngleH4"></div>
-                                        h
-                                        <div contenteditable="true" id="hAngleM4"></div>
-                                        m
-                                        <div contenteditable="true" id="hAngleS4"></div>
-                                        s
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="formatedInput">
-                                        <div contenteditable="true" id="declinD4"></div>
-                                        °
-                                        <div contenteditable="true" id="declinM4"></div>
-                                        ′
-                                        <div contenteditable="true" id="declinS4"></div>
-                                        ″
-                                    </div>
-                                </td>
-                                <td><input type="number" class="coordsInput table" id="coordX4" aria-label="x" /></td>
-                                <td><input type="number" class="coordsInput table" id="coordY4" aria-label="y" /></td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>
-                                    <input type="text" autocomplete="new-password" style="flex: 1;" id="name5"
-                                        aria-label="name">
-                                </td>
-                                <td>
-                                    <div class="formatedInput">
-                                        <div contenteditable="true" id="hAngleH5"></div>
-                                        h
-                                        <div contenteditable="true" id="hAngleM5"></div>
-                                        m
-                                        <div contenteditable="true" id="hAngleS5"></div>
-                                        s
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="formatedInput">
-                                        <div contenteditable="true" id="declinD5"></div>
-                                        °
-                                        <div contenteditable="true" id="declinM5"></div>
-                                        ′
-                                        <div contenteditable="true" id="declinS5"></div>
-                                        ″
-                                    </div>
-                                </td>
-                                <td><input type="number" class="coordsInput table" id="coordX5" aria-label="x" /></td>
-                                <td><input type="number" class="coordsInput table" id="coordY5" aria-label="y" /></td>
+                                <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="3">删除</button></td>
                             </tr>
                         </table>
+                        <button type="button" class="addCeleRowButton" id="addCeleRow">添加天体</button>
                     </div>
                     <div class="col-calcul">
                         <button type="button" class="calculButton" id="actionCalcul" title="计算">
@@ -318,10 +280,10 @@
                 <div class="col-acknow">
                     感谢开源项目（完整名单见<a href="https://github.com/BengbuGuards/StarLocator/blob/main/NOTICE.md">NOTICE</a>）：
                     <ul>
-                        <li><a href="https://stellarium.org">Stellarium</a>：一款强大的开源天文馆软件</li>
-                        <li><a href="https://github.com/cosinekitty/astronomy">Astronomy</a>：一个支持多编程语言的天文计算库</li>
-                        <li><a href="https://github.com/fabricjs/fabric.js">Fabric.js</a>：一个简单而强大的 JavaScript HTML5 画布库。</li>
-                        <li><a href="https://simbad.cds.unistra.fr/simbad">SIMBAD</a>：一个天体数据库</li>
+                        <li><a href="https://stellarium.org">Stellarium</a>：开源天文馆软件</li>
+                        <li><a href="https://github.com/cosinekitty/astronomy">Astronomy</a>：支持多编程语言的天文计算库</li>
+                        <li><a href="https://github.com/fabricjs/fabric.js">Fabric.js</a>：JavaScript HTML5 画布库</li>
+                        <li><a href="https://simbad.cds.unistra.fr/simbad">SIMBAD</a>：天体数据库</li>
                     </ul>
                 </div>
                 <div class="col-logo">

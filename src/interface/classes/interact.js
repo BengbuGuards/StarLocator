@@ -11,6 +11,7 @@ class InteractPhoto {
         this.canvas = null; // 画布
         this.canvasInst = null; // 画布实例
         this.tips = null; // 提示
+        this.celeStatus = null; // 天体标记数量提示
         this.cursorCrd = null; // 鼠标坐标
         this.inputTable = null; // 输入表格
         this.movable = false; // 是否可移动
@@ -54,6 +55,28 @@ class InteractPhoto {
     // 重置按钮功能状态
     resetbuttonFunctioner() {
         this.buttonFunctioner = this.defaultbuttonFunctioner;
+    }
+
+    // 刷新天体标记数量提示和天体识别按钮状态
+    updateCeleStatus() {
+        if (!this.celeStatus) return;
+
+        const count = this.CeleArray.num();
+        this.celeStatus.innerHTML = this.getCeleStatusText(count);
+        this.updateRecognizeButton(count);
+    }
+
+    getCeleStatusText(count) {
+        if (count < 3) return `已标记天体：${count} / 3，请至少标记 3 个天体后再进行天体识别`;
+        return `已标记天体：${count} 个`;
+    }
+
+    updateRecognizeButton(count) {
+        const recognizeButton = document.getElementById('recognizeStars');
+        if (recognizeButton) {
+            recognizeButton.classList.toggle('is-disabled', count < 3);
+            recognizeButton.setAttribute('aria-disabled', count < 3 ? 'true' : 'false');
+        }
     }
 
     // 获取当前日期时间时区的时间戳

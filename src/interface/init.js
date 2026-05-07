@@ -1,11 +1,11 @@
 import { Canvas, IText } from 'fabric';
-import { autoCompleteStarName } from './functions/AutoComplete.js';
 
 // 初始化页面元素
 function initializeElements(interactPhoto) {
     interactPhoto.container = document.getElementById('box');
     interactPhoto.cursorCrd = document.getElementById('cursorCrd');
     interactPhoto.tips = document.getElementById('canvasStatus');
+    interactPhoto.celeStatus = document.getElementById('celeStatus');
     interactPhoto.inputTable = document.getElementById('inputTable');
     interactPhoto.date = document.getElementById('setDate');
     interactPhoto.time = document.getElementById('setTime');
@@ -108,11 +108,12 @@ function initializeEvents(eventManager) {
     document
         .getElementById('recognizeStars')
         .addEventListener('click', eventManager.recognizeStars.onClick.bind(eventManager.recognizeStars));
+    document.getElementById('addCeleRow').addEventListener('click', () => {
+        interactPhoto.CeleArray.addEmptyRow();
+    });
 
     //为星体名称输入框启用自动补全
-    for (let i = 1; i <= 5; i++) {
-        autoCompleteStarName(document.getElementById(`name${i}`));
-    }
+    interactPhoto.CeleArray.initializeTableRows();
 }
 
 // 初始化地图

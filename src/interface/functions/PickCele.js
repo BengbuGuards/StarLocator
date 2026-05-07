@@ -48,10 +48,6 @@ class PickCele extends DefaultbuttonFunctioner {
 
     // 添加星星点的函数
     addStarAtPoint(x, y) {
-        // 保留两位小数
-        x = Math.round(x * 100) / 100;
-        y = Math.round(y * 100) / 100;
-
         this.interactPhoto.CeleArray.add(x, y);
     }
 }

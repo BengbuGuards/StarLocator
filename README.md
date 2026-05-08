@@ -1,53 +1,143 @@
+<div align="center">
+
 # StarLocator
 
-💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">最新版链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL%20v3-blue.svg)](./LICENSE)
+[![Stars](https://img.shields.io/github/stars/BengbuGuards/StarLocator?style=social)](https://github.com/BengbuGuards/StarLocator/stargazers)
+[![Web App](https://img.shields.io/badge/demo-live-brightgreen)](https://caveallegory.cn/StarLocator/)
+[![Help](https://img.shields.io/badge/docs-user%20guide-informational)](https://bengbuguards.github.io/StarLocator/help.html)
 
-> StarLocator 是什么 | WHAT IS STARLOCATOR
+A celestial positioning app that estimates where a night-sky photo was taken by turning the camera into a modern sextant.
 
-StarLocator是一款天文定位应用，主要基于一种已经应用了数个世纪的航海导航技术。该应用使用夜空照片及其精确拍摄时间为源数据，计算照片拍摄地在地球上的大致位置。该过程类似以相机对图中的天体高度角进行测量代替17世纪以来的水手使用六分仪的测量，与占星术、玄学和心灵感应无关。
+[Live Demo](https://caveallegory.cn/StarLocator/) · [User Guide](https://bengbuguards.github.io/StarLocator/help.html) · [Join QQ Group](https://qm.qq.com/q/lmRhILlX0e)
 
-StarLocator is a celestial positioning application mainly based on a maritime navigation technique that has been applied
-for centuries. In this app, a photo of night sky and the exact time when it was taken were used as source information to
-calculate the rough position of the photo taker was on the earth. The process is quite like using the camera as a
-sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is
-NOTHING to do with astrology, metaphysics and telepathy.
+</div>
 
-[![Star History Chart](https://api.star-history.com/svg?repos=BengbuGuards/StarLocator&type=Timeline)](https://star-history.com/#BengbuGuards/StarLocator&Timeline)
+## Table of Contents
 
-## 特点 | FEATURES
+- [What is StarLocator?](#what-is-starlocator)
+- [Why it is useful](#why-it-is-useful)
+- [Key features](#key-features)
+- [How it works](#how-it-works)
+- [Project structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Accuracy and privacy](#accuracy-and-privacy)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Credits](#credits)
+- [License](#license)
 
-- ✨**自动识星**：通过拍摄的星空照片，自动识别照片中的星星，无需手动辨识。
-- 😀**交互简单**：标星、标铅垂线、设置拍摄时间，然后就是点击按钮的事了，熟练掌握后整个过程不到**5分钟**。原本的耗时步骤，如查询天体天文数据，已被API和按钮所实现。
-- 🔒**隐私友好**：项目采用前后端分离架构，服务器后端只在核心计算时获取必要信息，并在结束计算后删除。
-- 🎯**精度良好**：我们在各个模块中采用了强稳健性的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
-- ✅**完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
-- ✨**Automatic star recognition**: By capturing starry sky photos, stars in the photos can be automatically recognized without the need for manual recognition.
-- 😀**Simple interaction**: Marking stars and plumblines, setting the time and then simply click a button. Can finish within **5 minutes** when familiar. All time-consuming steps, like searching for data of celestial bodies, have been achieved with API and buttons.
-- 🔒**Privacy friendly**: The project adopts a front-end and back-end separation architecture, where the server backend only retrieves necessary information during core computing and deletes it after the computation is completed.
-- 🎯**Good accuracy**: We applied robust algorithms in modules, making it resilient to environmental noises and marking errors. The error can usually be limited to **30km**.
-- ✅**Fully open sourced**: AGPL v3 open source protocol adopted. Aiming to make the approach as transparent as possible and to welcome community contributions.
+## What is StarLocator?
 
-## 安装 | INSTALLATION
+**中文**  
+StarLocator 是一款天文定位应用。它使用星空照片和精确拍摄时间作为输入，结合经典天文导航思路，估算拍摄者在地球上的大致位置。这个过程和历史上使用六分仪测量天体高度角的做法类似，只是把测量工具换成了相机与图像算法。
 
-见[INSTALLATION.md](./docs/INSTALLATION.md)
+**English**  
+StarLocator is a celestial positioning application. It takes a night-sky photo and the exact capture time, then estimates the photographer's rough location on Earth using the same core idea as classical celestial navigation, with image processing standing in for a sextant.
 
-## 使用方法 | HOW TO USE
+> This project is about astronomy and navigation, not astrology or metaphysics.
 
-见<a href="https://caveallegory.cn/StarLocator/help.html">使用帮助</a>
+## Why it is useful
 
-## 贡献 | CONTRIBUTING
+- Explore a practical, visual version of celestial navigation
+- Learn how image recognition and astronomy can work together
+- Reproduce the workflow with an open source codebase
+- Experiment with a privacy-friendly positioning tool for research and education
 
-见[CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+## Key features
 
-## 致谢 | CREDITS
+- **Automatic star recognition** from uploaded night-sky photos
+- **Fast workflow**: mark stars, mark the plumb line, set the time, then calculate
+- **Frontend/backend separation** so the compute service only receives the minimum required data
+- **Robust algorithms** designed to tolerate environmental noise and marking error
+- **Open source transparency** under AGPL v3
 
-### 开源项目 | OPEN SOURCE PROJECTS
+## How it works
 
-见[NOTICE.md](./NOTICE.md)
+1. Upload or capture a night-sky image.
+2. Mark the stars and the plumb line in the interface.
+3. Confirm the exact capture time.
+4. Let StarLocator match celestial data and solve for the rough location.
+5. Review the computed result and error range.
 
-### 开发团队 | DEVELOPERS
+## Project structure
 
-按加入时间排序
+| Path | Purpose |
+|---|---|
+| `src/` | Frontend source code |
+| `examples/` | Sample data for testing and demos |
+| `docs/` | Installation, contribution, and user documentation |
+| `prototype/` | Early experiments and prototype assets |
+| `pyproject.toml` | Python backend dependencies |
+| `package.json` | Frontend build tooling |
+
+## Installation
+
+Detailed setup steps live in [docs/INSTALLATION.md](./docs/INSTALLATION.md).
+
+### Backend
+
+```bash
+uv sync
+uv run uvicorn src.backend.main:app --reload
+```
+
+### Frontend
+
+```bash
+pnpm install
+pnpm run dev
+```
+
+### Production build
+
+```bash
+pnpm run build
+pnpm run serve
+```
+
+## Usage
+
+For the full walkthrough, see the [online help page](https://bengbuguards.github.io/StarLocator/help.html).
+
+### Typical workflow
+
+1. Open the web app.
+2. Load a star photo.
+3. Identify or confirm star points.
+4. Draw the plumb line.
+5. Enter the capture time precisely.
+6. Run the calculation and inspect the result.
+
+## Accuracy and privacy
+
+- In the maintainers' description, error can usually stay below **30 km** under good conditions.
+- The backend only handles the information needed for the positioning step and removes it after computation.
+- Final accuracy depends on sky conditions, photo quality, and marking precision.
+
+## Roadmap
+
+Potential additions that would help new users:
+
+- More example datasets and expected outputs
+- A troubleshooting section for common recognition failures
+- More screenshots for the full workflow
+- Developer docs for backend/frontend local setup
+
+## Contributing
+
+Contributions are welcome. Start with [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md), then open an issue or pull request for improvements, bug fixes, docs, or examples.
+
+## Credits
+
+### Open source projects
+
+See [NOTICE.md](./NOTICE.md).
+
+### Developers
+
+Listed by join time in the original project notes:
 
 - 小流汗黄豆 | BengbuGuards
 - 鬼蝉 | Hiroshi1993
@@ -57,3 +147,9 @@ NOTHING to do with astrology, metaphysics and telepathy.
 - hanran
 - Charmian
 - Yisan5772156
+
+## License
+
+Released under [AGPL-3.0](./LICENSE).
+
+[![Star History Chart](https://api.star-history.com/svg?repos=BengbuGuards/StarLocator&type=Timeline)](https://star-history.com/#BengbuGuards/StarLocator&Timeline)

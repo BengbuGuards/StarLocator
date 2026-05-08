@@ -2,18 +2,11 @@ import { DefaultbuttonFunctioner } from './Default.js';
 import { post, setHADE } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
-const recognitionStatus = {
-    READY: 0, // 按钮未激活
-    SUBMITTING: 1, // 准备提交数据并申请排队
-    SOLVING: 2, // 等待Astrometry求解
-    RECOGNIZING: 3, // 等待后端解析星名
-};
-
 // 天体识别按钮功能类
 class RecognizeStars extends DefaultbuttonFunctioner {
     constructor(interactPhoto) {
         super(interactPhoto);
-        this.status = recognitionStatus.SUBMITTING; // 识别的状态
+        this.isRecognizing = false; // 是否正在自动识星
         this.xy = null; // 所有天体的图上坐标
     }
 
@@ -21,29 +14,28 @@ class RecognizeStars extends DefaultbuttonFunctioner {
         super.onClick();
         if (!this.interactPhoto.movable) return;
 
-        if (this.status === recognitionStatus.READY) {
-            // 检查数据
-            if (this.interactPhoto.CeleArray.num() < 3) {
-                this.interactPhoto.tips.innerHTML = '请至少选择三颗星';
-                return;
-            }
-
-            this.interactPhoto.buttonFunctioner = this;
-            this.status === recognitionStatus.SUBMITTING;
-        } else {
+        if (this.isRecognizing) {
             // 自动识星可能比较耗时，可以让用户取消
             this.clearData();
             this.interactPhoto.resetbuttonFunctioner();
             this.interactPhoto.tips.innerHTML = '已取消自动识星';
+            return;
         }
 
-        if (this.status === recognitionStatus.SUBMITTING) {
-            this.submitData();
+        // 检查数据
+        const count = this.interactPhoto.CeleArray.num();
+        if (count < 3) {
+            this.interactPhoto.tips.innerHTML = `请至少选择三颗星，当前已标记 ${count} 个`;
+            return;
         }
+
+        this.interactPhoto.buttonFunctioner = this;
+        this.isRecognizing = true;
+        this.submitData();
     }
 
     clearData() {
-        this.status = recognitionStatus.SUBMITTING;
+        this.isRecognizing = false;
         this.xy = null;
     }
 

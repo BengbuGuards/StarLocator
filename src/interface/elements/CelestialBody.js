@@ -1,6 +1,8 @@
 import { ShapeObject, markerArray } from './Baseclass.js';
 import { autoCompleteStarName } from '../functions/AutoComplete.js';
 
+const MIN_STAR_ROWS = 3;
+
 // 星体类
 class CelestialBody extends ShapeObject {
     constructor(x, y, id, canvas) {
@@ -9,24 +11,6 @@ class CelestialBody extends ShapeObject {
         this.onRename();
         // 初始化图上坐标
         this.addToTable();
-        // 绑定事件
-        this.bindEvents();
-    }
-
-    /**
-     * 绑定与该星星相关的事件
-     */
-    bindEvents() {
-        // 绑定名字 div 文本变化事件
-        let nameDiv = document.getElementById(`name${this.id}`);
-        nameDiv.oninput = this.onRename.bind(this); // 一定要指定 this！！！
-        // 绑定名字 div 获取焦点
-        nameDiv.onfocus = this.onNameDivOnFocus.bind(this);
-        // 绑定坐标值变动事件
-        let coordX = document.getElementById(`coordX${this.id}`);
-        let coordY = document.getElementById(`coordY${this.id}`);
-        coordX.oninput = this.onValueChange.bind(this);
-        coordY.oninput = this.onValueChange.bind(this);
     }
 
     /**
@@ -41,24 +25,19 @@ class CelestialBody extends ShapeObject {
     }
 
     addToTable(x = this.x, y = this.y) {
-        document.getElementById(`coordX${this.id}`).value = x;
-        document.getElementById(`coordY${this.id}`).value = y;
+        const coordX = document.getElementById(`coordX${this.id}`);
+        const coordY = document.getElementById(`coordY${this.id}`);
+        coordX.value = this.round(x, 2);
+        coordY.value = this.round(y, 2);
+        coordX.dataset.rawValue = x;
+        coordY.dataset.rawValue = y;
     }
 
     onMove() {
         super.onMove();
 
         // 修改表格内容（貌似性能不是很好）
-        this.addToTable(this.round(this.point.left + 16.5, 2), this.round(this.point.top + 16.5, 2));
-    }
-
-    /**
-     * 当对应的名字的 div 获取焦点时，在图上高亮显示自己
-     */
-    onNameDivOnFocus() {
-        // 将图上对应的点设置为选中
-        this.canvas.setActiveObject(this.point);
-        this.canvas.renderAll();
+        this.addToTable(this.point.left + 16.5, this.point.top + 16.5);
     }
 
     /**
@@ -76,18 +55,6 @@ class CelestialBody extends ShapeObject {
         this.canvas.renderAll();
     }
 
-    /**
-     * 当坐标值变动时，更新图上的点
-     */
-    onValueChange() {
-        let x = parseFloat(document.getElementById(`coordX${this.id}`).value);
-        let y = parseFloat(document.getElementById(`coordY${this.id}`).value);
-        this.setRealXY(x, y);
-        this.point.setCoords();
-        this.label.setCoords();
-        this.canvas.renderAll();
-    }
-
     remove() {
         super.remove();
     }
@@ -97,11 +64,15 @@ class CelestialBody extends ShapeObject {
         document.getElementById(`hAngleH${this.id}`).textContent = '';
         document.getElementById(`hAngleM${this.id}`).textContent = '';
         document.getElementById(`hAngleS${this.id}`).textContent = '';
+        delete document.getElementById(`hAngleS${this.id}`).dataset.rawValue;
         document.getElementById(`declinD${this.id}`).textContent = '';
         document.getElementById(`declinM${this.id}`).textContent = '';
         document.getElementById(`declinS${this.id}`).textContent = '';
+        delete document.getElementById(`declinS${this.id}`).dataset.rawValue;
         document.getElementById(`coordX${this.id}`).value = '';
         document.getElementById(`coordY${this.id}`).value = '';
+        delete document.getElementById(`coordX${this.id}`).dataset.rawValue;
+        delete document.getElementById(`coordY${this.id}`).dataset.rawValue;
         document.getElementById(`name${this.id}`).oninput = null;
         document.getElementById(`name${this.id}`).onfocus = null;
         document.getElementById(`coordX${this.id}`).oninput = null;
@@ -115,34 +86,13 @@ class CeleArray extends markerArray {
     }
 
     add(x, y) {
+        const id = this.num() + 1;
+        this.ensureTableRow(id);
         // 判断星星数量是否已超过表格行数
         let inputTable = document.getElementById('inputTable');
-        if (this.num() + 1 > inputTable.rows.length - 2) {
-            // 减掉一行标题与一行天顶
-            // 添加一行
-            let newRow = inputTable.insertRow(this.num() + 2);
-            // 添加单元格
-            let secondStarRow = inputTable.rows[3];
-            // 第二颗星星的行，用于 HTML 模板
-            // 为什么不用第一行：style="flex: 1" 出现在属性里，这不应被替换
-            for (let i = 0; i <= 5; ++i) {
-                let newcell = newRow.insertCell(i); // 将第二行 HTML 抄过来并替换数字
-                if (i == 0) {
-                    newcell.innerHTML = this.num() + 1;
-                } else {
-                    newcell.innerHTML = secondStarRow.cells[i].innerHTML
-                        .replace(/id="(.+?2)">.*?<\/div>/g, (match, p1) => {
-                            return `id="${p1}"></div>`;
-                        })
-                        .replace(/id="(.+?)2"/g, (match, p1) => {
-                            return `id="${p1}${this.num() + 1}"`;
-                        });
-                }
-            }
-            autoCompleteStarName(document.getElementById(`name${this.num() + 1}`));
-        }
+        if (!inputTable) return;
         // 创建新的星星对象
-        let star = new CelestialBody(x, y, this.num() + 1, this.interactPhoto.canvas);
+        let star = new CelestialBody(x, y, id, this.interactPhoto.canvas);
         this.array.push(star);
         // 为新添加的星星绑定与CeleArray相关的删除事件
         star.deleter
@@ -150,6 +100,195 @@ class CeleArray extends markerArray {
                 this.remove(star.id);
             })
             .bind(this);
+        this.bindTableRow(id);
+        this.interactPhoto.updateCeleStatus();
+    }
+
+    initializeTableRows() {
+        for (let i = 1; i <= this.tableStarRowCount(); i++) {
+            this.bindTableRow(i);
+        }
+        this.interactPhoto.updateCeleStatus();
+    }
+
+    tableStarRowCount() {
+        const inputTable = document.getElementById('inputTable');
+        return inputTable ? inputTable.rows.length - 2 : 0;
+    }
+
+    ensureTableRow(id) {
+        while (this.tableStarRowCount() < id) {
+            this.addEmptyRow();
+        }
+    }
+
+    addEmptyRow() {
+        let inputTable = document.getElementById('inputTable');
+        if (!inputTable) return;
+
+        const id = this.tableStarRowCount() + 1;
+        let newRow = inputTable.insertRow(id + 1);
+        newRow.innerHTML = this.createStarRowHTML(id);
+        this.bindTableRow(id);
+    }
+
+    createStarRowHTML(id) {
+        return `
+            <td>${id}</td>
+            <td><input type="text" autocomplete="new-password" class="celesNameInput table" id="name${id}" aria-label="name"></td>
+            <td>
+                <div class="formatedInput">
+                    <div contenteditable="true" id="hAngleH${id}"></div>h
+                    <div contenteditable="true" id="hAngleM${id}"></div>m
+                    <div contenteditable="true" id="hAngleS${id}"></div>s
+                </div>
+            </td>
+            <td>
+                <div class="formatedInput">
+                    <div contenteditable="true" id="declinD${id}"></div>°
+                    <div contenteditable="true" id="declinM${id}"></div>′
+                    <div contenteditable="true" id="declinS${id}"></div>″
+                </div>
+            </td>
+            <td><input type="number" class="coordsInput table" id="coordX${id}" aria-label="x" /></td>
+            <td><input type="number" class="coordsInput table" id="coordY${id}" aria-label="y" /></td>
+            <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="${id}">删除</button></td>
+        `;
+    }
+
+    bindTableRow(id) {
+        const name = document.getElementById(`name${id}`);
+        const coordX = document.getElementById(`coordX${id}`);
+        const coordY = document.getElementById(`coordY${id}`);
+        const removeButton = document.querySelector(`.removeCeleRow[data-star-id="${id}"]`);
+
+        if (name) {
+            if (!name.dataset.autocompleteBound) {
+                autoCompleteStarName(name);
+                name.dataset.autocompleteBound = 'true';
+            }
+            name.oninput = () => {
+                const star = this.array[id - 1];
+                if (star) star.onRename();
+            };
+            name.onfocus = () => {
+                const star = this.array[id - 1];
+                if (!star) return;
+                star.canvas.setActiveObject(star.point);
+                star.canvas.renderAll();
+            };
+        }
+
+        const handleCoordInput = () => {
+            const x = parseFloat(coordX.value);
+            const y = parseFloat(coordY.value);
+            if (!Number.isFinite(x) || !Number.isFinite(y)) return;
+            coordX.dataset.rawValue = x;
+            coordY.dataset.rawValue = y;
+
+            if (!this.interactPhoto.movable) {
+                this.interactPhoto.tips.innerHTML = '请先选择星空照片';
+                return;
+            }
+
+            if (id <= this.num()) {
+                this.array[id - 1].setRealXY(x, y);
+                this.array[id - 1].point.setCoords();
+                this.array[id - 1].label.setCoords();
+                this.interactPhoto.canvas.renderAll();
+                return;
+            }
+
+            if (id === this.num() + 1) {
+                this.add(x, y);
+            } else {
+                this.interactPhoto.tips.innerHTML = `请先填写第 ${this.num() + 1} 行的 x、y 坐标`;
+            }
+        };
+
+        if (coordX) coordX.oninput = handleCoordInput;
+        if (coordY) coordY.oninput = handleCoordInput;
+        if (removeButton) {
+            removeButton.onclick = () => {
+                this.removeTableRow(id);
+            };
+        }
+    }
+
+    clearTableRowData(id) {
+        document.getElementById(`name${id}`).value = '';
+        document.getElementById(`hAngleH${id}`).textContent = '';
+        document.getElementById(`hAngleM${id}`).textContent = '';
+        document.getElementById(`hAngleS${id}`).textContent = '';
+        delete document.getElementById(`hAngleS${id}`).dataset.rawValue;
+        document.getElementById(`declinD${id}`).textContent = '';
+        document.getElementById(`declinM${id}`).textContent = '';
+        document.getElementById(`declinS${id}`).textContent = '';
+        delete document.getElementById(`declinS${id}`).dataset.rawValue;
+        document.getElementById(`coordX${id}`).value = '';
+        document.getElementById(`coordY${id}`).value = '';
+        delete document.getElementById(`coordX${id}`).dataset.rawValue;
+        delete document.getElementById(`coordY${id}`).dataset.rawValue;
+    }
+
+    copyTableRowData(fromId, toId) {
+        document.getElementById(`name${toId}`).value = document.getElementById(`name${fromId}`).value;
+        document.getElementById(`hAngleH${toId}`).textContent = document.getElementById(`hAngleH${fromId}`).textContent;
+        document.getElementById(`hAngleM${toId}`).textContent = document.getElementById(`hAngleM${fromId}`).textContent;
+        document.getElementById(`hAngleS${toId}`).textContent = document.getElementById(`hAngleS${fromId}`).textContent;
+        document.getElementById(`declinD${toId}`).textContent = document.getElementById(`declinD${fromId}`).textContent;
+        document.getElementById(`declinM${toId}`).textContent = document.getElementById(`declinM${fromId}`).textContent;
+        document.getElementById(`declinS${toId}`).textContent = document.getElementById(`declinS${fromId}`).textContent;
+        document.getElementById(`coordX${toId}`).value = document.getElementById(`coordX${fromId}`).value;
+        document.getElementById(`coordY${toId}`).value = document.getElementById(`coordY${fromId}`).value;
+        this.copyRawValue(`hAngleS${fromId}`, `hAngleS${toId}`);
+        this.copyRawValue(`declinS${fromId}`, `declinS${toId}`);
+        this.copyRawValue(`coordX${fromId}`, `coordX${toId}`);
+        this.copyRawValue(`coordY${fromId}`, `coordY${toId}`);
+    }
+
+    copyRawValue(fromElementId, toElementId) {
+        const fromElement = document.getElementById(fromElementId);
+        const toElement = document.getElementById(toElementId);
+        if (fromElement.dataset.rawValue === undefined) {
+            delete toElement.dataset.rawValue;
+        } else {
+            toElement.dataset.rawValue = fromElement.dataset.rawValue;
+        }
+    }
+
+    removeTableRow(id) {
+        if (id <= this.num()) {
+            this.array[id - 1].remove();
+            this.remove(id);
+            return;
+        }
+
+        let inputTable = document.getElementById('inputTable');
+        if (this.tableStarRowCount() > MIN_STAR_ROWS) {
+            inputTable.deleteRow(id + 1);
+            for (let i = id; i <= this.tableStarRowCount(); i++) {
+                this.renumberTableRow(i);
+                this.bindTableRow(i);
+            }
+        } else {
+            this.clearTableRowData(id);
+            this.bindTableRow(id);
+        }
+        this.interactPhoto.updateCeleStatus();
+    }
+
+    renumberTableRow(id) {
+        let inputTable = document.getElementById('inputTable');
+        const row = inputTable.rows[id + 1];
+        if (!row) return;
+
+        row.cells[0].innerHTML = id;
+        row.querySelectorAll('[id]').forEach((element) => {
+            element.id = element.id.replace(/\d+$/, id);
+        });
+        const removeButton = row.querySelector('.removeCeleRow');
+        if (removeButton) removeButton.dataset.starId = id;
     }
 
     /**
@@ -163,45 +302,7 @@ class CeleArray extends markerArray {
         // 对后面的星星进行 id 更新
         for (let celeBody of this.array) {
             if (celeBody.id > id) {
-                document.getElementById(`name${celeBody.id - 1}`).value = document.getElementById(
-                    `name${celeBody.id}`
-                ).value;
-                document.getElementById(`hAngleH${celeBody.id - 1}`).textContent = document.getElementById(
-                    `hAngleH${celeBody.id}`
-                ).textContent;
-                document.getElementById(`hAngleM${celeBody.id - 1}`).textContent = document.getElementById(
-                    `hAngleM${celeBody.id}`
-                ).textContent;
-                document.getElementById(`hAngleS${celeBody.id - 1}`).textContent = document.getElementById(
-                    `hAngleS${celeBody.id}`
-                ).textContent;
-                document.getElementById(`declinD${celeBody.id - 1}`).textContent = document.getElementById(
-                    `declinD${celeBody.id}`
-                ).textContent;
-                document.getElementById(`declinM${celeBody.id - 1}`).textContent = document.getElementById(
-                    `declinM${celeBody.id}`
-                ).textContent;
-                document.getElementById(`declinS${celeBody.id - 1}`).textContent = document.getElementById(
-                    `declinS${celeBody.id}`
-                ).textContent;
-                document.getElementById(`coordX${celeBody.id - 1}`).value = document.getElementById(
-                    `coordX${celeBody.id}`
-                ).value;
-                document.getElementById(`coordY${celeBody.id - 1}`).value = document.getElementById(
-                    `coordY${celeBody.id}`
-                ).value;
-                document.getElementById(`name${celeBody.id - 1}`).oninput = document.getElementById(
-                    `name${celeBody.id}`
-                ).oninput;
-                document.getElementById(`name${celeBody.id - 1}`).onfocus = document.getElementById(
-                    `name${celeBody.id}`
-                ).onfocus;
-                document.getElementById(`coordX${celeBody.id - 1}`).oninput = document.getElementById(
-                    `coordX${celeBody.id}`
-                ).oninput;
-                document.getElementById(`coordY${celeBody.id - 1}`).oninput = document.getElementById(
-                    `coordY${celeBody.id}`
-                ).oninput;
+                this.copyTableRowData(celeBody.id, celeBody.id - 1);
                 celeBody.removeTableData();
                 celeBody.id--;
                 celeBody.onRename();
@@ -211,37 +312,37 @@ class CeleArray extends markerArray {
         this.array.splice(id - 1, 1);
         // 删除最后一行表格
         let inputTable = document.getElementById('inputTable');
-        if (this.num() >= 5 && inputTable.rows.length - 2 > 5) {
+        if (inputTable.rows.length - 2 > MIN_STAR_ROWS) {
             inputTable.deleteRow(inputTable.rows.length - 1);
         }
+        for (let i = 1; i <= this.tableStarRowCount(); i++) {
+            this.bindTableRow(i);
+        }
+        this.interactPhoto.updateCeleStatus();
     }
 
     clear() {
+        let inputTable = document.getElementById('inputTable');
+        while (inputTable.rows.length - 2 > MIN_STAR_ROWS) {
+            inputTable.deleteRow(inputTable.rows.length - 1);
+        }
         // 清空表格数据
-        for (let i = 1; i <= 5; i++) {
-            document.getElementById(`name${i}`).value = '';
-            document.getElementById(`hAngleH${i}`).textContent = '';
-            document.getElementById(`hAngleM${i}`).textContent = '';
-            document.getElementById(`hAngleS${i}`).textContent = '';
-            document.getElementById(`declinD${i}`).textContent = '';
-            document.getElementById(`declinM${i}`).textContent = '';
-            document.getElementById(`declinS${i}`).textContent = '';
-            document.getElementById(`coordX${i}`).value = '';
-            document.getElementById(`coordY${i}`).value = '';
+        for (let i = 1; i <= this.tableStarRowCount(); i++) {
+            this.clearTableRowData(i);
             document.getElementById(`name${i}`).oninput = null;
             document.getElementById(`name${i}`).onfocus = null;
             document.getElementById(`coordX${i}`).oninput = null;
             document.getElementById(`coordY${i}`).oninput = null;
-        }
-        let inputTable = document.getElementById('inputTable');
-        while (inputTable.rows.length - 2 > 5) {
-            inputTable.deleteRow(inputTable.rows.length - 1);
         }
         // 清空星星及其数组
         for (let i of this.array) {
             i.remove();
         }
         this.array = [];
+        for (let i = 1; i <= this.tableStarRowCount(); i++) {
+            this.bindTableRow(i);
+        }
+        this.interactPhoto.updateCeleStatus();
     }
 }
 

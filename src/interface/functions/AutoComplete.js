@@ -55,14 +55,25 @@ function autoCompleteStarName(inp) {
     inp.addEventListener('keydown', function (e) {
         let divA = document.getElementById(this.id + '-autocomplete');
         if (divA) var items = divA.getElementsByTagName('div');
-        if (e.keyCode == 38 || (e.keyCode == 9 && e.shiftKey)) {
-            //up or shift+tab
+        if (e.keyCode == 9) {
+            // tab/shift+tab: move between celestial-name inputs, not autocomplete items
+            const currentId = this.id.match(/^name(\d+)$/);
+            const nextId = currentId ? Number(currentId[1]) + (e.shiftKey ? -1 : 1) : null;
+            const nextInput = nextId ? document.getElementById(`name${nextId}`) : null;
+
+            closeAllLists();
+            if (nextInput) {
+                e.preventDefault();
+                nextInput.focus();
+            }
+        } else if (e.keyCode == 38) {
+            //up
             e.preventDefault();
             currentFocus--;
             addActive(items);
             fixScrolling(items);
-        } else if (e.keyCode == 40 || e.keyCode == 9) {
-            //down or tab
+        } else if (e.keyCode == 40) {
+            //down
             e.preventDefault();
             currentFocus++;
             addActive(items);

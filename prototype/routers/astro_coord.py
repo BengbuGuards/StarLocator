@@ -3,13 +3,13 @@ from schemas import astro_coord
 from core.astro_coord.calc import get_HaDecs_by_names
 
 from .limiter import limiter
-from config import MEDIUM_RATE_LIMIT
+from config import LIGHT_RATE_LIMIT
 
 router = APIRouter()
 
 
 @router.post("", response_model=astro_coord.AstroCoord)
-@limiter.limit(MEDIUM_RATE_LIMIT)
+@limiter.limit(LIGHT_RATE_LIMIT)
 def http_astro_coord(request: Request, data: astro_coord.AstroTime):
     """
     获取指定时间的天体时角和赤纬

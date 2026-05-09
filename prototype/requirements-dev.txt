@@ -1,8 +1,5 @@
-black
 numpy
 scipy
-pytest
-matplotlib
 fastapi
 uvicorn[standard]
 python-multipart
@@ -10,4 +7,8 @@ astronomy-engine
 httpx
 async_lru
 slowapi
-sep-pjw
+sep
+astropy
+
+pytest
+matplotlib

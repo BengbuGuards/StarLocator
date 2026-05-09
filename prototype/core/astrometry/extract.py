@@ -1,6 +1,6 @@
 import numpy as np
 from PIL import Image
-import sep_pjw as sep
+import sep
 
 
 def extract_stars(

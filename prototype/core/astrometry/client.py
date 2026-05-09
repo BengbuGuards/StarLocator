@@ -225,7 +225,7 @@ class Client(object):
             imageh=wcs.imageh,
         )
         result = self.send_request(service, {"wcs": params})
-        logging.info(f"Result status: {result["status"]}")
+        logging.info(f"Result status: {result['status']}")
         plotdata = result["plot"]
         plotdata = base64.b64decode(plotdata)
         open(outfn, "wb").write(plotdata)

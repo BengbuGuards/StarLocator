@@ -1,7 +1,7 @@
 import httpx
 import asyncio
 import numpy as np
-import sep_pjw as sep
+import sep
 from PIL import Image
 from io import BytesIO
 import astronomy as ast

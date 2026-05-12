@@ -1,5 +1,6 @@
 import numpy as np
 import astronomy as ast
+from core.utils import wrap_angle_in_deg
 from core.positioning.locator.utils.math import vector_angle
 from core.positioning.calc import calc_geo as geo_calc
 from core.astro_coord.calc import get_HaDecs_by_names
@@ -150,14 +151,3 @@ def angle_error(
         angle = vector_angle(star_vec, moon_vec)
         error += (np.rad2deg(angle - target_angles[i])) ** 2
     return error
-
-
-def wrap_angle_in_deg(deg):
-    """
-    Make the angle in [-180, 180].
-    """
-    while deg > 180:
-        deg -= 360
-    while deg < -180:
-        deg += 360
-    return deg

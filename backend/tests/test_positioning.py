@@ -57,12 +57,42 @@ target = {
 target_topPoint = [0.0, -17013.85]
 
 
+def assert_geojson(geojson):
+    assert geojson["type"] == "FeatureCollection"
+    assert len(geojson["features"]) == 2
+
+    point = geojson["features"][0]
+    error_line = geojson["features"][1]
+
+    assert point["type"] == "Feature"
+    assert point["geometry"]["type"] == "Point"
+    point_coords = point["geometry"]["coordinates"]
+    assert point_coords == pytest.approx([target["lon"], target["lat"]], rel=6e-3)
+    assert point["properties"]["kind"] == "position"
+    assert point["properties"]["topPoint"] == pytest.approx(target_topPoint)
+
+    assert error_line["type"] == "Feature"
+    assert error_line["geometry"]["type"] == "LineString"
+    assert np.array(error_line["geometry"]["coordinates"]) == pytest.approx(
+        np.array(
+            [
+                [point_coords[0] - 0.125, point_coords[1]],
+                [point_coords[0] + 0.125, point_coords[1]],
+            ]
+        ),
+        rel=6e-3,
+    )
+    assert error_line["properties"] == {"kind": "error-line", "shiftDeg": 0.125}
+
+
 def test_local():
     geo = calc_geo(photo, is_fix_refraction, is_fix_gravity)
     geo["lat"] = np.rad2deg(geo["lat"])
     geo["lon"] = np.rad2deg(geo["lon"])
     assert geo["topPoint"] == pytest.approx(target_topPoint)
+    assert_geojson(geo["geojson"])
     del geo["topPoint"]
+    del geo["geojson"]
     assert geo == pytest.approx(target, rel=6e-3)
 
 
@@ -79,5 +109,7 @@ def test_remote():
     result["lat"] = np.rad2deg(result["lat"])
     result["lon"] = np.rad2deg(result["lon"])
     assert result["topPoint"] == pytest.approx(target_topPoint)
+    assert_geojson(result["geojson"])
     del result["topPoint"]
+    del result["geojson"]
     assert result == pytest.approx(target, rel=6e-3)

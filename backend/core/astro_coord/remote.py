@@ -33,7 +33,8 @@ async def get_RaDec_by_name(
 
     async with httpx.AsyncClient(limits=limits) as client:
         response = await client.get(
-            f"https://simbad.u-strasbg.fr/simbad/sim-nameresolver?ident={star_name_base64}&output=json&data=J&option=strict"
+            f"https://simbad.u-strasbg.fr/simbad/sim-nameresolver?ident={star_name_base64}&output=json&data=J&option=strict",
+            timeout=10,
         )
         if response.status_code != 200:
             raise ValueError(
@@ -63,7 +64,7 @@ async def get_RaDecs_by_names(
         try:
             raDec = await task
             raDecs_tmp.append(raDec)
-        except ValueError:
+        except (httpx.HTTPError, ValueError, KeyError, IndexError, TypeError):
             pass
     raDecs_tmp = dict(raDecs_tmp)
 

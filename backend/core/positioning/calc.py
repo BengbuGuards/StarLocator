@@ -1,9 +1,53 @@
 import numpy as np
-from .top_point.methods.matrix_inverse_normalized import intersection
-from .find_z.methods import trisect, fix_refraction
-from .locator.methods.bi_median import get_geo
+
+from core.utils import wrap_angle_in_deg
+from .find_z.methods import fix_refraction, trisect
 from .find_z.utils.math import angles_on_sphere, normalize
 from .latitude.method.series2 import astronomic_latitude_to_geodetic_latitude
+from .locator.methods.bi_median import get_geo
+from .top_point.methods.matrix_inverse_normalized import intersection
+
+
+def build_error_line_feature(lon_deg: float, lat_deg: float, shift_deg: float) -> dict:
+    return {
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [
+                [wrap_angle_in_deg(lon_deg - shift_deg), lat_deg],
+                [wrap_angle_in_deg(lon_deg + shift_deg), lat_deg],
+            ],
+        },
+        "properties": {
+            "kind": "error-line",
+            "shiftDeg": shift_deg,
+        },
+    }
+
+
+def build_geojson(
+    lon_deg: float, lat_deg: float, z: float, top_point: np.ndarray
+) -> dict:
+    shift = 0.125
+    return {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [lon_deg, lat_deg],
+                },
+                "properties": {
+                    "name": "Here!",
+                    "kind": "position",
+                    "z": z,
+                    "topPoint": top_point.tolist(),
+                },
+            },
+            build_error_line_feature(lon_deg, lat_deg, shift),
+        ],
+    }
 
 
 def calc_z(
@@ -99,12 +143,18 @@ def calc_geo(
             astronomic_latitude_to_geodetic_latitude(np.rad2deg(geo[1]))
         )
 
+    lon = geo[0].item()
+    lat = geo[1].item()
+    lon_deg = wrap_angle_in_deg(np.rad2deg(lon).item())
+    lat_deg = np.rad2deg(lat).item()
+
     return {
         "detail": "success",
         "topPoint": top_point,
         "z": z,
-        "lon": geo[0].item(),
-        "lat": geo[1].item(),
+        "lon": lon,
+        "lat": lat,
+        "geojson": build_geojson(lon_deg, lat_deg, z, top_point),
     }
 
 

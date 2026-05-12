@@ -345,6 +345,54 @@ a:visited {
 	padding: 4px 12px;
 }
 
+.geojsonPanel {
+	margin: 10px 0;
+}
+
+.geojsonPanel,
+.geojsonPanel * {
+	box-sizing: border-box;
+}
+
+.geojsonActions {
+	margin-bottom: 6px;
+}
+
+.geojsonPanel a,
+.geojsonPanel a:link,
+.geojsonPanel a:visited,
+.geojsonPanel button {
+	display: block;
+	width: fit-content;
+	border: 1px solid #189c65;
+	border-radius: 4px;
+	background-color: #187C54;
+	color: white;
+	cursor: pointer;
+	font: inherit;
+	line-height: normal;
+	margin-top: 8px;
+	padding: 4px 12px;
+	text-align: center;
+	text-decoration: none;
+	appearance: none;
+}
+
+.geojsonPanel a:hover,
+.geojsonPanel a:focus,
+.geojsonPanel button:hover,
+.geojsonPanel button:focus {
+	background-color: #189c65;
+	color: white;
+	text-decoration: none;
+}
+
+.geojsonPanel a:active,
+.geojsonPanel button:active {
+	background-color: #194837;
+	color: white;
+}
+
 .helpButton {
 	color: white;
 	border: 2px solid #2150B7;
@@ -377,6 +425,23 @@ a:visited {
 
 .calculButton:hover {
 	background-color: #e44f0d;
+}
+
+.calculButton.is-disabled {
+	opacity: 0.45;
+	filter: grayscale(65%);
+}
+
+.calculButton.is-disabled:hover {
+	background-color: #b54914;
+}
+
+.calculButton.is-disabled:hover .calculIcon {
+	visibility: visible;
+}
+
+.calculButton.is-disabled:hover .calculAnim {
+	visibility: hidden;
 }
 
 .calculButton:active {

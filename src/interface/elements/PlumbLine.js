@@ -78,6 +78,7 @@ class PLArray extends markerArray {
             let lineCoord = [lastPLLine.points[0].coordinate, lastPLLine.points[1].coordinate].flat();
             lastPLLine.lineObject = new LineObject(lineCoord, this.interactPhoto.canvas, '#35dc96');
             lastPLLine.addMoveLineEvent();
+            this.interactPhoto.updateCalculButton();
         } else if (lastPLLine.points.length > 2) {
             console.error('Too many points in a line.');
         }
@@ -101,6 +102,7 @@ class PLArray extends markerArray {
                 this.array[i].points[j].id -= 2;
             }
         }
+        this.interactPhoto.updateCalculButton();
     }
 }
 

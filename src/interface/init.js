@@ -22,7 +22,7 @@ function initializeCanvas(interactPhoto) {
         selection: false,
     });
 
-    interactPhoto.text = new IText('选择星空照片。', {
+    interactPhoto.text = new IText('拖拽星空照片到此处', {
         fill: '#8a6119',
         textAlign: 'center',
         fontSize: 40,
@@ -75,9 +75,6 @@ function initializeEvents(eventManager) {
         .getElementById('celePick')
         .addEventListener('click', eventManager.pickCele.onClick.bind(eventManager.pickCele));
     document.getElementById('vaniZen').addEventListener('click', eventManager.pickPL.onClick.bind(eventManager.pickPL));
-    document
-        .getElementById('srcFile')
-        .addEventListener('change', (e) => eventManager.imageChange.onClick.call(eventManager.imageChange, e));
     interactPhoto.container.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -116,17 +113,4 @@ function initializeEvents(eventManager) {
     interactPhoto.CeleArray.initializeTableRows();
 }
 
-// 初始化地图
-function initializeMap(interactPhoto) {
-    /*global BMapGL*/
-    // 按住鼠标右键，修改倾斜角和角度
-    let map = new BMapGL.Map('map'); // 创建Map实例
-    map.centerAndZoom(new BMapGL.Point(110, 35), 4); // 初始化地图,设置中心点坐标和地图级别
-    map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-    map.addControl(new BMapGL.ScaleControl()); // 添加比例尺控件
-    map.addControl(new BMapGL.ZoomControl()); // 添加缩放控件
-    map.addControl(new BMapGL.MapTypeControl()); //添加地图类型控件
-    interactPhoto.map = map;
-}
-
-export { initializeElements, initializeCanvas, initializeEvents, initializeMap };
+export { initializeElements, initializeCanvas, initializeEvents };

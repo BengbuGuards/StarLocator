@@ -26,10 +26,8 @@ MAX_UPLOAD_SIZE = 10 * 1024 * 1024
 LOG_LEVEL = "info"
 
 # API_KEY
-## 百度地图 JS API KEY
-BMAP_API_KEY = "******"
 ## astrometry API_KEY
-ASTROMETRY_API_KEY = "******"
+ASTROMETRY_API_KEY = "*****"
 
 # 网络请求是否限流
 RATE_LIMIT = False
@@ -45,5 +43,4 @@ HEAVY_RATE_LIMIT = "1/6second"
 CORS_ALLOW_ORIGIN = [
     FRONTEND_BASEURL,
     BACKEND_BASEURL,
-    "https://api.map.baidu.com",
 ]

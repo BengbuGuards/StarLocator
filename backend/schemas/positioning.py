@@ -68,3 +68,4 @@ class PositioningResponse(BaseModel):
     z: float
     lat: float
     lon: float
+    geojson: dict

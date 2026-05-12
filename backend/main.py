@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn.config
-from routers import astro_coord, moon_time, positioning, bmap, astrometry
+from routers import astro_coord, moon_time, positioning, astrometry
 from routers.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -28,7 +28,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # ty
 app.include_router(positioning.router, prefix="/api/positioning", tags=["positioning"])
 app.include_router(astro_coord.router, prefix="/api/astrocoord", tags=["astrocoord"])
 app.include_router(moon_time.router, prefix="/api/moontime", tags=["moontime"])
-app.include_router(bmap.router, prefix="/api/_BMapService", tags=["_BMapService"])
 app.include_router(astrometry.router, prefix="/api/astrometry", tags=["astrometry"])
 
 

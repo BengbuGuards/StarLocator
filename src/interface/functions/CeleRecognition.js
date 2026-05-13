@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { post, setHADE } from '../utils.js';
+import { setHADE } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
 // 天体识别按钮功能类

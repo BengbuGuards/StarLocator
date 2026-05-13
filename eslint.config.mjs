@@ -5,7 +5,7 @@ import prettierConfig from 'eslint-config-prettier';
 
 export default [
     {
-        ignores: ['dist/'],
+        ignores: ['dist/', 'backend/.venv/'],
     },
     {
         languageOptions: {

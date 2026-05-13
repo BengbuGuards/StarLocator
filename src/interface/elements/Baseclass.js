@@ -45,8 +45,10 @@ class ShapeObject {
     }
 
     setRealXY(x, y) {
-        (this.x = x), (this.y = y);
-        (this.point.left = x - 16.5), (this.point.top = y - 16.5);
+        this.x = x;
+        this.y = y;
+        this.point.left = x - 16.5;
+        this.point.top = y - 16.5;
         this.onMove();
     }
 

@@ -1,16 +1,10 @@
 import re
-import httpx
 import asyncio
 from .data import solar_bodies
 from async_lru import alru_cache
-from config import CACHE_SIZE, MAX_CONNECTIONS
-
-# 设置最大并发数
-limits = httpx.Limits(
-    max_connections=MAX_CONNECTIONS,
-    max_keepalive_connections=MAX_CONNECTIONS,
-)
-
+from config import CACHE_SIZE
+from core.utils.http import get_http_client
+import httpx
 
 @alru_cache(maxsize=CACHE_SIZE)
 async def get_RaDec_by_name(
@@ -30,20 +24,20 @@ async def get_RaDec_by_name(
         return (None, None)
 
     star_name_base64 = re.sub(r"\s+", "+", star_name)
+    client = get_http_client()
 
-    async with httpx.AsyncClient(limits=limits) as client:
-        response = await client.get(
-            f"https://simbad.u-strasbg.fr/simbad/sim-nameresolver?ident={star_name_base64}&output=json&data=J&option=strict",
-            timeout=10,
+    response = await client.get(
+        f"https://simbad.u-strasbg.fr/simbad/sim-nameresolver?ident={star_name_base64}&output=json&data=J&option=strict",
+        timeout=10,
+    )
+    if response.status_code != 200:
+        raise ValueError(
+            f"Failed request astrocoord with status code {response.status_code}"
         )
-        if response.status_code != 200:
-            raise ValueError(
-                f"Failed request astrocoord with status code {response.status_code}"
-            )
-        data = response.json()
-        ra = data[0]["ra"] / 15
-        dec = data[0]["dec"]
-        return (star_name, (ra, dec))
+    data = response.json()
+    ra = data[0]["ra"] / 15
+    dec = data[0]["dec"]
+    return (star_name, (ra, dec))
 
 
 async def get_RaDecs_by_names(

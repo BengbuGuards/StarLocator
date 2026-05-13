@@ -11,6 +11,7 @@ from .client import ClientRunnerOptions, run_client
 from core.astro_coord.calc import get_HaDec_by_RaDec
 from ..positioning.locator.utils.math import sph_dist
 from config import ASTROMETRY_API_KEY, MAX_CONNECTIONS
+from core.utils.http import get_http_client
 from ..astro_coord.data import solar_bodies, starEN2ZH, solar_body_mags
 
 # 设置最大并发数
@@ -67,7 +68,7 @@ def flux_in_img(images: list[Image.Image]) -> list[float]:
     return fluxs
 
 
-def tune_rd(
+async def tune_rd(
     xy2field_rd: dict, timestamp: float, radius: float = 60, max_mag: float = 6
 ) -> dict[tuple[float, float], tuple[float, float, str]]:
     """
@@ -95,7 +96,7 @@ def tune_rd(
         fixed_xy2field_rd[xy] = (
             f"{ra.item()}{seperate}{dec.item()}"  # 生成供SIMBAD查询的坐标
         )
-    xy2index_rd_names_mag = get_fixed_stars(fixed_xy2field_rd, radius, max_mag)
+    xy2index_rd_names_mag = await get_fixed_stars(fixed_xy2field_rd, radius, max_mag)
     # 在从太阳系天体中找
     for xy in xy2field_rd.keys():
         ra, dec = xy2field_rd[xy]
@@ -168,7 +169,7 @@ class SolarStars:
         return self.all_infos[target_idx]
 
 
-def get_fixed_stars(
+async def get_fixed_stars(
     fixed_xy2field_rd: dict, radius: float, max_mag: float
 ) -> dict[tuple[float, float], tuple[float, float, str, float]]:
     """
@@ -197,56 +198,56 @@ def get_fixed_stars(
             The right ascension, declination and name of the star.
         """
         # 发送请求
-        async with httpx.AsyncClient(limits=limits) as client:
-            # 查询参数
-            params = {
-                "coord": field_rd,
-                "output": "json",
-                "radius": radius,
-                "data": "J(2d;c) I.0 M(V)",
-            }
-            response = await client.post(
-                "https://simbad.u-strasbg.fr/simbad/sim-nameresolver",
-                params=params,
-                timeout=10,
-            )
-            # 处理返回结果
-            ra, dec = field_rd.split("-") if "-" in field_rd else field_rd.split("+")
+        client = get_http_client()
+        # 查询参数
+        params = {
+            "coord": field_rd,
+            "output": "json",
+            "radius": radius,
+            "data": "J(2d;c) I.0 M(V)",
+        }
+        response = await client.post(
+            "https://simbad.u-strasbg.fr/simbad/sim-nameresolver",
+            params=params,
+            timeout=10,
+        )
+        # 处理返回结果
+        ra, dec = field_rd.split("-") if "-" in field_rd else field_rd.split("+")
 
-            if response.text.startswith("!! No astronomical object found :"):
-                # 如果找不到，就返回原来的坐标
-                return (xy, (float(ra), float(dec), "Unknown", 100))
+        if response.text.startswith("!! No astronomical object found :"):
+            # 如果找不到，就返回原来的坐标
+            return (xy, (float(ra), float(dec), "Unknown", 100))
 
-            # 按视星等数值从小到大排序，把最亮的天体选出
-            found_results = response.json()
-            found_results = sorted(
-                found_results, key=lambda x: float(x.get("M.V", 100))
-            )
-            found_result = found_results[0]
-            mag = float(found_result.get("M.V", 100))
+        # 按视星等数值从小到大排序，把最亮的天体选出
+        found_results = response.json()
+        found_results = sorted(
+            found_results, key=lambda x: float(x.get("M.V", 100))
+        )
+        found_result = found_results[0]
+        mag = float(found_result.get("M.V", 100))
 
-            # 如果找到的天体视星等大于最大视星等，也返回原来的坐标
-            if mag > max_mag:
-                return (xy, (float(ra), float(dec), "Unknown", 100))
+        # 如果找到的天体视星等大于最大视星等，也返回原来的坐标
+        if mag > max_mag:
+            return (xy, (float(ra), float(dec), "Unknown", 100))
 
-            # 成功找到一定半径内的亮星，返回其信息
-            ra, dec = found_result["coord"].split()[:2]
-            return (
-                xy,
-                (
-                    float(ra),
-                    float(dec),
-                    found_result["mainId"].lstrip("* "),
-                    mag,
-                ),
-            )
+        # 成功找到一定半径内的亮星，返回其信息
+        ra, dec = found_result["coord"].split()[:2]
+        return (
+            xy,
+            (
+                float(ra),
+                float(dec),
+                found_result["mainId"].lstrip("* "),
+                mag,
+            ),
+        )
 
     # 并发查询
     async def task_pack():
         tasks = [find_star(xy, field_rd) for xy, field_rd in fixed_xy2field_rd.items()]
         return await asyncio.gather(*tasks)
 
-    raw_resp_infos = asyncio.run(task_pack())
+    raw_resp_infos = await task_pack()
 
     # 转为字典
     fixed_xy2index_rd_name_mags = dict()
@@ -302,13 +303,13 @@ def submit(
     try:
         detail, job_id = run_client(options)
         job_id = str(job_id)
-    except Exception as e:
-        detail = str(e)
+    except Exception:
+        detail = "连接星图解析服务失败，请稍后重试"
         job_id = None
     return detail, job_id
 
 
-def recognize(
+async def recognize(
     job_id: str,
     xy: list[tuple[float, float]],
     timestamp: float,
@@ -332,13 +333,14 @@ def recognize(
         hd_names: The hour angle, declination and name of the stars.
     """
     # 查询任务状态
-    detail = httpx.get(f"https://nova.astrometry.net/api/jobs/{job_id}").json()[
-        "status"
-    ]
+    client = get_http_client()
+    response = await client.get(f"https://nova.astrometry.net/api/jobs/{job_id}")
+    detail = response.json()["status"]
 
     if detail == "success":
         rdls_url = f"https://nova.astrometry.net/image_rd_file/{job_id}"
-        content = httpx.get(rdls_url).content
+        content_resp = await client.get(rdls_url)
+        content = content_resp.content
         xy2field_rd = dict()  # 星点坐标到图中赤道坐标的映射
         with fits.open(BytesIO(content)) as hdul:
             hdul_data = hdul[1].data  # type: ignore
@@ -354,7 +356,7 @@ def recognize(
                 )
         try:
             # 根据图中赤道坐标，寻找最接近的星星的真实赤道坐标和名称
-            xy2rd_names = tune_rd(xy2field_rd, timestamp, radius, max_mag)
+            xy2rd_names = await tune_rd(xy2field_rd, timestamp, radius, max_mag)
             # xy保留小数点后两位
             round_xy = np.array(xy).round(decimals=2).tolist()
             # 返回输入顺序的星星的真实时角坐标和名称
@@ -369,8 +371,8 @@ def recognize(
                     # 尝试汉化星名
                     star_name = starEN2ZH.get(star_name.lower(), star_name)
                 hd_names.append((*hour_ra, star_name))
-        except Exception as e:
-            detail = str(e)
+        except Exception:
+            detail = "解析第三方星图数据失败，请确认图像是否清晰或稍后重试"
             return detail, None
         return detail, hd_names
     else:

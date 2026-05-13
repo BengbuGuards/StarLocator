@@ -40,14 +40,15 @@ target = [
 
 
 def test_local():
-    detail, hd_names = recognize(
+    import asyncio
+    detail, hd_names = asyncio.run(recognize(
         job_id,
         xy,
         timestamp,
         radius=60,
         max_mag=6,
         is_zh=True,
-    )
+    ))
     assert detail == "success"
     assert hd_names
     for i in range(len(hd_names)):

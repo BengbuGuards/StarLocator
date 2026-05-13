@@ -62,9 +62,10 @@ target = datetime.datetime(2024, 10, 14, 16, tzinfo=datetime.timezone.utc).times
 
 
 def test_local():
-    real_timestamp = calc(
+    import asyncio
+    real_timestamp = asyncio.run(calc(
         photo, approx_timestamp, scope_days, is_fix_refraction, is_fix_gravity
-    )
+    ))
     assert real_timestamp == pytest.approx(target)
 
 

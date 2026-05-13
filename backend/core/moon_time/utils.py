@@ -3,7 +3,7 @@ import astronomy as ast
 from core.utils import wrap_angle_in_deg
 from core.positioning.locator.utils.math import vector_angle
 from core.positioning.calc import calc_geo as geo_calc
-from core.astro_coord.calc import get_HaDecs_by_names
+from core.astro_coord.calc import get_HaDecs_by_names, get_HaDecs_sync
 from core.positioning.locator.utils.math import sph2cart
 from core.positioning.calc import stars_convert
 
@@ -41,7 +41,7 @@ def angle_btw_moon_stars(points: np.ndarray, moon_idx: int, z: float) -> np.ndar
     return target_angles
 
 
-def geo_estimate_by_stars(
+async def geo_estimate_by_stars(
     data: dict,
     approx_timestamp: float,
     moon_idx: int,
@@ -66,8 +66,8 @@ def geo_estimate_by_stars(
     # 数据转换
     _, _, star_names = stars_convert(data["stars"])
     # 根据大致日期获取各星时角赤纬
-    approx_star_HaDecs, is_success = get_HaDecs_by_names(star_names, approx_timestamp)
-    if not is_success:
+    approx_star_HaDecs, is_success = await get_HaDecs_by_names(star_names, approx_timestamp)
+    if is_success != "success":
         raise ValueError("无法获取天体坐标")
     for i, star_name in enumerate(star_names):
         data["stars"][i]["lon"] = np.deg2rad(
@@ -108,6 +108,7 @@ def angle_error(
     geo_estimate: dict,
     moon_idx: int,
     target_angles: np.ndarray,
+    pre_fetched_ra_decs: dict,
 ):
     """
     误差函数，计算每一天的星星（含月）相互角距，输出误差
@@ -132,7 +133,7 @@ def angle_error(
     # 得到该时间所计算的观测者地理坐标
     observer = ast.Observer(np.rad2deg(geo_estimate["lat"]), observer_lon, 0)
     # 获取该时间、该地理坐标下的天体时角赤纬
-    star_HaDecs, _ = get_HaDecs_by_names(star_names, timestamp, observer)
+    star_HaDecs, _ = get_HaDecs_sync(star_names, timestamp, observer, pre_fetched_ra_decs)
     moon_HaDec = star_HaDecs[star_names[moon_idx]]
     assert moon_HaDec[0] and moon_HaDec[1]
     moon_vec = np.array(

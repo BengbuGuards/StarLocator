@@ -23,19 +23,22 @@ target = {
 
 
 def test_local():
-    result, is_success = get_HaDecs_by_names(star_names, timestamp)
-    assert is_success
-    for star_name in star_names:
-        assert result[star_name] == pytest.approx(target[star_name])
+    import asyncio
+    async def run_test():
+        result, is_success = await get_HaDecs_by_names(star_names, timestamp)
+        assert is_success
+        for star_name in star_names:
+            assert result[star_name] == pytest.approx(target[star_name])
 
-    # 验证缓存功能
-    start_time = time.time()
-    result, is_success = get_HaDecs_by_names(star_names, timestamp)
-    end_time = time.time()
-    assert is_success
-    for star_name in star_names:
-        assert result[star_name] == pytest.approx(target[star_name])
-    assert end_time - start_time < 0.05
+        # 验证缓存功能
+        start_time = time.time()
+        result, is_success = await get_HaDecs_by_names(star_names, timestamp)
+        end_time = time.time()
+        assert is_success
+        for star_name in star_names:
+            assert result[star_name] == pytest.approx(target[star_name])
+        assert end_time - start_time < 0.05
+    asyncio.run(run_test())
 
 
 def test_remote():

@@ -1,8 +1,9 @@
 from typing import Annotated
 from fastapi import APIRouter, Request, Response, Form
+from fastapi.responses import StreamingResponse
 from schemas.astrometry.extract_stars import ExtractStarRequest, ExtractStarResponse
 from schemas.astrometry.recognize import RecognizeRequest, RecognizeResponse
-from schemas.astrometry.submit import SubmitRequest, SubmitResponse
+from schemas.astrometry.submit import SubmitRequest, SubmitResponse, RecognizeStreamRequest
 from core.astrometry.extract import extract_stars
 from core.astrometry.solve import recognize
 from core.astrometry.solve import submit
@@ -11,6 +12,8 @@ from PIL import Image
 import json
 import httpx
 
+import asyncio
+from core.utils.http import get_http_client
 from .limiter import limiter
 from config import LIGHT_RATE_LIMIT, MEDIUM_RATE_LIMIT, MAX_UPLOAD_SIZE
 
@@ -19,7 +22,7 @@ router = APIRouter()
 
 @router.post("/extractstars", response_model=ExtractStarResponse)
 @limiter.limit(LIGHT_RATE_LIMIT)
-def http_extract_stars(request: Request, data: Annotated[ExtractStarRequest, Form()]):
+async def http_extract_stars(request: Request, data: Annotated[ExtractStarRequest, Form()]):
     """
     获取图像中的星星位置
 
@@ -45,14 +48,14 @@ def http_extract_stars(request: Request, data: Annotated[ExtractStarRequest, For
             "positions": None,
         }
     try:
-        image = Image.open(BytesIO(f))
-    except Exception as e:
+        image = await asyncio.to_thread(Image.open, BytesIO(f))
+    except Exception:
         return {
-            "detail": str(e),
+            "detail": "图像格式不支持或文件已损坏",
             "positions": None,
         }
-    detail, positions = extract_stars(
-        image, data.thresh, data.min_area, data.clean, data.clean_param
+    detail, positions = await asyncio.to_thread(
+        extract_stars, image, data.thresh, data.min_area, data.clean, data.clean_param
     )
     return {
         "detail": detail,
@@ -62,7 +65,7 @@ def http_extract_stars(request: Request, data: Annotated[ExtractStarRequest, For
 
 @router.post("/submit", response_model=SubmitResponse)
 @limiter.limit(MEDIUM_RATE_LIMIT)
-def http_submit(request: Request, data: Annotated[SubmitRequest, Form()]):
+async def http_submit(request: Request, data: Annotated[SubmitRequest, Form()]):
     """
     提交图像中的星星位置以让Astrometry.net解析
 
@@ -92,10 +95,10 @@ def http_submit(request: Request, data: Annotated[SubmitRequest, Form()]):
                 "job_id": None,
             }
         try:
-            image = Image.open(BytesIO(f))
-        except Exception as e:
+            image = await asyncio.to_thread(Image.open, BytesIO(f))
+        except Exception:
             return {
-                "detail": str(e),
+                "detail": "上传的图像格式不支持或文件已损坏",
                 "job_id": None,
             }
         sub_images.append(image)
@@ -106,15 +109,15 @@ def http_submit(request: Request, data: Annotated[SubmitRequest, Form()]):
     scale_lower = data.scale_lower
     scale_upper = data.scale_upper
 
-    detail, job_id = submit(
-        sub_images, xy, image_width, image_height, scale_units, scale_lower, scale_upper
+    detail, job_id = await asyncio.to_thread(
+        submit, sub_images, xy, image_width, image_height, scale_units, scale_lower, scale_upper
     )
 
     return {"detail": detail, "job_id": job_id}
 
 
 @router.get("/jobidstatus/{job_id}")
-def http_jobid_status(request: Request, job_id: str):
+async def http_jobid_status(request: Request, job_id: str):
     """
     获取任务的状态
 
@@ -125,13 +128,14 @@ def http_jobid_status(request: Request, job_id: str):
     Returns:
         a str, Astrometry的响应结果
     """
-    response = httpx.get(f"http://nova.astrometry.net/api/jobs/{job_id}")
+    client = get_http_client()
+    response = await client.get(f"http://nova.astrometry.net/api/jobs/{job_id}")
     return Response(content=response.text, status_code=response.status_code)
 
 
 @router.post("/recognize", response_model=RecognizeResponse)
 @limiter.limit(MEDIUM_RATE_LIMIT)
-def http_recognize(request: Request, data: RecognizeRequest):
+async def http_recognize(request: Request, data: RecognizeRequest):
     """
     解析Astrometry.net返回的结果
 
@@ -151,7 +155,7 @@ def http_recognize(request: Request, data: RecognizeRequest):
             hd_names: list[tuple[float, float, str]] | None, HA, Dec, 星名
     """
 
-    detail, hd_names = recognize(
+    detail, hd_names = await recognize(
         data.job_id,
         data.xy,
         data.timestamp,
@@ -161,3 +165,73 @@ def http_recognize(request: Request, data: RecognizeRequest):
     )
 
     return {"detail": detail, "hd_names": hd_names}
+@router.post("/recognize-stream")
+@limiter.limit(MEDIUM_RATE_LIMIT)
+async def http_recognize_stream(request: Request, data: Annotated[RecognizeStreamRequest, Form()]):
+    """
+    提交图像并自动轮询解析结果（SSE流式响应）
+    """
+    async def event_generator():
+        try:
+            sub_images = []
+            for sub_image in data.sub_images:
+                f = sub_image.file.read()
+                if len(f) > MAX_UPLOAD_SIZE:
+                    yield f"data: {json.dumps({'step': 'error', 'detail': f'上传文件大小{len(f)}超过{MAX_UPLOAD_SIZE}字节'})}\n\n"
+                    return
+                try:
+                    image = await asyncio.to_thread(Image.open, BytesIO(f))
+                except Exception:
+                    yield f"data: {json.dumps({'step': 'error', 'detail': '上传的图像格式不支持或文件已损坏'})}\n\n"
+                    return
+                sub_images.append(image)
+            
+            xy = json.loads(data.xy)
+            detail, job_id = await asyncio.to_thread(
+                submit, sub_images, xy, data.image_width, data.image_height, 
+                data.scale_units, data.scale_lower, data.scale_upper
+            )
+            
+            if not job_id:
+                yield f"data: {json.dumps({'step': 'error', 'detail': detail})}\n\n"
+                return
+                
+            yield f"data: {json.dumps({'step': 'submitted', 'job_id': job_id})}\n\n"
+            
+            client = get_http_client()
+            while True:
+                # 轮询状态
+                try:
+                    response = await client.get(f"http://nova.astrometry.net/api/jobs/{job_id}", timeout=10)
+                    status_data = response.json()
+                    status = status_data.get("status")
+                except Exception as e:
+                    yield f"data: {json.dumps({'step': 'error', 'detail': '查询任务状态失败'})}\n\n"
+                    return
+                    
+                if status == "success":
+                    yield f"data: {json.dumps({'step': 'solving'})}\n\n"
+                    break
+                elif status == "failure":
+                    yield f"data: {json.dumps({'step': 'error', 'detail': '无法确定天体坐标'})}\n\n"
+                    return
+                else:
+                    await asyncio.sleep(1)
+            
+            # 开始 recognize
+            detail, hd_names = await recognize(
+                job_id, xy, data.timestamp, radius=data.radius, max_mag=data.max_mag, is_zh=data.is_zh
+            )
+            
+            if detail == "success":
+                yield f"data: {json.dumps({'step': 'success', 'hd_names': hd_names})}\n\n"
+            else:
+                yield f"data: {json.dumps({'step': 'error', 'detail': detail})}\n\n"
+                
+        except asyncio.CancelledError:
+            # 客户端断开连接
+            pass
+        except Exception as e:
+            yield f"data: {json.dumps({'step': 'error', 'detail': '服务器内部发生未知错误'})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")

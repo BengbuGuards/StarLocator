@@ -27,7 +27,7 @@ LOG_LEVEL = "info"
 
 # API_KEY
 ## astrometry API_KEY
-ASTROMETRY_API_KEY = "*****"
+ASTROMETRY_API_KEY = "******"
 
 # 网络请求是否限流
 RATE_LIMIT = False

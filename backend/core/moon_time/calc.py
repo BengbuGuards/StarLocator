@@ -11,7 +11,10 @@ from core.positioning.find_z.utils.math import minimize
 from core.positioning.top_point.methods.matrix_inverse_normalized import intersection
 
 
-def calc(
+from core.astro_coord.calc import get_RaDecs_by_names
+from core.astro_coord.data import starZH2EN, solar_bodies
+
+async def calc(
     photo: dict,
     approx_timestamp: float,
     scope_days: float,
@@ -52,27 +55,42 @@ def calc(
     # 获取月与各星相互角距作为目标值
     points, _, star_names = stars_convert(photo["stars"])
     target_angles = angle_btw_moon_stars(points, moon_idx, z)
+    
+    # 提前获取太阳系外天体的赤经赤纬（用于后续同步计算）
+    fixed_star_names = []
+    for star_name in star_names:
+        operate_name = star_name
+        if operate_name in starZH2EN:
+            operate_name = starZH2EN[operate_name]
+        operate_name = operate_name.lower()
+        if operate_name not in solar_bodies:
+            fixed_star_names.append(operate_name)
+    pre_fetched_ra_decs = await get_RaDecs_by_names(fixed_star_names)
+
     # 根据星星信息计算大致日期下的地理坐标
-    geo_estimate = geo_estimate_by_stars(
+    geo_estimate = await geo_estimate_by_stars(
         deepcopy(photo), approx_timestamp, moon_idx, is_fix_gravity, is_fix_refraction
     )
 
     s_per_day = 86400
 
-    # 将scope_days划分为每20天一个区间，对每个区间使用三段二分法minimize搜索最小误差，最后返回最小误差对应的时间
-    min_time = int(approx_timestamp - (scope_days * s_per_day) / 2)
-    max_time = int(approx_timestamp + (scope_days * s_per_day) / 2)
-    min_error = float("inf")
-    opt_time = 0
-    opt_func = lambda timestamp: angle_error(
-        timestamp, approx_timestamp, star_names, geo_estimate, moon_idx, target_angles
-    )
-    for left_i in range(min_time, max_time, 20 * s_per_day):
-        right_i = min(left_i + 20 * s_per_day, max_time)
-        opt_time_single = minimize(opt_func, left_i, right_i, 1, 100)
-        time_error = opt_func(opt_time_single)
-        if time_error < min_error:
-            min_error = time_error
-            opt_time = opt_time_single
+    def optimize_loop():
+        # 将scope_days划分为每20天一个区间，对每个区间使用三段二分法minimize搜索最小误差，最后返回最小误差对应的时间
+        min_time = int(approx_timestamp - (scope_days * s_per_day) / 2)
+        max_time = int(approx_timestamp + (scope_days * s_per_day) / 2)
+        min_error = float("inf")
+        opt_time = 0
+        opt_func = lambda timestamp: angle_error(
+            timestamp, approx_timestamp, star_names, geo_estimate, moon_idx, target_angles, pre_fetched_ra_decs
+        )
+        for left_i in range(min_time, max_time, 20 * s_per_day):
+            right_i = min(left_i + 20 * s_per_day, max_time)
+            opt_time_single = minimize(opt_func, left_i, right_i, 1, 100)
+            time_error = opt_func(opt_time_single)
+            if time_error < min_error:
+                min_error = time_error
+                opt_time = opt_time_single
+        return opt_time
 
-    return opt_time
+    import asyncio
+    return await asyncio.to_thread(optimize_loop)

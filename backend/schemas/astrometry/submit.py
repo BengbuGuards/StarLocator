@@ -36,3 +36,9 @@ class SubmitRequest(BaseModel):
 class SubmitResponse(BaseModel):
     detail: str = Field(..., description="Whether the extraction is successful.")
     job_id: str | None = Field(..., description="The job id of the submission.")
+
+class RecognizeStreamRequest(SubmitRequest):
+    timestamp: float = Field(..., description="The timestamp of the image.", gt=0)
+    radius: float = Field(60, description="The radius of the search area.", gt=0)
+    max_mag: float = Field(6, description="The maximum magnitude of the stars.")
+    is_zh: bool = Field(False, description="Whether to use the Chinese star names.")

@@ -53,7 +53,37 @@ def get_HaDec_in_solar(
     return (hour_angle, equ_ofdate.dec)
 
 
-def get_HaDecs_by_names(
+def get_HaDecs_sync(
+    star_names: list[str],
+    timestamp: float,
+    observer: ast.Observer,
+    pre_fetched_ra_decs: dict[str, tuple[float | None, float | None]],
+) -> tuple[dict[str, tuple[float | None, float | None]], str]:
+    """同步计算天体时角和赤纬（不涉及网络请求）"""
+    ha_desc = dict()
+    detail = "success"
+    ast_time = stamp2ast_time(timestamp)
+
+    for star_name in star_names:
+        operate_name = star_name
+        if operate_name in starZH2EN:
+            operate_name = starZH2EN[operate_name]
+        operate_name = operate_name.lower()
+
+        if operate_name in solar_bodies:
+            ha_desc[star_name] = get_HaDec_in_solar(operate_name, ast_time, observer)
+        else:
+            ra_dec = pre_fetched_ra_decs.get(operate_name, (None, None))
+            ha_desc[star_name] = get_HaDec_by_RaDec(ra_dec, ast_time, observer)
+
+    for star_name in star_names:
+        if ha_desc[star_name][0] is None or ha_desc[star_name][1] is None:
+            detail = f"未能获取天体 '{star_name}' 的坐标信息，请检查拼写或稍后重试"
+            break
+
+    return ha_desc, detail
+
+async def get_HaDecs_by_names(
     star_names: list[str],
     timestamp: float,
     observer: ast.Observer = ast.Observer(0, 0, 0),
@@ -71,40 +101,16 @@ def get_HaDecs_by_names(
         is_success: 是否成功获取恒星赤经赤纬
     """
 
-    ha_desc = dict()  # 时角和赤纬数组（角度）
-    fixed_star_names = dict()  # 太阳系外要查询的恒星名（查询名: 操作名）
-    solar_star_names = dict()  # 太阳系内要查询的天体名（查询名: 操作名）
-    detail = "success"  # 是否成功获取恒星赤经赤纬
-    ast_time = stamp2ast_time(timestamp)
-
+    fixed_star_names = []
     for star_name in star_names:
         operate_name = star_name
-        # 如果匹配到汉英对照星表，则转换为英文名
         if operate_name in starZH2EN:
             operate_name = starZH2EN[operate_name]
         operate_name = operate_name.lower()
-        if operate_name in solar_bodies:
-            solar_star_names[star_name] = operate_name
-        else:
-            fixed_star_names[star_name] = operate_name
+        if operate_name not in solar_bodies:
+            fixed_star_names.append(operate_name)
 
     # 异步获取恒星的赤经和赤纬
-    ra_decs = asyncio.run(get_RaDecs_by_names(list(fixed_star_names.values())))
-    # 同步计算天体的时角和赤纬
-    # 计算太阳系外天体的时角和赤纬
-    for star_name in fixed_star_names.keys():
-        ha_desc[star_name] = get_HaDec_by_RaDec(
-            ra_decs[fixed_star_names[star_name]], ast_time, observer
-        )
-
-    # 计算太阳系内天体的时角和赤纬
-    for star_name, operate_name in solar_star_names.items():
-        ha_desc[star_name] = get_HaDec_in_solar(operate_name, ast_time, observer)
-
-    # 检查是否成功获取恒星赤经赤纬
-    for star_name in star_names:
-        if ha_desc[star_name][0] is None or ha_desc[star_name][1] is None:
-            detail = "fail"
-            break
-
-    return ha_desc, detail
+    ra_decs = await get_RaDecs_by_names(fixed_star_names)
+    
+    return get_HaDecs_sync(star_names, timestamp, observer, ra_decs)

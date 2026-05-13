@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 import uvicorn.config
 from routers import astro_coord, moon_time, positioning, astrometry
 from routers.limiter import limiter
@@ -7,9 +8,17 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from config import CORS_ALLOW_ORIGIN, LOG_LEVEL
 import uvicorn
+from core.utils.http import get_http_client, close_http_client
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 启动时初始化 HTTP Client
+    get_http_client()
+    yield
+    # 关闭时清理
+    await close_http_client()
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 # 跨域
 app.add_middleware(

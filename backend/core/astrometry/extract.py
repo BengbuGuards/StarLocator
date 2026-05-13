@@ -41,8 +41,8 @@ def extract_stars(
             clean=clean,
             clean_param=clean_param,
         )
-    except Exception as e:
-        return str(e), None
+    except Exception:
+        return "图片噪点过高或无法在图像中提取到有效星点", None
     # 提取星星位置
     positions = np.around(
         np.array([objects["x"], objects["y"]]),

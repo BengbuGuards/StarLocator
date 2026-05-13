@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Request
 from schemas import positioning
 from core.positioning.calc import calc_geo
@@ -10,7 +11,7 @@ router = APIRouter()
 
 @router.post("", response_model=positioning.PositioningResponse)
 @limiter.limit(LIGHT_RATE_LIMIT)
-def http_geo_by_data(request: Request, data: positioning.PositioningRequest):
+async def http_geo_by_data(request: Request, data: positioning.PositioningRequest):
     """
     Find the geographical position.
 
@@ -36,10 +37,11 @@ def http_geo_by_data(request: Request, data: positioning.PositioningRequest):
             lat: float, latitude
     """
 
-    geo = calc_geo(
+    geo = await asyncio.to_thread(
+        calc_geo,
         data.photo.model_dump(),
-        is_fix_refraction=data.isFixRefraction,
-        is_fix_gravity=data.isFixGravity,
+        data.isFixRefraction,
+        data.isFixGravity,
     )
 
     return geo

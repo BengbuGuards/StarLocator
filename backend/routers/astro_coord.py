@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("", response_model=astro_coord.AstroCoord)
 @limiter.limit(LIGHT_RATE_LIMIT)
-def http_astro_coord(request: Request, data: astro_coord.AstroTime):
+async def http_astro_coord(request: Request, data: astro_coord.AstroTime):
     """
     获取指定时间的天体时角和赤纬
 
@@ -26,7 +26,7 @@ def http_astro_coord(request: Request, data: astro_coord.AstroTime):
             haDecs: list[float | None] 各天体的时角和赤纬列表（角度）
     """
 
-    haDecs, detail = get_HaDecs_by_names(data.starNames, data.timestamp)
+    haDecs, detail = await get_HaDecs_by_names(data.starNames, data.timestamp)
     return {
         "detail": detail,
         "haDecs": haDecs,

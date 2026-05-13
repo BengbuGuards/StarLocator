@@ -129,11 +129,15 @@ class Calc extends DefaultbuttonFunctioner {
     }
 
     checkStarPositions(originalStars) {
-        return originalStars.every((originalStar) => Number.isFinite(originalStar.x) && Number.isFinite(originalStar.y));
+        return originalStars.every(
+            (originalStar) => Number.isFinite(originalStar.x) && Number.isFinite(originalStar.y)
+        );
     }
 
     checkStarCoords(originalStars) {
-        return originalStars.every((originalStar) => Number.isFinite(originalStar.lon) && Number.isFinite(originalStar.lat));
+        return originalStars.every(
+            (originalStar) => Number.isFinite(originalStar.lon) && Number.isFinite(originalStar.lat)
+        );
     }
 
     // 添加天顶坐标到表格

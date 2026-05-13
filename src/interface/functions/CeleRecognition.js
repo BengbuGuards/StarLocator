@@ -1,5 +1,5 @@
 import { DefaultbuttonFunctioner } from './Default.js';
-import { post, setHADE } from '../utils.js';
+import { setHADE } from '../utils.js';
 import { BACKEND_API } from '../../config.js';
 
 // 天体识别按钮功能类
@@ -8,6 +8,7 @@ class RecognizeStars extends DefaultbuttonFunctioner {
         super(interactPhoto);
         this.isRecognizing = false; // 是否正在自动识星
         this.xy = null; // 所有天体的图上坐标
+        this.abortController = null; // 用于取消请求
     }
 
     onClick() {
@@ -16,6 +17,9 @@ class RecognizeStars extends DefaultbuttonFunctioner {
 
         if (this.isRecognizing) {
             // 自动识星可能比较耗时，可以让用户取消
+            if (this.abortController) {
+                this.abortController.abort();
+            }
             this.clearData();
             this.interactPhoto.resetbuttonFunctioner();
             this.interactPhoto.tips.innerHTML = '已取消自动识星';
@@ -37,82 +41,87 @@ class RecognizeStars extends DefaultbuttonFunctioner {
     clearData() {
         this.isRecognizing = false;
         this.xy = null;
+        this.abortController = null;
     }
 
-    // 提交数据
+    // 提交数据并建立SSE连接监听进度
     async submitData() {
         this.interactPhoto.tips.innerHTML = '正在申请任务排队（0/3）';
         this.xy = this.getXY();
         const subImages = await this.getSubImages(this.xy);
-        const image_width = this.interactPhoto.img.width;
-        const image_height = this.interactPhoto.img.height;
-        const formData = {
-            sub_images: subImages,
-            xy: JSON.stringify(this.xy),
-            image_width: image_width,
-            image_height: image_height,
-            scale_lower: document.getElementById('setScopeAngle1').value,
-            scale_upper: document.getElementById('setScopeAngle2').value,
-        };
-        post(BACKEND_API + '/astrometry/submit', formData, 'form').then(([results, detail]) => {
-            if (detail == 'success') {
-                this.interactPhoto.tips.innerHTML = '正在求解天体坐标（1/3）';
-                this.inquire(results['job_id']);
-            } else {
-                this.interactPhoto.tips.innerHTML = `提交数据失败：${detail}`;
-                this.clearData(); // TODO：其他按钮功能类可能也需要清除状态
-                this.interactPhoto.resetbuttonFunctioner();
-            }
-        });
-    }
 
-    // 轮询Astrometry任务是否成功
-    inquire(jobid) {
-        fetch(`${BACKEND_API}/astrometry/jobidstatus/${jobid}`, {
-            method: 'GET',
-        })
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                if (data['status'] === 'success') {
-                    this.interactPhoto.tips.innerHTML = '正在识别天体名称（2/3）';
-                    this.recognizeStars(jobid);
-                } else if (data['status'] === 'failure') {
-                    this.interactPhoto.tips.innerHTML = '无法确定天体坐标';
-                    this.clearData();
-                    this.interactPhoto.resetbuttonFunctioner();
-                } else {
-                    setTimeout(() => {
-                        this.inquire(jobid);
-                    }, 1000);
+        const formData = new FormData();
+        subImages.forEach((blob) => formData.append('sub_images', blob, `sub.png`));
+        formData.append('xy', JSON.stringify(this.xy));
+        formData.append('image_width', this.interactPhoto.img.width);
+        formData.append('image_height', this.interactPhoto.img.height);
+        formData.append('scale_lower', document.getElementById('setScopeAngle1').value);
+        formData.append('scale_upper', document.getElementById('setScopeAngle2').value);
+        formData.append('timestamp', this.interactPhoto.getTimestamp());
+        formData.append('is_zh', true);
+
+        this.abortController = new AbortController();
+
+        try {
+            const response = await fetch(`${BACKEND_API}/astrometry/recognize-stream`, {
+                method: 'POST',
+                body: formData,
+                signal: this.abortController.signal,
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                let lines = buffer.split('\n');
+                // 保留最后不完整的一行
+                buffer = lines.pop();
+
+                for (let line of lines) {
+                    if (line.trim() === '') continue;
+                    if (line.startsWith('data: ')) {
+                        const dataStr = line.substring(6);
+                        try {
+                            const data = JSON.parse(dataStr);
+                            if (data.step === 'submitted') {
+                                this.interactPhoto.tips.innerHTML = '正在求解天体坐标（1/3）';
+                            } else if (data.step === 'solving') {
+                                this.interactPhoto.tips.innerHTML = '正在识别天体名称（2/3）';
+                            } else if (data.step === 'success') {
+                                this.interactPhoto.tips.innerHTML = '识别成功（3/3）';
+                                this.showStars(data);
+                                this.clearData();
+                                this.interactPhoto.resetbuttonFunctioner();
+                            } else if (data.step === 'error') {
+                                this.interactPhoto.tips.innerHTML = `识别失败：${data.detail}`;
+                                this.clearData();
+                                this.interactPhoto.resetbuttonFunctioner();
+                                return; // 发生错误，结束处理
+                            }
+                        } catch (e) {
+                            console.error('SSE Parsing error:', e, dataStr);
+                        }
+                    }
                 }
-            })
-            .catch((error) => {
-                this.interactPhoto.tips.innerHTML = `查询任务状态失败：${error}`;
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                console.log('自动识星请求已被取消');
+            } else {
+                this.interactPhoto.tips.innerHTML = `提交请求失败：${error.message}`;
                 this.clearData();
                 this.interactPhoto.resetbuttonFunctioner();
-            });
-    }
-
-    // 识别星名
-    recognizeStars(jobid) {
-        const data = {
-            job_id: jobid,
-            xy: this.xy,
-            timestamp: this.interactPhoto.getTimestamp(),
-            is_zh: true,
-        };
-        post(BACKEND_API + '/astrometry/recognize', data, 'json').then(([results, detail]) => {
-            if (detail == 'success') {
-                this.interactPhoto.tips.innerHTML = '识别成功（3/3）';
-                this.showStars(results);
-            } else {
-                this.interactPhoto.tips.innerHTML = `识别失败：${detail}`;
             }
-            this.clearData();
-            this.interactPhoto.resetbuttonFunctioner();
-        });
+        }
     }
 
     // 获取天体的图上坐标

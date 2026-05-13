@@ -16,8 +16,8 @@ backend:
 - [slowapi](https://github.com/laurents/slowapi): MIT License
 - [sep](http://github.com/kbarbary/sep): LGPL-3.0 License
 - [astropy](https://www.astropy.org/): BSD 3-Clause License
-- [astrometry.net](https://astrometry.net): Custom License. The [client.py](./prototype/core/star_recognition/client.py) file of this project contains some content from astrometry and has been modified based on it, mainly integrating the star recognition function.
+- [astrometry.net](https://astrometry.net): Custom License. The [client.py](./backend/core/star_recognition/client.py) file of this project contains some content from astrometry and has been modified based on it, mainly integrating the star recognition function.
 
 data:
 - [SIMBAD](https://simbad.u-strasbg.fr/simbad/): This project has made use of the SIMBAD database, operated at CDS, Strasbourg, France
-- [stellarium](https://github.com/Stellarium/stellarium): GPL-2.0 license. The [data.py](./prototype/core/astro_coord/data.py) and [starZH2EN.js](./src/interface/starZH2EN.js) files of this project contains some content from stellarium and has been modified based on it, mainly integrating the Chinese and English star name tables.
+- [stellarium](https://github.com/Stellarium/stellarium): GPL-2.0 license. The [data.py](./backend/core/astro_coord/data.py) and [starZH2EN.js](./src/interface/starZH2EN.js) files of this project contains some content from stellarium and has been modified based on it, mainly integrating the Chinese and English star name tables.

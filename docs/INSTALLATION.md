@@ -2,7 +2,7 @@
 1. 克隆仓库，安装Node.js、pnpm和Python（版本尽量较新）。
 2. 前端构建
 
-    自定义前端配置文件[config.js](../src/config.js)。其中，百度地图API key申请见[百度地图开放平台](https://lbsyun.baidu.com/)，Astrometry.net API key申请见[Astrometry.net](https://nova.astrometry.net/api_help)。
+    自定义前端配置文件[config.js](../src/config.js)。Astrometry.net API key申请见[Astrometry.net](https://nova.astrometry.net/api_help)。
 
     安装依赖：
     ```bash
@@ -28,29 +28,21 @@
 
 3. 后端构建
 
-    进入`prototype`目录：
+    进入`backend`目录：
     ```bash
-    cd prototype
+    cd backend
     ```
 
-    自定义后端配置文件[config.py](../prototype/config.py)。
-
-    **注意：** 本项目的地图显示功能由百度地图API提供，在`config.py`中填写百度地图API的AK后可正常使用，使用时请注意百度地图API的使用条款。此外也可不填写AK，最终计算结果将以文本形式显示。
-
-    新建虚拟环境：
-    ```bash
-    conda create -n starlocator
-    conda activate starlocator
-    ```
+    自定义后端配置文件[config.py](../backend/config.py)。
 
     安装依赖：
     ```bash
-    pip install -r requirements.txt
+    uv sync --no-dev
     ```
 
     （Optional）安装开发依赖：
     ```bash
-    pip install -r requirements-dev.txt
+    uv sync --dev
     ```
 
     运行后端：

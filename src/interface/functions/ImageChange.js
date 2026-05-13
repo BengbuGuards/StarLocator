@@ -43,6 +43,7 @@ class ImageChange extends DefaultbuttonFunctioner {
         this.interactPhoto.canvas.selection = true;
         this.interactPhoto.canvas.defaultCursor = 'grab';
         this.interactPhoto.canvas.remove(this.interactPhoto.text);
+        this.interactPhoto.updateCalculButton();
     }
 
     onClick(e) {

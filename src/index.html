@@ -5,13 +5,6 @@
     <meta charset="utf-8">
     <title>照片测星定位</title>
     <link rel="shortcut icon" href="img/icon/favicon.ico" type="image/x-icon" crossorigin="">
-    <!-- 加载BMap初始化脚本 -->
-    <script type="text/javascript">
-        window._BMapSecurityConfig = {
-            serviceHost: '{{back_host}}/_BMapService'
-        }
-    </script>
-    <script type="text/javascript" src="{{back_host}}/_BMapService/api?v=3.0&type=webgl"></script>
     <!-- TODO: 移动端适配 -->
 </head>
 
@@ -73,7 +66,6 @@
         </div>
         <div class="col-measure">
             <h2>测量</h2>
-            <input type="file" id="srcFile" accept="image/*" aria-label="上传文件" />
             <button type="button" id="resetZoom" style="float: right;">重置缩放</button>
             <div id="box" style="min-width:450px; height: 600px; width:100%">
                 <canvas id="canvas"></canvas>
@@ -270,8 +262,13 @@
                     <td id="outputLat" class="result">0.0000°</td>
                 </tr>
             </table>
-            <div id="address" style="height:30px;"></div>
-            <div id="map" style="min-width:360px; height: 360px; margin-left:0px"></div>
+            <div class="geojsonPanel" id="geojsonPanel" hidden>
+                <div class="geojsonActions">
+                    <span>GeoJSON</span>
+                </div>
+                <a id="openGeojsonIo" class="geojsonButton" href="https://geojson.io/" target="_blank" rel="noopener noreferrer">用 geojson.io 查看</a>
+                <button type="button" id="openAmap" class="geojsonButton">用高德地图查看</button>
+            </div>
         </div>
         <div style="margin-top: 30px">
             <h2>关于</h2>

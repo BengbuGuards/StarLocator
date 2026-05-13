@@ -1,0 +1,25 @@
+[project]
+name = "starlocator"
+version = "2.1.0"
+description = "照片测星定位 网页app（地平论吧）"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "astronomy-engine>=2.1.19",
+    "astropy>=7.2.0",
+    "async-lru>=2.3.0",
+    "fastapi>=0.136.1",
+    "httpx>=0.28.1",
+    "numpy>=2.4.4",
+    "python-multipart>=0.0.27",
+    "scipy>=1.17.1",
+    "sep>=1.4.1",
+    "slowapi>=0.1.9",
+    "uvicorn[standard]>=0.46.0",
+]
+
+[dependency-groups]
+dev = [
+    "matplotlib>=3.10.9",
+    "pytest>=9.0.3",
+]

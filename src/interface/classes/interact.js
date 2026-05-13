@@ -17,7 +17,6 @@ class InteractPhoto {
         this.movable = false; // 是否可移动
         this.text = null; // 文本
         this.rect = null; // 矩形
-        this.map = null; // 地图
         this.date = null; // 日期
         this.time = null; // 时间
         this.timeZone = null; // 时区
@@ -57,6 +56,10 @@ class InteractPhoto {
         this.buttonFunctioner = this.defaultbuttonFunctioner;
     }
 
+    getCompletePLCount() {
+        return this.PLArray.array.filter((pl) => pl.points.length === 2).length;
+    }
+
     // 刷新天体标记数量提示和天体识别按钮状态
     updateCeleStatus() {
         if (!this.celeStatus) return;
@@ -64,6 +67,7 @@ class InteractPhoto {
         const count = this.CeleArray.num();
         this.celeStatus.innerHTML = this.getCeleStatusText(count);
         this.updateRecognizeButton(count);
+        this.updateCalculButton();
     }
 
     getCeleStatusText(count) {
@@ -77,6 +81,15 @@ class InteractPhoto {
             recognizeButton.classList.toggle('is-disabled', count < 3);
             recognizeButton.setAttribute('aria-disabled', count < 3 ? 'true' : 'false');
         }
+    }
+
+    updateCalculButton() {
+        const calculButton = document.getElementById('actionCalcul');
+        if (!calculButton) return;
+
+        const isDisabled = !this.movable || this.CeleArray.num() < 3 || this.getCompletePLCount() < 2;
+        calculButton.classList.toggle('is-disabled', isDisabled);
+        calculButton.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }
 
     // 获取当前日期时间时区的时间戳

@@ -15,26 +15,26 @@
 	"author": "",
 	"license": "AGPL-3.0-only",
 	"dependencies": {
-		"fabric": "^6.4.3",
+		"fabric": "^6.9.1",
 		"fuzzysort": "^3.1.0"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.13.0",
-		"css-loader": "^7.1.2",
-		"css-minimizer-webpack-plugin": "^7.0.0",
-		"eslint": "^9.13.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
-		"globals": "^15.11.0",
-		"handlebars": "^4.7.8",
+		"@eslint/js": "^10.0.1",
+		"css-loader": "^7.1.4",
+		"css-minimizer-webpack-plugin": "^8.0.0",
+		"eslint": "^10.3.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-prettier": "^5.5.5",
+		"globals": "^17.6.0",
+		"handlebars": "^4.7.9",
 		"html-loader": "^5.1.0",
-		"html-webpack-plugin": "^5.6.3",
+		"html-webpack-plugin": "^5.6.7",
 		"http-server": "^14.1.1",
-		"mini-css-extract-plugin": "^2.9.2",
-		"prettier": "^3.3.3",
+		"mini-css-extract-plugin": "^2.10.2",
+		"prettier": "^3.8.3",
 		"style-loader": "^4.0.0",
-		"webpack": "^5.95.0",
-		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^5.1.0"
+		"webpack": "^5.106.2",
+		"webpack-cli": "^7.0.2",
+		"webpack-dev-server": "^5.2.3"
 	}
 }

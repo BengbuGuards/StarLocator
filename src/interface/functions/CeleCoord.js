@@ -27,7 +27,7 @@ class CeleCoord {
             },
             'json'
         );
-        if (results === null) {
+        if (results === null || detail !== 'success') {
             this.interactPhoto.tips.innerHTML = `自动计算天体坐标失败：${detail}`;
             return -1;
         }
@@ -35,7 +35,7 @@ class CeleCoord {
         this.interactPhoto.tips.innerHTML = `自动计算天体坐标成功`;
         for (let i = 0; i < starNames.length; i++) {
             let [ha, dec] = results['haDecs'][starNames[i]];
-            if (isNaN(ha) || isNaN(dec)) {
+            if (!Number.isFinite(ha) || !Number.isFinite(dec)) {
                 this.interactPhoto.tips.innerHTML = `无法自动计算${starNames[i]}坐标，请检查天体名称是否正确`;
                 return -1;
             } else {

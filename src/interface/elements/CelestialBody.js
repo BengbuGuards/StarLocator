@@ -187,7 +187,7 @@ class CeleArray extends markerArray {
             coordY.dataset.rawValue = y;
 
             if (!this.interactPhoto.movable) {
-                this.interactPhoto.tips.innerHTML = '请先选择星空照片';
+                this.interactPhoto.tips.innerHTML = '请先拖拽星空照片到此处';
                 return;
             }
 

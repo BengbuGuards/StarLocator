@@ -1,4 +1,4 @@
-import { initializeElements, initializeCanvas, initializeEvents, initializeMap } from '../init.js';
+import { initializeElements, initializeCanvas, initializeEvents } from '../init.js';
 import { TouchEventAdapter } from './TouchEventAdapter.js';
 import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
@@ -32,7 +32,6 @@ class EventManager {
             initializeElements(this.interactPhoto);
             initializeCanvas(this.interactPhoto);
             initializeEvents(this);
-            initializeMap(this.interactPhoto);
         }.bind(this);
     }
 

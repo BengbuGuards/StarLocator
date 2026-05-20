@@ -15,6 +15,7 @@
 	"author": "",
 	"license": "AGPL-3.0-only",
 	"dependencies": {
+		"astronomy-engine": "^2.1.19",
 		"fabric": "^6.9.1",
 		"fuzzysort": "^3.1.0"
 	},

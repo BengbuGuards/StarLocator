@@ -39,25 +39,3 @@ def test_local():
             assert result[star_name] == pytest.approx(target[star_name])
         assert end_time - start_time < 0.05
     asyncio.run(run_test())
-
-
-def test_remote():
-    url = f"{BACKEND_API_BASEURL}/astrocoord"
-    data = {"starNames": star_names, "timestamp": timestamp}
-    resp = httpx.post(url, json=data)
-    assert resp.status_code == 200
-    result = resp.json()
-    assert result["detail"] == "success"
-    for star_name in star_names:
-        assert result["haDecs"][star_name] == pytest.approx(target[star_name])
-
-    # 验证缓存功能
-    start_time = time.time()
-    resp = httpx.post(url, json=data)
-    end_time = time.time()
-    assert resp.status_code == 200
-    result = resp.json()
-    assert result["detail"] == "success"
-    for star_name in star_names:
-        assert result["haDecs"][star_name] == pytest.approx(target[star_name])
-    assert end_time - start_time < 0.05

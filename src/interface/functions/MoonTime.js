@@ -1,5 +1,6 @@
 import { DefaultbuttonFunctioner } from './Default.js';
 import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
+import { getRaDecByName, optimizeMoonTime, vectorAngle } from '../AstroService.js';
 import { BACKEND_API } from '../../config.js';
 
 class MoonTime extends DefaultbuttonFunctioner {
@@ -49,7 +50,7 @@ class MoonTime extends DefaultbuttonFunctioner {
     }
 
     // 计算拍摄时间
-    calc(stars, globalPLsPointsCoord) {
+    async calc(stars, globalPLsPointsCoord) {
         // 开始计算
         this.interactPhoto.buttonFunctioner = this;
         this.interactPhoto.tips.innerHTML = `计算中...`;
@@ -60,52 +61,98 @@ class MoonTime extends DefaultbuttonFunctioner {
         let approxTimestamp = this.interactPhoto.getTimestamp();
         let scopeDays = parseFloat(document.getElementById('setTimeScope').value);
 
-        // 计算拍摄时间
-        post(
-            `${BACKEND_API}/moontime`,
-            {
-                photo: {
-                    stars: stars,
-                    lines: globalPLsPointsCoord,
-                },
-                approxTimestamp: approxTimestamp,
-                scopeDays: scopeDays,
-                isFixRefraction: isFixRefraction,
-                isFixGravity: isFixGravity,
-            },
-            'json'
-        ).then(([results, detail]) => {
-            if (detail === 'success') {
-                // 显示结果
-                this.interactPhoto.setDatebyTime(results['time']);
-                // 使用新时间重新计算天体坐标并显示
-                this.celeCoord.calc().then(() => {
-                    this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';
-                });
-            } else {
-                this.interactPhoto.tips.innerHTML = `计算拍摄时间失败：${detail}`;
-            }
-        });
+        // 找到月亮索引并提取非月亮的标星数据
+        const moonIdx = stars.findIndex((s) => ['月', '月亮', '月球', 'moon'].includes(s.name.trim().toLowerCase()));
+        if (moonIdx === -1) {
+            this.interactPhoto.tips.innerHTML = `没有找到月亮数据`;
+            this.interactPhoto.resetbuttonFunctioner();
+            return;
+        }
+        const subStars = stars.filter((_, idx) => idx !== moonIdx);
 
-        // 结束计算
-        this.interactPhoto.resetbuttonFunctioner();
+        try {
+            // 1. 通过向后端的 positioning 发送不含月亮的星体坐标来估算地理位置与焦距
+            const [geoEstimate, detail] = await post(
+                `${BACKEND_API}/positioning`,
+                {
+                    photo: {
+                        stars: subStars,
+                        lines: globalPLsPointsCoord,
+                    },
+                    isFixRefraction: isFixRefraction,
+                    isFixGravity: isFixGravity,
+                },
+                'json'
+            );
+
+            if (detail !== 'success' || !geoEstimate) {
+                this.interactPhoto.tips.innerHTML = `定位估算失败：${detail}`;
+                this.interactPhoto.resetbuttonFunctioner();
+                return;
+            }
+
+            // 2. 计算月亮与其他星体的图上像素夹角作为 targetAngles
+            const z = geoEstimate.z;
+            const points3D = stars.map((s) => [s.x, s.y, z]);
+            const targetAngles = points3D.map((p) => vectorAngle(points3D[moonIdx], p));
+
+            // 3. 提前并行获取所有非太阳系天体的赤经赤纬 J2000 数据
+            const preFetchedRaDecs = {};
+            const starNames = stars.map((s) => s.name);
+
+            this.interactPhoto.tips.innerHTML = `正在检索星体坐标...`;
+            await Promise.all(
+                starNames.map(async (name) => {
+                    preFetchedRaDecs[name] = await getRaDecByName(name);
+                })
+            );
+
+            // 检查星体坐标是否检索成功
+            let missingStars = [];
+            for (let i = 0; i < starNames.length; i++) {
+                if (i === moonIdx) continue;
+                if (!preFetchedRaDecs[starNames[i]]) {
+                    missingStars.push(starNames[i]);
+                }
+            }
+            if (missingStars.length > 0) {
+                this.interactPhoto.tips.innerHTML = `未能获取天体 '${missingStars.join(', ')}' 的坐标信息，请检查拼写或网络`;
+                this.interactPhoto.resetbuttonFunctioner();
+                return;
+            }
+
+            // 4. 执行本地高精度迭代时间优化
+            this.interactPhoto.tips.innerHTML = `正在推算精确拍摄时间...`;
+            const bestTimestamp = await optimizeMoonTime(
+                approxTimestamp,
+                scopeDays,
+                starNames,
+                geoEstimate,
+                moonIdx,
+                targetAngles,
+                preFetchedRaDecs
+            );
+
+            // 5. 显示结果并更新图上所有天体坐标
+            this.interactPhoto.setDatebyTime(bestTimestamp);
+            await this.celeCoord.calc();
+            this.interactPhoto.tips.innerHTML = '计算拍摄时间成功';
+        } catch (error) {
+            this.interactPhoto.tips.innerHTML = `计算拍摄时间失败：${error.message}`;
+        } finally {
+            this.interactPhoto.resetbuttonFunctioner();
+        }
     }
 
     // 检查originalStars数组每个子项的名称是否完整
     checkStars(originalStars) {
-        let isComplete = true;
-        originalStars.forEach((originalStar) => {
-            if (originalStar[0] === '') {
-                isComplete = false;
-            }
-        });
-        return isComplete;
+        return originalStars.every((originalStar) => originalStar.name && originalStar.name.trim() !== '');
     }
 
     // 检查月亮
     hasMoon(originalStars) {
         return originalStars.some(
-            (star) => star['name'] === '月' || star['name'] === '月亮' || star['name'] === 'moon'
+            (star) => star.name && ['月', '月亮', '月球', 'moon'].includes(star.name.trim().toLowerCase())
         );
     }
 }

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import uvicorn.config
-from routers import astro_coord, moon_time, positioning, astrometry
+from routers import positioning, astrometry
 from routers.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
@@ -35,8 +35,6 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # ty
 
 # 分发路由
 app.include_router(positioning.router, prefix="/api/positioning", tags=["positioning"])
-app.include_router(astro_coord.router, prefix="/api/astrocoord", tags=["astrocoord"])
-app.include_router(moon_time.router, prefix="/api/moontime", tags=["moontime"])
 app.include_router(astrometry.router, prefix="/api/astrometry", tags=["astrometry"])
 
 

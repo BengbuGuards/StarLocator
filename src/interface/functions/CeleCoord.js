@@ -1,5 +1,6 @@
-import { BACKEND_API } from '../../config.js';
-import { post, setHADE } from '../utils.js';
+import { MakeTime, Observer } from 'astronomy-engine';
+import { setHADE } from '../utils.js';
+import { getRaDecByName, getHaDecByRaDec, getHaDecInSolar } from '../AstroService.js';
 
 // 计算天体坐标功能类
 class CeleCoord {
@@ -18,32 +19,41 @@ class CeleCoord {
             return -1;
         }
 
-        // 开始计算
-        let [results, detail] = await post(
-            `${BACKEND_API}/astrocoord`,
-            {
-                starNames: starNames,
-                timestamp: timestamp,
-            },
-            'json'
-        );
-        if (results === null || detail !== 'success') {
-            this.interactPhoto.tips.innerHTML = `自动计算天体坐标失败：${detail}`;
-            return -1;
-        }
+        this.interactPhoto.tips.innerHTML = `正在本地计算天体坐标...`;
 
-        this.interactPhoto.tips.innerHTML = `自动计算天体坐标成功`;
-        for (let i = 0; i < starNames.length; i++) {
-            let [ha, dec] = results['haDecs'][starNames[i]];
-            if (!Number.isFinite(ha) || !Number.isFinite(dec)) {
-                this.interactPhoto.tips.innerHTML = `无法自动计算${starNames[i]}坐标，请检查天体名称是否正确`;
-                return -1;
-            } else {
+        const astTime = MakeTime(new Date(timestamp * 1000));
+        const observer = new Observer(0, 0, 0);
+
+        try {
+            for (let i = 0; i < starNames.length; i++) {
+                const name = starNames[i];
+                const info = await getRaDecByName(name);
+                if (!info) {
+                    this.interactPhoto.tips.innerHTML = `无法自动计算 ${name} 坐标，请检查天体名称是否正确或网络是否连接`;
+                    return -1;
+                }
+
+                let ha, dec;
+                if (info.isSolar) {
+                    [ha, dec] = getHaDecInSolar(info.name, astTime, observer);
+                } else {
+                    [ha, dec] = getHaDecByRaDec(info.ra, info.dec, astTime, observer);
+                }
+
+                if (!Number.isFinite(ha) || !Number.isFinite(dec)) {
+                    this.interactPhoto.tips.innerHTML = `无法自动计算 ${name} 坐标，数值异常`;
+                    return -1;
+                }
+
                 setHADE(i + 1, 360 - ha * 15, dec); // 时角变参考时角
             }
+            this.interactPhoto.tips.innerHTML = `自动计算天体坐标成功`;
+            return 0;
+        } catch (e) {
+            const errorMsg = e.message || e;
+            this.interactPhoto.tips.innerHTML = `自动计算天体坐标失败：${errorMsg}`;
+            return -1;
         }
-
-        return 0;
     }
 
     getStarNames() {

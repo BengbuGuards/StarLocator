@@ -202,12 +202,47 @@
                                         ″
                                     </div>
                                 </td>
-                                <td><input type="number" class="coordsInput table" id="coordX3" aria-label="x" /></td>
-                                <td><input type="number" class="coordsInput table" id="coordY3" aria-label="y" /></td>
-                                <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="3">删除</button></td>
-                            </tr>
-                        </table>
-                        <button type="button" class="addCeleRowButton" id="addCeleRow">添加天体</button>
+                                 <td><input type="number" class="coordsInput table" id="coordX3" aria-label="x" /></td>
+                                 <td><input type="number" class="coordsInput table" id="coordY3" aria-label="y" /></td>
+                                 <td><button type="button" class="tableActionButton removeCeleRow" data-star-id="3">删除</button></td>
+                             </tr>
+                         </table>
+                         <button type="button" class="addCeleRowButton" id="addCeleRow">添加天体</button>
+                         <table class="inputTable" id="plInputTable" style="margin-top: 15px;">
+                             <colgroup>
+                                 <col class="col-seq">
+                                 <col class="col-pl-x">
+                                 <col class="col-pl-y">
+                                 <col class="col-pl-x">
+                                 <col class="col-pl-y">
+                                 <col class="col-action">
+                             </colgroup>
+                             <tr>
+                                 <th class="tooltip">序号<span class="tooltiptext">铅垂线的序号</span></th>
+                                 <th class="tooltip">端点1 x<span class="tooltiptext">端点1的横坐标</span></th>
+                                 <th class="tooltip">端点1 y<span class="tooltiptext">端点1的纵坐标</span></th>
+                                 <th class="tooltip">端点2 x<span class="tooltiptext">端点2的横坐标</span></th>
+                                 <th class="tooltip">端点2 y<span class="tooltiptext">端点2的纵坐标</span></th>
+                                 <th class="tooltip">操作<span class="tooltiptext">删除该行</span></th>
+                             </tr>
+                             <tr>
+                                 <td>1</td>
+                                 <td><input type="number" class="coordsInput table" id="pl1_x1" aria-label="pl1_x1" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl1_y1" aria-label="pl1_y1" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl1_x2" aria-label="pl1_x2" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl1_y2" aria-label="pl1_y2" /></td>
+                                 <td><button type="button" class="tableActionButton removePlRow" data-pl-id="1">删除</button></td>
+                             </tr>
+                             <tr>
+                                 <td>2</td>
+                                 <td><input type="number" class="coordsInput table" id="pl2_x1" aria-label="pl2_x1" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl2_y1" aria-label="pl2_y1" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl2_x2" aria-label="pl2_x2" /></td>
+                                 <td><input type="number" class="coordsInput table" id="pl2_y2" aria-label="pl2_y2" /></td>
+                                 <td><button type="button" class="tableActionButton removePlRow" data-pl-id="2">删除</button></td>
+                             </tr>
+                         </table>
+                         <button type="button" class="addCeleRowButton" id="addPlRow">添加铅垂线</button>
                     </div>
                     <div class="col-calcul">
                         <button type="button" class="calculButton" id="actionCalcul" title="计算">

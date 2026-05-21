@@ -39,6 +39,11 @@ td:hover {
 	width: 13%;
 }
 
+.inputTable .col-pl-x,
+.inputTable .col-pl-y {
+	width: 21%;
+}
+
 .inputTable .col-action {
 	width: 10%;
 }

@@ -21,13 +21,18 @@ function getOriginalStars(interactPhoto) {
 // 获取铅垂线端点坐标
 function getGlobalPLPointsCoord(interactPhoto) {
     let globalPLPointsCoord = [];
-    for (let i = 0; i < interactPhoto.PLArray.num(); i++) {
-        let pl = interactPhoto.PLArray.array[i];
-        let points = [];
-        for (let j = 0; j < pl.points.length; j++) {
-            points.push(pl.points[j].coordinate);
+    const totalRows = interactPhoto.PLArray.tablePLRowCount();
+    for (let i = 1; i <= totalRows; i++) {
+        const x1 = parseFloat(document.getElementById(`pl${i}_x1`)?.value);
+        const y1 = parseFloat(document.getElementById(`pl${i}_y1`)?.value);
+        const x2 = parseFloat(document.getElementById(`pl${i}_x2`)?.value);
+        const y2 = parseFloat(document.getElementById(`pl${i}_y2`)?.value);
+        if (Number.isFinite(x1) && Number.isFinite(y1) && Number.isFinite(x2) && Number.isFinite(y2)) {
+            globalPLPointsCoord.push([
+                [x1, y1],
+                [x2, y2],
+            ]);
         }
-        globalPLPointsCoord.push(points);
     }
     return globalPLPointsCoord;
 }

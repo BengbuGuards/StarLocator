@@ -108,9 +108,13 @@ function initializeEvents(eventManager) {
     document.getElementById('addCeleRow').addEventListener('click', () => {
         interactPhoto.CeleArray.addEmptyRow();
     });
+    document.getElementById('addPlRow').addEventListener('click', () => {
+        interactPhoto.PLArray.addEmptyRow();
+    });
 
     //为星体名称输入框启用自动补全
     interactPhoto.CeleArray.initializeTableRows();
+    interactPhoto.PLArray.initializeTableRows();
 }
 
 export { initializeElements, initializeCanvas, initializeEvents };

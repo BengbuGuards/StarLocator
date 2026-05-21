@@ -57,7 +57,18 @@ class InteractPhoto {
     }
 
     getCompletePLCount() {
-        return this.PLArray.array.filter((pl) => pl.points.length === 2).length;
+        let count = 0;
+        const totalRows = this.PLArray.tablePLRowCount();
+        for (let i = 1; i <= totalRows; i++) {
+            const x1 = parseFloat(document.getElementById(`pl${i}_x1`)?.value);
+            const y1 = parseFloat(document.getElementById(`pl${i}_y1`)?.value);
+            const x2 = parseFloat(document.getElementById(`pl${i}_x2`)?.value);
+            const y2 = parseFloat(document.getElementById(`pl${i}_y2`)?.value);
+            if (Number.isFinite(x1) && Number.isFinite(y1) && Number.isFinite(x2) && Number.isFinite(y2)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     // 刷新天体标记数量提示和天体识别按钮状态

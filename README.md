@@ -1,59 +1,96 @@
 # StarLocator
 
-💬<a href="https://qm.qq.com/q/lmRhILlX0e">加入StarLocator交流群</a> | 🌎<a href="https://caveallegory.cn/StarLocator/">最新版链接</a> | ℹ️<a href="https://bengbuguards.github.io/StarLocator/help.html">使用帮助</a>
+[![Stars](https://img.shields.io/github/stars/BengbuGuards/StarLocator?style=flat-square)](https://github.com/BengbuGuards/StarLocator/stargazers)
+[![License](https://img.shields.io/github/license/BengbuGuards/StarLocator?style=flat-square)](https://github.com/BengbuGuards/StarLocator/blob/main/LICENSE)
+[![Website](https://img.shields.io/badge/web-live-2ea44f?style=flat-square)](https://caveallegory.cn/StarLocator/)
 
-> StarLocator 是什么 | WHAT IS STARLOCATOR
+A celestial positioning app that estimates where a night-sky photo was taken by combining star recognition with the exact capture time.
 
-StarLocator是一款天文定位应用，主要基于一种已经应用了数个世纪的航海导航技术。该应用使用夜空照片及其精确拍摄时间为源数据，计算照片拍摄地在地球上的大致位置。该过程类似以相机对图中的天体高度角进行测量代替17世纪以来的水手使用六分仪的测量，与占星术、玄学和心灵感应无关。
+一个基于传统天文导航思路的天文定位应用。StarLocator 使用星空照片与精确拍摄时间，估算拍摄者在地球上的大致位置。
 
-StarLocator is a celestial positioning application mainly based on a maritime navigation technique that has been applied
-for centuries. In this app, a photo of night sky and the exact time when it was taken were used as source information to
-calculate the rough position of the photo taker was on the earth. The process is quite like using the camera as a
-sextant to measure the elevation of celestial bodies in the image just as sailors did since 17th century, and there is
-NOTHING to do with astrology, metaphysics and telepathy.
+## Table of Contents
 
-[![Star History Chart](https://api.star-history.com/svg?repos=BengbuGuards/StarLocator&type=Timeline)](https://star-history.com/#BengbuGuards/StarLocator&Timeline)
+- [Quick Links](#quick-links)
+- [What StarLocator Does](#what-starlocator-does)
+- [Highlights](#highlights)
+- [How It Works](#how-it-works)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Repository Layout](#repository-layout)
+- [Contributing](#contributing)
+- [Credits](#credits)
 
-## 特点 | FEATURES
+## Quick Links
 
-- ✨**自动识星**：通过拍摄的星空照片，自动识别照片中的星星，无需手动辨识。
-- 😀**交互简单**：标星、标铅垂线、设置拍摄时间，然后就是点击按钮的事了，熟练掌握后整个过程不到**5分钟**。原本的耗时步骤，如查询天体天文数据，已被API和按钮所实现。
-- 🔒**隐私友好**：项目采用前后端分离架构，服务器后端只在核心计算时获取必要信息，并在结束计算后删除。
-- 🎯**精度良好**：我们在各个模块中采用了强稳健性的算法，对环境噪声、标记误差有良好的抗噪能力，误差通常可稳定在**30km**以下。
-- ✅**完全开源**：我们使用AGPL v3开源，目的是为尽可能地使该方法透明，同时欢迎社区共建。
-- ✨**Automatic star recognition**: By capturing starry sky photos, stars in the photos can be automatically recognized without the need for manual recognition.
-- 😀**Simple interaction**: Marking stars and plumblines, setting the time and then simply click a button. Can finish within **5 minutes** when familiar. All time-consuming steps, like searching for data of celestial bodies, have been achieved with API and buttons.
-- 🔒**Privacy friendly**: The project adopts a front-end and back-end separation architecture, where the server backend only retrieves necessary information during core computing and deletes it after the computation is completed.
-- 🎯**Good accuracy**: We applied robust algorithms in modules, making it resilient to environmental noises and marking errors. The error can usually be limited to **30km**.
-- ✅**Fully open sourced**: AGPL v3 open source protocol adopted. Aiming to make the approach as transparent as possible and to welcome community contributions.
+- Community QQ group: <https://qm.qq.com/q/lmRhILlX0e>
+- Latest web app: <https://caveallegory.cn/StarLocator/>
+- Help guide: <https://bengbuguards.github.io/StarLocator/help.html>
+- Installation notes: [docs/INSTALLATION.md](./docs/INSTALLATION.md)
+- Contributing guide: [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 
-## 安装 | INSTALLATION
+## What StarLocator Does
 
-见[INSTALLATION.md](./docs/INSTALLATION.md)
+StarLocator modernizes a navigation technique that sailors have used for centuries. Instead of measuring star altitude with a sextant, it uses a photo of the night sky plus the capture time to estimate the observer's location.
 
-## 使用方法 | HOW TO USE
+StarLocator 与占星、玄学或“心灵感应”无关，它做的是天体识别、几何测量和定位计算。
 
-见<a href="https://caveallegory.cn/StarLocator/help.html">使用帮助</a>
+## Highlights
 
-## 贡献 | CONTRIBUTING
+- **Automatic star recognition** / 自动识星
+- **Simple workflow** with marking tools and guided steps / 交互简单，熟练后可在几分钟内完成
+- **Privacy-friendly architecture** / 前后端分离，核心计算后删除必要数据
+- **Robust positioning** with good tolerance to noise / 对环境噪声和标记误差有较好鲁棒性
+- **Open source and transparent** / 使用 AGPL v3，欢迎社区共建
 
-见[CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+## How It Works
 
-## 致谢 | CREDITS
+1. Take or import a night-sky photo.
+2. Mark stars, the plumb line, and the capture time.
+3. Let StarLocator identify celestial bodies and solve the approximate location.
+4. Review the result and iterate if needed.
 
-### 开源项目 | OPEN SOURCE PROJECTS
+## Installation
 
-见[NOTICE.md](./NOTICE.md)
+See the full installation guide in [docs/INSTALLATION.md](./docs/INSTALLATION.md).
 
-### 开发团队 | DEVELOPERS
+For local frontend development, the main scripts are:
 
-按加入时间排序
+```bash
+pnpm install
+pnpm dev
+pnpm build
+pnpm serve
+```
 
-- 小流汗黄豆 | BengbuGuards
-- 鬼蝉 | Hiroshi1993
-- 无限远点的辩证法 | cheanus
-- 着火的冰块nya | zhdbk3
-- 薛定谔的按钮
-- hanran
-- Charmian
-- Yisan5772156
+## Usage
+
+- Web help and walkthrough: <https://bengbuguards.github.io/StarLocator/help.html>
+- Prototype scripts and sample data: [`prototype/`](./prototype/) and [`examples/`](./examples/)
+
+A typical flow is: open the app, upload a star photo, finish the guided markings, then run the calculation.
+
+## Repository Layout
+
+```text
+src/          Frontend source files
+examples/     Example images and CSV data
+prototype/    Early Python prototype
+docs/         Installation and contribution docs
+```
+
+## Contributing
+
+Contributions are welcome. If you want to help with astronomy data, UX, frontend work, or documentation, please start with [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md).
+
+## Credits
+
+- Open-source notices: [NOTICE.md](./NOTICE.md)
+- Developers (ordered by join time):
+  - BengbuGuards
+  - Hiroshi1993
+  - cheanus
+  - zhdbk3
+  - 薛定谔的按钮
+  - hanran
+  - Charmian
+  - Yisan5772156

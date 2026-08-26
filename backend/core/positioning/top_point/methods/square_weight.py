@@ -3,7 +3,7 @@ import numpy as np
 from ..utils.plane import all_points_of_lines_intersection
 
 
-def intersection(lines: list) -> tuple:
+def intersection(lines: np.ndarray) -> np.ndarray:
     """
     Find the intersection point of given lines.
     params:

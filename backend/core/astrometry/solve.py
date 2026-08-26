@@ -28,6 +28,21 @@ limits = httpx.Limits(
 logger = logging.getLogger(__name__)
 
 
+async def get_with_retry(client: httpx.AsyncClient, url: str) -> httpx.Response:
+    """GET请求，瞬时网络错误重试，避免外部服务抖动导致整体失败"""
+    attempt = 0
+    while True:
+        try:
+            response = await client.get(url)
+            response.raise_for_status()
+            return response
+        except httpx.HTTPError:
+            attempt += 1
+            if attempt >= 3:
+                raise
+            await asyncio.sleep(0.5 * attempt)
+
+
 def flux_in_img(images: list[Image.Image]) -> list[float]:
     """
     Calculate the flux of stars in every images.
@@ -214,7 +229,8 @@ async def get_fixed_stars(
             "data": "J(2d;c) I.0 M(V)",
         }
         # 瞬时网络错误重试，避免单个SIMBAD请求抖动导致整体失败
-        for attempt in range(3):
+        attempt = 0
+        while True:
             try:
                 response = await client.post(
                     "https://simbad.u-strasbg.fr/simbad/sim-nameresolver",
@@ -224,9 +240,10 @@ async def get_fixed_stars(
                 response.raise_for_status()
                 break
             except httpx.HTTPError:
-                if attempt == 2:
+                attempt += 1
+                if attempt >= 3:
                     raise
-                await asyncio.sleep(0.5 * (attempt + 1))
+                await asyncio.sleep(0.5 * attempt)
         # 处理返回结果
         ra, dec = field_rd.split("-") if "-" in field_rd else field_rd.split("+")
 
@@ -356,12 +373,14 @@ async def recognize(
     """
     # 查询任务状态
     client = get_http_client()
-    response = await client.get(f"https://nova.astrometry.net/api/jobs/{job_id}")
+    response = await get_with_retry(
+        client, f"https://nova.astrometry.net/api/jobs/{job_id}"
+    )
     detail = response.json()["status"]
 
     if detail == "success":
         rdls_url = f"https://nova.astrometry.net/image_rd_file/{job_id}"
-        content_resp = await client.get(rdls_url)
+        content_resp = await get_with_retry(client, rdls_url)
         content = content_resp.content
         xy2field_rd = dict()  # 星点坐标到图中赤道坐标的映射
         with fits.open(BytesIO(content)) as hdul:

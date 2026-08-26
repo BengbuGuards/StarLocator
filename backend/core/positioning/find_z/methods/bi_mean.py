@@ -65,7 +65,7 @@ def get_z_from_2_points(p1: tuple, p2: tuple, theta: float) -> list[float]:
     return []
 
 
-def reject_outliers(data: list, sigma: float = 2.0) -> list:
+def reject_outliers(data: list, sigma: float = 2.0) -> np.ndarray:
     """
     Reject the outliers in the data.
 
@@ -73,10 +73,10 @@ def reject_outliers(data: list, sigma: float = 2.0) -> list:
         data: list of data
         sigma: the number of standard deviations from the mean to reject the outliers
     return:
-        data: list of data without outliers
+        data: array of data without outliers
     """
-    data = np.array(data)
-    return data[
-        (data > np.mean(data) - sigma * np.std(data))
-        & (data < np.mean(data) + sigma * np.std(data))
+    arr = np.array(data)
+    return arr[
+        (arr > np.mean(arr) - sigma * np.std(arr))
+        & (arr < np.mean(arr) + sigma * np.std(arr))
     ]

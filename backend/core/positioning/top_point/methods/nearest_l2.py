@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def intersection(lines: list) -> tuple:
+def intersection(lines: np.ndarray) -> np.ndarray:
     """
     Find the intersection point of given lines.
     params:

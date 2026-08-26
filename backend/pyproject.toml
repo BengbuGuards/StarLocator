@@ -32,6 +32,10 @@ ignore = [
     "RUF001", "RUF002", "RUF003",
 ]
 
+[tool.ruff.lint.isort]
+# 显式声明本地模块：避免因 config.py（gitignored）缺失导致一方/第三方分类漂移
+known-first-party = ["config", "core", "main", "routers", "schemas", "tests"]
+
 [tool.pytest.ini_options]
 filterwarnings = [
     # async-lru 检测到测试中事件循环切换并自动清理缓存，库文档声明该行为安全

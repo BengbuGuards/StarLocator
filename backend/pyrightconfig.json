@@ -1,0 +1,11 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "exclude": [
+    // vendored from https://github.com/dstndstn/astrometry.net
+    "core/astrometry/client.py",
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.*"
+  ]
+}

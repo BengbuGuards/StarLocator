@@ -4,7 +4,7 @@ from scipy.optimize import minimize
 from . import median
 
 
-def objective_function(point: tuple, lines: list) -> float:
+def objective_function(point: tuple, lines: np.ndarray) -> float:
     """
     Objective function for optimization.
     params:
@@ -15,6 +15,7 @@ def objective_function(point: tuple, lines: list) -> float:
     """
     x, y = point
     total_distance = 0
+    distance = 0.0
     for line in lines:
         x1, y1 = line[0]
         x2, y2 = line[1]
@@ -32,7 +33,7 @@ def objective_function(point: tuple, lines: list) -> float:
     return distance
 
 
-def intersection(lines: list) -> tuple:
+def intersection(lines: np.ndarray) -> np.ndarray:
     """
     Find the intersection point of given lines.
     params:

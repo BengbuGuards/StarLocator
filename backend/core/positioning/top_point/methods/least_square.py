@@ -25,7 +25,7 @@ def least_squares_fit(points):
     return k, b
 
 
-def intersection(lines: list) -> tuple:
+def intersection(lines: np.ndarray) -> tuple:
     """
     Find the intersection point of given lines.
     params:

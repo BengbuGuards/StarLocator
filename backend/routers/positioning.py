@@ -1,10 +1,12 @@
 import asyncio
+
 from fastapi import APIRouter, Request
-from schemas import positioning
+
+from config import LIGHT_RATE_LIMIT
 from core.positioning.calc import calc_geo
+from schemas import positioning
 
 from .limiter import limiter
-from config import LIGHT_RATE_LIMIT
 
 router = APIRouter()
 

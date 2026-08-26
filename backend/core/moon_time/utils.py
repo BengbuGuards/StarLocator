@@ -1,11 +1,11 @@
-import numpy as np
 import astronomy as ast
-from core.utils import wrap_angle_in_deg
-from core.positioning.locator.utils.math import vector_angle
-from core.positioning.calc import calc_geo as geo_calc
+import numpy as np
+
 from core.astro_coord.calc import get_HaDecs_by_names, get_HaDecs_sync
-from core.positioning.locator.utils.math import sph2cart
+from core.positioning.calc import calc_geo as geo_calc
 from core.positioning.calc import stars_convert
+from core.positioning.locator.utils.math import sph2cart, vector_angle
+from core.utils import wrap_angle_in_deg
 
 
 def find_moon_idx(stars: list[dict]) -> int:
@@ -82,8 +82,8 @@ async def geo_estimate_by_stars(
             is_fix_refraction=is_fix_refraction,
             is_fix_gravity=is_fix_gravity,
         )
-    except:
-        raise ValueError("无法计算地理位置")
+    except Exception as e:
+        raise ValueError("无法计算地理位置") from e
     return geo_estimate
 
 

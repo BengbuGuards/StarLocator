@@ -1,12 +1,14 @@
+# type: ignore[reportAttributeAccessIssue]
 import argparse
 from copy import deepcopy
 
 import numpy as np
 import scipy.stats as st
+
+from ..locator.utils.math import vector_angle
 from .methods.bi_mean import get_z as bi_mean
 from .methods.north_len import get_z as north_len
 from .methods.trisect import get_z as trisect
-from ..locator.utils.math import vector_angle
 
 
 def generate_points(args):
@@ -16,7 +18,7 @@ def generate_points(args):
     ## 生成点和夹角（弧度）
     points = []
     thetas = np.zeros((num_points, num_points), dtype=np.float32)
-    for i in range(num_points):
+    for _ in range(num_points):
         ## 生成一个参考点
         points_x = np.random.uniform(*scope_x)
         points_y = np.random.uniform(*scope_y)
@@ -118,7 +120,7 @@ def print_results(results):
 
 def main(methods, args):
     results = {}
-    for name in methods.keys():
+    for name in methods:
         results[name] = {"error": []}
     for _ in range(args.num_tests):
         ## 生成点和夹角

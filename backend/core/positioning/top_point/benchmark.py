@@ -1,16 +1,15 @@
+# type: ignore[reportAttributeAccessIssue]
 import argparse
 
 import numpy as np
 import scipy.stats as st
+
 from .methods.least_square import intersection as least_square
 from .methods.matrix_inverse import intersection as matrix_inverse
+from .methods.matrix_inverse_normalized import intersection as matrix_inverse_normalized
 from .methods.median import intersection as median
 from .methods.median2 import intersection as median2
-from .methods.nearest_l2 import intersection as nearest_l2
-from .methods.optim import intersection as optim
 from .methods.sphere import intersection as sphere
-from .methods.square_weight import intersection as square_weight
-from .methods.matrix_inverse_normalized import intersection as matrix_inverse_normalized
 
 
 def generate_lines(args):
@@ -21,7 +20,7 @@ def generate_lines(args):
     alpha = args.alpha
     ## 生成线的两点
     lines = []
-    for i in range(num_lines):
+    for _ in range(num_lines):
         ## 生成一个参考点
         x0 = 0
         while np.abs(x0) < 1e-2:
@@ -134,7 +133,7 @@ def print_results(results):
 
 def main(methods, args):
     results = {}
-    for name in methods.keys():
+    for name in methods:
         results[name] = {"error": [], "error_x": [], "error_y": []}
     for _ in range(args.num_tests):
         ## 生成线的两点

@@ -1,5 +1,6 @@
-from . import constants
 import numpy as np
+
+from . import constants
 
 np.set_printoptions(precision=15)
 

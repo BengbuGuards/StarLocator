@@ -1,8 +1,10 @@
+# type: ignore[reportAttributeAccessIssue]
 import argparse
 from copy import deepcopy
 
 import numpy as np
 import scipy.stats as st
+
 from .methods.bi_median import get_geo as bi_median
 from .methods.matrix_inverse import get_geo as matrix_inverse
 from .utils.math import cart2sph, sph_dist
@@ -14,7 +16,7 @@ def generate_datas(args):
     scope_y = args.scope_y
     ## 生成星点矢量
     points = []
-    for i in range(num_points):
+    for _ in range(num_points):
         ## 生成一个参考点
         points_x = np.random.uniform(*scope_x)
         points_y = np.random.uniform(*scope_y)
@@ -134,7 +136,7 @@ def print_results(results):
 
 def main(methods, args):
     results = {}
-    for name in methods.keys():
+    for name in methods:
         results[name] = {"error": []}
     for _ in range(args.num_tests):
         ## 生成数据

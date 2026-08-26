@@ -1,9 +1,9 @@
 import httpx
-import pytest
 import numpy as np
+import pytest
+
 from config import BACKEND_API_BASEURL
 from core.positioning.calc import calc_geo
-
 
 photo = {
     "stars": [

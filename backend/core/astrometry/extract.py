@@ -1,6 +1,6 @@
 import numpy as np
-from PIL import Image
 import sep
+from PIL import Image
 
 
 def extract_stars(
@@ -48,5 +48,5 @@ def extract_stars(
         np.array([objects["x"], objects["y"]]),
         decimals=2,
     ).T.tolist()
-    assert type(positions) == list
+    assert isinstance(positions, list)
     return detail, positions

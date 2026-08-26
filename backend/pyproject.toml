@@ -6,20 +6,40 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "astronomy-engine>=2.1.19",
-    "astropy>=7.2.0",
+    "astropy>=8.0.1",
     "async-lru>=2.3.0",
-    "fastapi>=0.136.1",
+    "fastapi>=0.141.1",
     "httpx>=0.28.1",
-    "numpy>=2.4.4",
-    "python-multipart>=0.0.27",
-    "scipy>=1.17.1",
+    "numpy>=2.5.2",
+    "python-multipart>=0.0.32",
+    "scipy>=1.18.1",
     "sep>=1.4.1",
-    "slowapi>=0.1.9",
-    "uvicorn[standard]>=0.46.0",
+    "slowapi>=0.1.10",
+    "uvicorn[standard]>=0.52.4",
+]
+
+[tool.ruff]
+target-version = "py312"
+exclude = [
+    # vendored from https://github.com/dstndstn/astrometry.net
+    "core/astrometry/client.py",
+]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = [
+    # 本项目为中文注释/星表数据：全角标点与希腊字母（星名）为有意使用
+    "RUF001", "RUF002", "RUF003",
+]
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    # async-lru 检测到测试中事件循环切换并自动清理缓存，库文档声明该行为安全
+    "ignore:alru_cache detected event loop change",
 ]
 
 [dependency-groups]
 dev = [
-    "matplotlib>=3.10.9",
+    "matplotlib>=3.11.1",
     "pytest>=9.0.3",
 ]

@@ -1,18 +1,20 @@
 from copy import deepcopy
+
 import numpy as np
-from .utils import (
-    find_moon_idx,
-    angle_btw_moon_stars,
-    geo_estimate_by_stars,
-    angle_error,
-)
-from core.positioning.calc import stars_convert, calc_z
+
+from core.astro_coord.calc import get_RaDecs_by_names
+from core.astro_coord.data import solar_bodies, starZH2EN
+from core.positioning.calc import calc_z, stars_convert
 from core.positioning.find_z.utils.math import minimize
 from core.positioning.top_point.methods.matrix_inverse_normalized import intersection
 
+from .utils import (
+    angle_btw_moon_stars,
+    angle_error,
+    find_moon_idx,
+    geo_estimate_by_stars,
+)
 
-from core.astro_coord.calc import get_RaDecs_by_names
-from core.astro_coord.data import starZH2EN, solar_bodies
 
 async def calc(
     photo: dict,
@@ -46,12 +48,12 @@ async def calc(
     )  # 剔除月的数据
     try:
         top_point = intersection(np.array(photo["lines"]))
-    except:
-        raise ValueError("无法找到灭点")
+    except Exception as e:
+        raise ValueError("无法找到灭点") from e
     try:
         z = calc_z(points, hour_decs, top_point, is_fix_refraction)
-    except:
-        raise ValueError("无法计算焦距")
+    except Exception as e:
+        raise ValueError("无法计算焦距") from e
     # 获取月与各星相互角距作为目标值
     points, _, star_names = stars_convert(photo["stars"])
     target_angles = angle_btw_moon_stars(points, moon_idx, z)
@@ -80,9 +82,16 @@ async def calc(
         max_time = int(approx_timestamp + (scope_days * s_per_day) / 2)
         min_error = float("inf")
         opt_time = 0
-        opt_func = lambda timestamp: angle_error(
-            timestamp, approx_timestamp, star_names, geo_estimate, moon_idx, target_angles, pre_fetched_ra_decs
-        )
+        def opt_func(timestamp: float) -> float:
+            return angle_error(
+                timestamp,
+                approx_timestamp,
+                star_names,
+                geo_estimate,
+                moon_idx,
+                target_angles,
+                pre_fetched_ra_decs,
+            )
         for left_i in range(min_time, max_time, 20 * s_per_day):
             right_i = min(left_i + 20 * s_per_day, max_time)
             opt_time_single = minimize(opt_func, left_i, right_i, 1, 100)

@@ -1,6 +1,6 @@
 from fastapi import UploadFile
-from ..base import Coordinate
 from pydantic import BaseModel, Field
+
 from config import MAX_NUM_OF_STARS
 
 

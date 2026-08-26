@@ -1,6 +1,7 @@
 from fastapi import UploadFile
-from ..base import Coordinate
 from pydantic import BaseModel, Field
+
+from ..base import Coordinate
 
 
 class ExtractStarRequest(BaseModel):

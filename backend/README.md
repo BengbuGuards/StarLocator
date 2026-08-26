@@ -4,14 +4,18 @@
 1. 命令行进入本文件夹
 2. 安装依赖
     ```bash
-    pip install -r requirements.txt
+    uv sync
     ```
 
 ## 后端
 
 ### 运行
 1. 进入本文件夹
-2. 自定义config.py中的配置
+2. 配置文件
+    ```bash
+    cp config.example.py config.py
+    ```
+    然后自定义config.py中的配置
 3. 运行
     ```bash
     python main.py

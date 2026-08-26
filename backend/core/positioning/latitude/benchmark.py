@@ -1,14 +1,7 @@
-from . import constants
 import numpy as np
 from matplotlib import pyplot as plt
-from .method.bisect_formular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_formular,
-)
-from .method.bisect_tabular import (
-    astronomic_latitude_to_geodetic_latitude as bisect_tabular,
-)
-from .method.naive import astronomic_latitude_to_geodetic_latitude as naive
-from .method.series import astronomic_latitude_to_geodetic_latitude as series
+
+from . import constants
 from .method.series2 import astronomic_latitude_to_geodetic_latitude as series2
 
 geodetic_latitudes = np.linspace(-90, 90, 10001)
@@ -91,18 +84,18 @@ methods = {
 
 
 diff = dict()
-for method_name, method in methods.items():
+for method_name in methods:
     diff[method_name] = []
 
 for geodetic_latitude, astronomic_latitude in zip(
-    geodetic_latitudes, astronomic_latitudes
+    geodetic_latitudes, astronomic_latitudes, strict=True
 ):
     for method_name, method in methods.items():
         solved_geodetic_latitude = method(astronomic_latitude)
         diff[method_name].append(solved_geodetic_latitude - geodetic_latitude)
 
 for method_name, method_diff in diff.items():
-    plt.plot(geodetic_latitudes, diff[method_name], label=method_name)
+    plt.plot(geodetic_latitudes, method_diff, label=method_name)
 
 plt.grid(True)
 plt.xlabel("real geodetic latitude in degree")

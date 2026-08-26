@@ -1,21 +1,25 @@
+import asyncio
+import json
+from io import BytesIO
 from typing import Annotated
-from fastapi import APIRouter, Request, Response, Form
+
+from fastapi import APIRouter, Form, Request, Response
 from fastapi.responses import StreamingResponse
+from PIL import Image
+
+from config import LIGHT_RATE_LIMIT, MAX_UPLOAD_SIZE, MEDIUM_RATE_LIMIT
+from core.astrometry.extract import extract_stars
+from core.astrometry.solve import recognize, submit
+from core.utils.http import get_http_client
 from schemas.astrometry.extract_stars import ExtractStarRequest, ExtractStarResponse
 from schemas.astrometry.recognize import RecognizeRequest, RecognizeResponse
-from schemas.astrometry.submit import SubmitRequest, SubmitResponse, RecognizeStreamRequest
-from core.astrometry.extract import extract_stars
-from core.astrometry.solve import recognize
-from core.astrometry.solve import submit
-from io import BytesIO
-from PIL import Image
-import json
-import httpx
+from schemas.astrometry.submit import (
+    RecognizeStreamRequest,
+    SubmitRequest,
+    SubmitResponse,
+)
 
-import asyncio
-from core.utils.http import get_http_client
 from .limiter import limiter
-from config import LIGHT_RATE_LIMIT, MEDIUM_RATE_LIMIT, MAX_UPLOAD_SIZE
 
 router = APIRouter()
 
@@ -205,7 +209,7 @@ async def http_recognize_stream(request: Request, data: Annotated[RecognizeStrea
                     response = await client.get(f"http://nova.astrometry.net/api/jobs/{job_id}", timeout=10)
                     status_data = response.json()
                     status = status_data.get("status")
-                except Exception as e:
+                except Exception:
                     yield f"data: {json.dumps({'step': 'error', 'detail': '查询任务状态失败'})}\n\n"
                     return
                     
@@ -231,7 +235,7 @@ async def http_recognize_stream(request: Request, data: Annotated[RecognizeStrea
         except asyncio.CancelledError:
             # 客户端断开连接
             pass
-        except Exception as e:
+        except Exception:
             yield f"data: {json.dumps({'step': 'error', 'detail': '服务器内部发生未知错误'})}\n\n"
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

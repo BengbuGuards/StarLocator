@@ -1,24 +1,31 @@
-import httpx
 import asyncio
+import logging
+from io import BytesIO
+
+import astronomy as ast
+import httpx
 import numpy as np
 import sep
-from PIL import Image
-from io import BytesIO
-import astronomy as ast
 from astropy.io import fits
-from ..astro_coord.utils import stamp2ast_time
-from .client import ClientRunnerOptions, run_client
-from core.astro_coord.calc import get_HaDec_by_RaDec
-from ..positioning.locator.utils.math import sph_dist
+from PIL import Image
+
 from config import ASTROMETRY_API_KEY, MAX_CONNECTIONS
+from core.astro_coord.calc import get_HaDec_by_RaDec
 from core.utils.http import get_http_client
-from ..astro_coord.data import solar_bodies, starEN2ZH, solar_body_mags
+
+from ..astro_coord.data import solar_bodies, solar_body_mags, starEN2ZH
+from ..astro_coord.utils import stamp2ast_time
+from ..positioning.locator.utils.math import sph_dist
+from .client import ClientRunnerOptions, run_client
 
 # 设置最大并发数
 limits = httpx.Limits(
     max_connections=MAX_CONNECTIONS,
     max_keepalive_connections=MAX_CONNECTIONS,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def flux_in_img(images: list[Image.Image]) -> list[float]:
@@ -90,7 +97,7 @@ async def tune_rd(
         timestamp, max_mag
     )  # 初始化太阳系天体信息，缓存以便于后续查询
     # 先从太阳系外天体中找
-    for xy in xy2field_rd.keys():
+    for xy in xy2field_rd:
         ra, dec = xy2field_rd[xy]
         seperate = "+" if dec > 0 else ""
         fixed_xy2field_rd[xy] = (
@@ -98,7 +105,7 @@ async def tune_rd(
         )
     xy2index_rd_names_mag = await get_fixed_stars(fixed_xy2field_rd, radius, max_mag)
     # 在从太阳系天体中找
-    for xy in xy2field_rd.keys():
+    for xy in xy2field_rd:
         ra, dec = xy2field_rd[xy]
         solar_index_rd, solar_name, solar_mag = solar_stars.get_solar_stars(
             ra, dec, radius
@@ -206,11 +213,20 @@ async def get_fixed_stars(
             "radius": radius,
             "data": "J(2d;c) I.0 M(V)",
         }
-        response = await client.post(
-            "https://simbad.u-strasbg.fr/simbad/sim-nameresolver",
-            params=params,
-            timeout=10,
-        )
+        # 瞬时网络错误重试，避免单个SIMBAD请求抖动导致整体失败
+        for attempt in range(3):
+            try:
+                response = await client.post(
+                    "https://simbad.u-strasbg.fr/simbad/sim-nameresolver",
+                    params=params,
+                    timeout=10,
+                )
+                response.raise_for_status()
+                break
+            except httpx.HTTPError:
+                if attempt == 2:
+                    raise
+                await asyncio.sleep(0.5 * (attempt + 1))
         # 处理返回结果
         ra, dec = field_rd.split("-") if "-" in field_rd else field_rd.split("+")
 
@@ -242,9 +258,15 @@ async def get_fixed_stars(
             ),
         )
 
-    # 并发查询
+    # 并发查询（限制并发数，避免SIMBAD限流）
+    sem = asyncio.Semaphore(3)
+
     async def task_pack():
-        tasks = [find_star(xy, field_rd) for xy, field_rd in fixed_xy2field_rd.items()]
+        async def query(xy, field_rd):
+            async with sem:
+                return await find_star(xy, field_rd)
+
+        tasks = [query(xy, field_rd) for xy, field_rd in fixed_xy2field_rd.items()]
         return await asyncio.gather(*tasks)
 
     raw_resp_infos = await task_pack()
@@ -361,7 +383,7 @@ async def recognize(
             round_xy = np.array(xy).round(decimals=2).tolist()
             # 返回输入顺序的星星的真实时角坐标和名称
             hd_names = []
-            assert type(round_xy) == list
+            assert isinstance(round_xy, list)
             for xy_item in round_xy:
                 rd_name = xy2rd_names[(float(xy_item[0]), float(xy_item[1]))]  # type: ignore
                 ra, dec = rd_name[:2]
@@ -372,6 +394,7 @@ async def recognize(
                     star_name = starEN2ZH.get(star_name.lower(), star_name)
                 hd_names.append((*hour_ra, star_name))
         except Exception:
+            logger.exception("解析第三方星图数据失败")
             detail = "解析第三方星图数据失败，请确认图像是否清晰或稍后重试"
             return detail, None
         return detail, hd_names

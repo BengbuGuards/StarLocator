@@ -5,30 +5,25 @@
 # Licensed under a 3-clause BSD style license - see LICENSE
 # https://github.com/dstndstn/astrometry.net
 
-from __future__ import print_function
+import base64
+import logging
 import os
 import sys
 import time
-import base64
-import shutil
-import logging
 
 try:
     # py3
-    from urllib.parse import urlencode, quote
-    from urllib.request import urlopen, Request
     from urllib.error import HTTPError
+    from urllib.parse import quote, urlencode
+    from urllib.request import Request, urlopen
 except ImportError:
     # py2
-    from urllib import urlencode, quote
-    from urllib2 import urlopen, Request, HTTPError
+    from urllib import quote, urlencode
+
+    from urllib2 import HTTPError, Request, urlopen
 
 # from exceptions import Exception
-from email.mime.base import MIMEBase
-from email.mime.multipart import MIMEMultipart
-from email.mime.application import MIMEApplication
 
-from email.encoders import encode_noop
 
 import json
 
@@ -58,7 +53,7 @@ class RequestError(Exception):
     pass
 
 
-class Client(object):
+class Client:
     default_url = "https://nova.astrometry.net/api/"
 
     def __init__(self, apiurl=default_url):
@@ -199,7 +194,7 @@ class Client(object):
             try:
                 f = open(fn, "rb")
                 file_args = (fn, f.read())
-            except IOError:
+            except OSError:
                 logging.info("File %s does not exist" % fn)
                 raise
         return self.send_request("upload", args, file_args)
@@ -285,7 +280,7 @@ class Client(object):
         return result
 
 
-class ClientRunnerOptions(object):
+class ClientRunnerOptions:
     def __init__(self, **entries):
         self.server = Client.default_url
         self.public = "y"

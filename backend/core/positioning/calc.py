@@ -1,6 +1,7 @@
 import numpy as np
 
 from core.utils import wrap_angle_in_deg
+
 from .find_z.methods import fix_refraction, trisect
 from .find_z.utils.math import angles_on_sphere, normalize
 from .latitude.method.series2 import astronomic_latitude_to_geodetic_latitude
@@ -109,13 +110,13 @@ def calc_geo(
     # 计算灭点
     try:
         top_point = intersection(np.array(photo["lines"]))
-    except:
+    except Exception:
         return {"detail": "灭点计算失败"}
 
     # 计算焦距
     try:
         z = calc_z(points, hour_decs, top_point, is_fix_refraction)
-    except:
+    except Exception:
         return {"detail": "焦距计算失败"}
 
     # 计算地理位置
@@ -135,7 +136,7 @@ def calc_geo(
             },
             is_fix_refraction,
         )
-    except:
+    except Exception:
         return {"detail": "地理位置计算失败"}
 
     if is_fix_gravity:

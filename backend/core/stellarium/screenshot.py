@@ -1,17 +1,17 @@
 import os
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import httpx
 
 HOST = "http://127.0.0.1"
 PORT = 8090
 
-BASE_URL = "{}:{}".format(HOST, PORT)
+BASE_URL = f"{HOST}:{PORT}"
 
 
 def execute_code(code):
-    url = "{}/api/scripts/direct".format(BASE_URL)
+    url = f"{BASE_URL}/api/scripts/direct"
     data = {"code": code}
     resp = httpx.post(url, data=data)
     res = resp.text
@@ -21,43 +21,41 @@ def execute_code(code):
 def screenshot(name, folder="./"):
     path = os.path.abspath(folder)
     SCRIPT_SCREEN_SHOT = (
-        'core.wait(0.5);core.screenshot("{}",false,"{}",true,"png");'.format(name, path)
+        f'core.wait(0.5);core.screenshot("{name}",false,"{path}",true,"png");'
     )
     execute_code(SCRIPT_SCREEN_SHOT)
 
 
 def set_location(lat, lng, alt):
-    COMMAND_SCRIPT = "core.setObserverLocation({},{},{},0);".format(lng, lat, alt)
+    COMMAND_SCRIPT = f"core.setObserverLocation({lng},{lat},{alt},0);"
     res = execute_code(COMMAND_SCRIPT)
-    print("设置经纬度 lat/lng/alt {}/{}/{} : {}".format(lat, lng, alt, res))
+    print(f"设置经纬度 lat/lng/alt {lat}/{lng}/{alt} : {res}")
 
 
 def set_time(dt: datetime):
-    utc_time = dt.astimezone(timezone.utc)
+    utc_time = dt.astimezone(UTC)
     utc_time_str = utc_time.strftime("%Y-%m-%dT%H:%M:%S")
-    COMMAND_SCRIPT = 'core.setTimeRate(0);\ncore.setDate("{}", "utc", false);'.format(
-        utc_time_str
-    )
+    COMMAND_SCRIPT = f'core.setTimeRate(0);\ncore.setDate("{utc_time_str}", "utc", false);'
 
     res = execute_code(COMMAND_SCRIPT)
 
-    print("设置时间 {} : {}".format(dt, res))
+    print(f"设置时间 {dt} : {res}")
 
 
 def set_direction(azimuth_from_south, altitude):
-    COMMAND_SCRIPT = "core.moveToAltAzi({},{},0);".format(altitude, azimuth_from_south)
+    COMMAND_SCRIPT = f"core.moveToAltAzi({altitude},{azimuth_from_south},0);"
 
     res = execute_code(COMMAND_SCRIPT)
 
-    print("设置 方位角 {} 高度角 {} : {}".format(azimuth_from_south, altitude, res))
+    print(f"设置 方位角 {azimuth_from_south} 高度角 {altitude} : {res}")
 
 
 def set_fov(fov_degree):
-    COMMAND_SCRIPT = "StelMovementMgr.zoomTo({}, 0)".format(fov_degree)
+    COMMAND_SCRIPT = f"StelMovementMgr.zoomTo({fov_degree}, 0)"
 
     res = execute_code(COMMAND_SCRIPT)
 
-    print("设置 FOV {} : {}".format(fov_degree, res))
+    print(f"设置 FOV {fov_degree} : {res}")
 
 
 def sanitize_filename(input_str):
@@ -99,9 +97,7 @@ def make_screenshot():
     """
     execute_code(COMMAND_SCRIPT)
 
-    fn = "stellarium_{}_{}_{}".format(
-        dt.isoformat(), observer_latitude, observer_longtitude
-    )
+    fn = f"stellarium_{dt.isoformat()}_{observer_latitude}_{observer_longtitude}"
     fn = sanitize_filename(fn)
 
     screenshot(fn, folder="./")

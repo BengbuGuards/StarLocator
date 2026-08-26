@@ -1,10 +1,11 @@
+
 from fastapi import APIRouter, Request
+
+from config import HEAVY_RATE_LIMIT
 from core.moon_time.calc import calc
 from schemas import moon_time
-import asyncio
 
 from .limiter import limiter
-from config import HEAVY_RATE_LIMIT
 
 router = APIRouter()
 
@@ -33,8 +34,7 @@ async def http_time_by_moon(request: Request, data: moon_time.MoonTimeRequest):
     """
     detail = "success"
     try:
-        time = await asyncio.to_thread(
-            calc,
+        time = await calc(
             data.photo.model_dump(),
             data.approxTimestamp,
             data.scopeDays,

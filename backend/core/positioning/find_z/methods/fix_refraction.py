@@ -1,7 +1,9 @@
-import numpy as np
 import astronomy as ast
-from ..utils.math import minimize, normalize
+import numpy as np
+
 from core.positioning.locator.utils.math import vector_angle
+
+from ..utils.math import minimize, normalize
 
 
 def get_z(data: dict, z0: float, zenith: np.ndarray) -> float:

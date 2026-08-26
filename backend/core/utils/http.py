@@ -1,5 +1,7 @@
-import httpx
 import asyncio
+
+import httpx
+
 from config import MAX_CONNECTIONS
 
 limits = httpx.Limits(

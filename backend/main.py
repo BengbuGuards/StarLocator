@@ -1,14 +1,17 @@
+from contextlib import asynccontextmanager
+
+import uvicorn
+import uvicorn.config
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-import uvicorn.config
-from routers import astro_coord, moon_time, positioning, astrometry
-from routers.limiter import limiter
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+
 from config import CORS_ALLOW_ORIGIN, LOG_LEVEL
-import uvicorn
-from core.utils.http import get_http_client, close_http_client
+from core.utils.http import close_http_client, get_http_client
+from routers import astro_coord, astrometry, moon_time, positioning
+from routers.limiter import limiter
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

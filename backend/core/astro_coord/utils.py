@@ -1,5 +1,6 @@
-import astronomy as ast
 from datetime import datetime
+
+import astronomy as ast
 
 
 def stamp2ast_time(timestamp: float) -> ast.Time:

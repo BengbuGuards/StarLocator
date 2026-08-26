@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from .base import PointLines, Coordinate
+
+from .base import Coordinate, PointLines
 
 
 class PositioningRequest(BaseModel):

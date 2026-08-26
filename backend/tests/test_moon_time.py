@@ -1,9 +1,10 @@
+import datetime
+
 import httpx
 import pytest
-import datetime
-from core.moon_time.calc import calc
-from config import BACKEND_API_BASEURL
 
+from config import BACKEND_API_BASEURL
+from core.moon_time.calc import calc
 
 photo = {
     "stars": [
@@ -58,7 +59,7 @@ is_fix_gravity = False
 approx_timestamp = datetime.datetime(2024, 10, 1, 0).timestamp()  # 1727712000
 scope_days = 365
 
-target = datetime.datetime(2024, 10, 14, 16, tzinfo=datetime.timezone.utc).timestamp()
+target = datetime.datetime(2024, 10, 14, 16, tzinfo=datetime.UTC).timestamp()
 
 
 def test_local():

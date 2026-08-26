@@ -1,6 +1,7 @@
 import numpy as np
-from . import median
 from scipy.optimize import minimize
+
+from . import median
 
 
 def objective_function(point: tuple, lines: list) -> float:

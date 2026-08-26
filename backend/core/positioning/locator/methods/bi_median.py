@@ -1,5 +1,6 @@
-import numpy as np
 import astronomy as ast
+import numpy as np
+
 from ..utils.math import cart2sph, sph2cart, vector_angle
 
 
@@ -45,10 +46,7 @@ def get_geo(data: dict, is_fix_refraction: bool = False) -> np.ndarray:
             # 忽略sqrt负数的警告
             with np.errstate(invalid="ignore"):
                 results = dual_star_positioning(data, i, j)
-            if (
-                np.isnan(results[0]).any() == False
-                and np.isnan(results[1]).any() == False
-            ):
+            if not np.isnan(results[0]).any() and not np.isnan(results[1]).any():
                 crude_positions.append(results)
 
     ## 检查是否有解

@@ -1,15 +1,16 @@
+import datetime
 import time
+
 import httpx
 import pytest
-import datetime
+
 from config import BACKEND_API_BASEURL
 from core.astro_coord.calc import get_HaDecs_by_names
-
 
 star_names = ["北落师门", "火鸟六", "土司空", "室宿一", "危宿三", "月球"]
 
 timestamp = datetime.datetime(
-    2024, 10, 14, 16, tzinfo=datetime.timezone.utc
+    2024, 10, 14, 16, tzinfo=datetime.UTC
 ).timestamp()  # 1728921600
 
 target = {

@@ -1,14 +1,16 @@
-import asyncio
 import astronomy as ast
-from .data import starZH2EN, solar_bodies
+
+from .data import solar_bodies, starZH2EN
 from .remote import get_RaDecs_by_names
 from .utils import stamp2ast_time
+
+DEFAULT_OBSERVER = ast.Observer(0, 0, 0)
 
 
 def get_HaDec_by_RaDec(
     raDec: tuple[float | None, float | None],
     date: ast.Time,
-    observer: ast.Observer = ast.Observer(0, 0, 0),
+    observer: ast.Observer = DEFAULT_OBSERVER,
 ) -> tuple[float | None, float | None]:
     """
     根据J2000赤经赤纬获取时角和赤纬
@@ -31,7 +33,7 @@ def get_HaDec_by_RaDec(
 
 
 def get_HaDec_in_solar(
-    star_name: str, date: ast.Time, observer: ast.Observer = ast.Observer(0, 0, 0)
+    star_name: str, date: ast.Time, observer: ast.Observer = DEFAULT_OBSERVER
 ) -> tuple[float | None, float | None]:
     """
     根据太阳系天体名称和日期获取其时角和赤纬
@@ -83,10 +85,11 @@ def get_HaDecs_sync(
 
     return ha_desc, detail
 
+
 async def get_HaDecs_by_names(
     star_names: list[str],
     timestamp: float,
-    observer: ast.Observer = ast.Observer(0, 0, 0),
+    observer: ast.Observer = DEFAULT_OBSERVER,
 ) -> tuple[dict[str, tuple[float | None, float | None]], str]:
     """
     根据恒星名称数组获取其时角和赤纬

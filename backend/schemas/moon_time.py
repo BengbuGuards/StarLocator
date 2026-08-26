@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
+
+from config import MAX_MOON_SEARCH_RANGE, MAX_NUM_OF_STARS
+
 from .base import PointLines, Stars
-from config import MAX_NUM_OF_STARS, MAX_MOON_SEARCH_RANGE
 
 
 class MoonPointLines(PointLines):

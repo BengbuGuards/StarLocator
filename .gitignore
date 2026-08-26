@@ -7,3 +7,4 @@ dist/
 package-lock.json
 .pytest_cache/
 __pycache__/
+config.py

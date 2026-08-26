@@ -1,6 +1,8 @@
+from datetime import datetime
+
 import httpx
 import pytest
-from datetime import datetime
+
 from config import BACKEND_API_BASEURL
 from core.astrometry.solve import recognize
 
@@ -65,7 +67,7 @@ def test_remote():
         "max_mag": 6,
         "is_zh": True,
     }
-    response = httpx.post(f"{BACKEND_API_BASEURL}/astrometry/recognize", json=data)
+    response = httpx.post(f"{BACKEND_API_BASEURL}/astrometry/recognize", json=data, timeout=60)
     assert response.status_code == 200, response.text
     result = response.json()
     assert result["detail"] == "success"

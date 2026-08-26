@@ -1,12 +1,14 @@
 import io
+
 import httpx
-import pytest
-import numpy as np
-from PIL import Image
 import matplotlib.pyplot as plt
+import numpy as np
+import pytest
 from matplotlib.patches import Circle
-from core.astrometry.extract import extract_stars
+from PIL import Image
+
 from config import BACKEND_API_BASEURL
+from core.astrometry.extract import extract_stars
 
 
 def sort_positions(positions: list[list[float]]) -> list:
@@ -19,9 +21,9 @@ def sort_positions(positions: list[list[float]]) -> list:
 def plot(image: Image.Image, objects: list[list[float]]):
     data_image = np.array(image.convert("L"), dtype=np.float64)
     # plot background-subtracted image
-    fig, ax = plt.subplots()
+    _, ax = plt.subplots()
     m, s = np.mean(data_image), np.std(data_image)
-    im = ax.imshow(
+    ax.imshow(
         data_image,
         interpolation="nearest",
         cmap="gray",
@@ -103,7 +105,7 @@ target_positions = sort_positions(target_positions)
 
 def test_local():
     detail, positions = extract_stars(image, thresh=40)
-    assert detail == "success" and type(positions) == list
+    assert detail == "success" and isinstance(positions, list)
     positions = sort_positions(positions)
     # plot(image, positions)  ##DEBUG
     for i in range(len(positions)):

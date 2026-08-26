@@ -1,5 +1,6 @@
-from .. import constants
 import numpy as np
+
+from .. import constants
 
 
 def get_geocentric_latitude(geodetic_latitude_in_rad):
@@ -65,13 +66,13 @@ def reverse_solve(geodetic_latitude):
 
 
 def astronomic_latitude_to_geodetic_latitude(astronomic_latitudes_in_degree):
-    l = -90
-    r = 90
+    left = -90
+    right = 90
     for _ in range(100):
-        m = (l + r) / 2
-        angle = reverse_solve(m)
+        mid = (left + right) / 2
+        angle = reverse_solve(mid)
         if angle > astronomic_latitudes_in_degree:
-            r = m
+            right = mid
         else:
-            l = m
-    return (l + r) / 2
+            left = mid
+    return (left + right) / 2

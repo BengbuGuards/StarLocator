@@ -1,4 +1,5 @@
 import numpy as np
+
 from ..utils.math import minimize
 
 

@@ -1,5 +1,7 @@
+from collections.abc import Callable
+
 import numpy as np
-from typing import Callable
+
 from ...locator.utils.math import sph_dist
 
 

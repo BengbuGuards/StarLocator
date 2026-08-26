@@ -47,6 +47,7 @@ uv sync                          # installs from uv.lock incl. dev group
 uv run python main.py            # or: uv run uvicorn main:app --port 6975 --reload
 uv run pytest tests              # requires backend running first
 uvx ruff check .                 # lint (config in pyproject.toml)
+uvx pyright                     # type check (config in pyrightconfig.json)
 ```
 
 CI (`.github/workflows/format-check.yml`) only gates formatting: PRs must be clean after `pnpm lintfix && pnpm format`.
@@ -61,7 +62,8 @@ CI (`.github/workflows/format-check.yml`) only gates formatting: PRs must be cle
 - Every route takes `request: Request` as first param (slowapi requirement); decorators stacked as `@router.post(...)` above `@limiter.limit(LIGHT|MEDIUM|HEAVY_RATE_LIMIT)`.
 - Outbound calls to flaky services: retry transient errors with backoff and bound concurrency with `asyncio.Semaphore(3)` (see `find_star` in `core/astrometry/solve.py`).
 - Comments/docstrings/user-facing strings are Chinese; camelCase JSON fields (`starNames`, `approxTimestamp`).
-- `core/astrometry/client.py` is vendored from astrometry.net — do not restyle it; it is excluded from ruff.
+- `core/astrometry/client.py` is vendored from astrometry.net — do not restyle it; it is excluded from ruff and pyright.
+- Local top-level modules (`config`, `core`, `routers`, `schemas`) are declared in `[tool.ruff.lint.isort] known-first-party` — do not rely on file-presence-based classification: `config.py` is gitignored and may not exist, which would silently flip import sorting.
 - Full-width CJK punctuation and Greek letters in comments/star catalogs are intentional; ruff ignores RUF001–003 for this reason.
 
 **Frontend**

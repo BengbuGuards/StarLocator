@@ -1,8 +1,11 @@
 # Repository Guidelines
 
+- 与用户沟通使用中文。
+
 ## Project Overview
 
 StarLocator (照片测星定位) — a web app that estimates the photographer's geographic location from a night-sky photo plus its capture time (camera-as-sextant celestial navigation). Users mark stars and plumb lines on a fabric.js canvas; the backend solves astrometry via nova.astrometry.net + SIMBAD, then computes position, hour-angle/declination, or observation time from the moon. Accuracy typically < 30 km. AGPL-3.0. Monorepo: vanilla-JS/webpack frontend (`src/`) + Python 3.12 FastAPI backend (`backend/`).
+Users may mark plumb lines (≥2) to fix the zenith directly, or alternatively mark a horizon line (≥2 endpoints) from which the backend derives the zenith's image point (top point) using the focal length z solved from stars alone; horizon mode is lower-accuracy, and plumb lines take precedence when both are present.
 
 ## Architecture & Data Flow
 

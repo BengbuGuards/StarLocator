@@ -41,7 +41,7 @@ class PickHorizon extends DefaultbuttonFunctioner {
                 // 取消操作
             } else {
                 // 加入一个端点
-                let p = this.interactPhoto.canvas.getPointer(e.e);
+                let p = this.interactPhoto.canvas.getScenePoint(e.e);
                 this.addHL([p.x, p.y]);
                 // 结束此次操作
                 this.isPickingHL = false;

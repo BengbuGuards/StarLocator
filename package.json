@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "webpack --config webpack.prod.js",
-		"dev": "webpack-dev-server --config webpack.dev.js",
+		"dev": "webpack serve --config webpack.dev.js",
 		"serve": "http-server ./dist -p 6974 -s",
 		"lintfix": "eslint . --fix",
 		"format": "prettier --write '**/*.js'"
@@ -15,8 +15,8 @@
 	"author": "",
 	"license": "AGPL-3.0-only",
 	"dependencies": {
-		"fabric": "^6.9.1",
-		"fuzzysort": "^3.1.0"
+		"fabric": "^7.4.0",
+		"fuzzysort": "^4.0.2"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -35,6 +35,6 @@
 		"style-loader": "^4.0.0",
 		"webpack": "^5.106.2",
 		"webpack-cli": "^7.0.2",
-		"webpack-dev-server": "^5.2.3"
+		"webpack-dev-server": "^6.0.0"
 	}
 }

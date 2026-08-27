@@ -15,6 +15,8 @@ class ShapeObject {
             height: 32,
             fill: this.color,
             hasControls: false,
+            originX: 'left',
+            originY: 'top',
         });
 
         this.label = new IText(label, {
@@ -25,6 +27,8 @@ class ShapeObject {
             fill: this.color,
             selectable: false,
             hoverCursor: 'grab',
+            originX: 'left',
+            originY: 'top',
         });
 
         this.deleter = new IText('×', {
@@ -34,6 +38,8 @@ class ShapeObject {
             fill: '#CF0000',
             hasControls: false,
             hoverCursor: 'pointer',
+            originX: 'left',
+            originY: 'top',
         });
 
         this.point.on('moving', this.onMove.bind(this));
@@ -93,6 +99,8 @@ class LineObject {
             strokeWidth: 1,
             selectable: false,
             hoverCursor: 'grab',
+            originX: 'left',
+            originY: 'top',
         });
 
         this.canvas.add(this.line);

@@ -49,7 +49,7 @@ class SelectStars extends DefaultbuttonFunctioner {
             // 开始选择，创建矩形框
             this.status = selectStatus.SELECTING;
             this.interactPhoto.setCanvasCursor('crosshair');
-            let p = this.interactPhoto.canvas.getPointer(e.e);
+            let p = this.interactPhoto.canvas.getScenePoint(e.e);
             this.rect = new Rectangle(p.x, p.y, this.interactPhoto.canvas);
         }
     }
@@ -60,7 +60,7 @@ class SelectStars extends DefaultbuttonFunctioner {
 
         if (this.status === selectStatus.SELECTING) {
             // 更新矩形框
-            let p = this.interactPhoto.canvas.getPointer(e.e);
+            let p = this.interactPhoto.canvas.getScenePoint(e.e);
             this.rect.update(p.x, p.y);
         }
     }

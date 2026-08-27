@@ -13,6 +13,8 @@ class Rectangle {
             height: 0,
             selectable: false,
             hoverCursor: 'grab',
+            originX: 'left',
+            originY: 'top',
         });
 
         this.canvas.add(this.rect);

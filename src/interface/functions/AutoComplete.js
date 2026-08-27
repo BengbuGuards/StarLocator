@@ -1,7 +1,7 @@
 import fuzzysort from 'fuzzysort';
 import { starZH2EN } from '../starZH2EN.js';
 
-const options = { limit: 100, threshold: 0.4, all: false };
+const options = { limit: 100, threshold: 0.4 };
 
 function autoCompleteStarName(inp) {
     /*从英汉对照表获取所有名称，并去重*/

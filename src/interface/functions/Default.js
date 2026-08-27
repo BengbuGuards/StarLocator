@@ -65,7 +65,7 @@ class DefaultbuttonFunctioner {
 
         // 坐标显示
         if (this.interactPhoto.movable && e && !this.panning) {
-            let p = this.interactPhoto.canvas.getPointer(e.e);
+            let p = this.interactPhoto.canvas.getScenePoint(e.e);
             this.interactPhoto.cursorCrd.innerHTML = `${Math.round(p.x * 100) / 100}，${Math.round(p.y * 100) / 100}`;
         }
 
@@ -123,8 +123,10 @@ class DefaultbuttonFunctioner {
 
     // 处理页面改变大小事件
     handleResize() {
-        this.interactPhoto.canvas.setWidth(this.interactPhoto.container.clientWidth);
-        this.interactPhoto.canvas.setHeight(this.interactPhoto.container.clientHeight);
+        this.interactPhoto.canvas.setDimensions({
+            width: this.interactPhoto.container.clientWidth,
+            height: this.interactPhoto.container.clientHeight,
+        });
         if (this.interactPhoto.movable) {
             this.interactPhoto.reZoomCanvas(this.interactPhoto.rect);
         } else {

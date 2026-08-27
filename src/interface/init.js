@@ -29,6 +29,8 @@ function initializeCanvas(interactPhoto) {
         fontFamily: '等线',
         selectable: false,
         hoverCursor: 'default',
+        originX: 'left',
+        originY: 'top',
     });
 
     interactPhoto.canvas.add(interactPhoto.text);

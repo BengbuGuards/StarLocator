@@ -30,6 +30,8 @@ class ImageChange extends DefaultbuttonFunctioner {
                     top: height / -2,
                     selectable: false,
                     hoverCursor: 'grab',
+                    originX: 'left',
+                    originY: 'top',
                 });
                 this.interactPhoto.canvas.add(img);
                 this.interactPhoto.rect = img;

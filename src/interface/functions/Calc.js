@@ -1,6 +1,6 @@
 import { DefaultbuttonFunctioner } from './Default.js';
 import { BACKEND_API } from '../../config.js';
-import { getOriginalStars, getGlobalPLPointsCoord, post } from '../utils.js';
+import { getOriginalStars, getGlobalPLPointsCoord, getGlobalHLPointsCoord, post } from '../utils.js';
 
 // 计算地理位置按钮功能类
 class Calc extends DefaultbuttonFunctioner {
@@ -41,8 +41,8 @@ class Calc extends DefaultbuttonFunctioner {
             this.interactPhoto.tips.innerHTML = `请完整填写星星像素坐标`;
             return false;
         }
-        if (this.interactPhoto.getCompletePLCount() < 2) {
-            this.interactPhoto.tips.innerHTML = `请至少选择两条完整铅垂线`;
+        if (this.interactPhoto.getCompletePLCount() < 2 && this.interactPhoto.getCompleteHLCount() < 1) {
+            this.interactPhoto.tips.innerHTML = `请至少选择两条完整铅垂线或一条完整地平线`;
             return false;
         }
         if (isAutoCeleCoord) {
@@ -70,14 +70,15 @@ class Calc extends DefaultbuttonFunctioner {
     calc() {
         // 读取数据
         let globalPLsPointsCoord = getGlobalPLPointsCoord(this.interactPhoto).filter((line) => line.length === 2);
+        let globalHLsPointsCoord = getGlobalHLPointsCoord(this.interactPhoto);
         let originalStars = getOriginalStars(this.interactPhoto);
 
         // 检查数据
         if (!this.checkStars(originalStars)) {
             this.interactPhoto.tips.innerHTML = `请完整填写星星数据`;
             return;
-        } else if (globalPLsPointsCoord.length < 2) {
-            this.interactPhoto.tips.innerHTML = `请至少选择两条完整铅垂线`;
+        } else if (globalPLsPointsCoord.length < 2 && globalHLsPointsCoord.length < 1) {
+            this.interactPhoto.tips.innerHTML = `请至少选择两条完整铅垂线或一条完整地平线`;
             return;
         }
 
@@ -92,6 +93,7 @@ class Calc extends DefaultbuttonFunctioner {
                 photo: {
                     stars: originalStars,
                     lines: globalPLsPointsCoord,
+                    horizon: globalHLsPointsCoord,
                 },
                 isFixRefraction: document.getElementById('check1').checked,
                 isFixGravity: document.getElementById('check2').checked,

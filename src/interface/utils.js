@@ -32,6 +32,20 @@ function getGlobalPLPointsCoord(interactPhoto) {
     return globalPLPointsCoord;
 }
 
+// 获取地平线端点坐标
+function getGlobalHLPointsCoord(interactPhoto) {
+    let globalHLPointsCoord = [];
+    for (let i = 0; i < interactPhoto.HLArray.num(); i++) {
+        let hl = interactPhoto.HLArray.array[i];
+        let points = [];
+        for (let j = 0; j < hl.points.length; j++) {
+            points.push(hl.points[j].coordinate);
+        }
+        globalHLPointsCoord.push(points);
+    }
+    return globalHLPointsCoord;
+}
+
 // 设置参考时角和赤纬，将角度数值化为度/时分秒形式
 function setHADE(id, hourAngle, declination) {
     const rawHourAngle = hourAngle;
@@ -166,4 +180,4 @@ async function post(url, data, Type) {
     }
 }
 
-export { getOriginalStars, getGlobalPLPointsCoord, post, setHADE, getHADE };
+export { getOriginalStars, getGlobalPLPointsCoord, getGlobalHLPointsCoord, post, setHADE, getHADE };

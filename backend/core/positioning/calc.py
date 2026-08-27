@@ -51,6 +51,28 @@ def build_geojson(
     }
 
 
+def top_point_from_horizon(
+    horizon_pts: list[list[float]] | np.ndarray, z: float
+) -> np.ndarray:
+    """
+    由地平线上的点拟合地平线，并计算天顶在照片中的位置（灭点）。
+
+    Params:
+        horizon_pts: (n, 2), 地平线上标注的点
+        z: float, 焦距
+    Returns:
+        top_point: (2,), 灭点坐标
+    """
+    pts = np.asarray(horizon_pts, dtype=np.float64)
+    center = pts.mean(axis=0)
+    _, _, vt = np.linalg.svd(pts - center, full_matrices=False)
+    a, b = vt[-1]  # 最小奇异值方向 = 地平线法向
+    c = -(a * center[0] + b * center[1])  # 直线 a x + b y + c = 0
+    if abs(c) < 1e-9:
+        raise ValueError("地平线过于靠近光心，无法确定灭点")
+    return np.array([z * z * a / c, z * z * b / c])
+
+
 def calc_z(
     points: np.ndarray,
     hour_decs: np.ndarray,
@@ -93,6 +115,7 @@ def calc_geo(
                     lat: float, declination
                     lon: float, reverse of hour angle
             lines: (n, 2, 2), plumb lines
+            horizon: (n, 2, 2), horizon line segments
         is_fix_refraction: whether to fix refraction
         is_fix_gravity: whether to fix gravity
     return:
@@ -106,18 +129,44 @@ def calc_geo(
 
     num_points = len(photo["stars"])
     points, hour_decs, _ = stars_convert(photo["stars"])
+    lines = photo.get("lines", [])
+    horizon_pts = [p for seg in photo.get("horizon", []) for p in seg]
 
-    # 计算灭点
-    try:
-        top_point = intersection(np.array(photo["lines"]))
-    except Exception:
-        return {"detail": "灭点计算失败"}
+    has_plumb = len(lines) >= 2
+    has_horizon = len(horizon_pts) >= 2
+    if not has_plumb and not has_horizon:
+        return {"detail": "请至少标注两条铅垂线或一条地平线"}
 
-    # 计算焦距
-    try:
-        z = calc_z(points, hour_decs, top_point, is_fix_refraction)
-    except Exception:
-        return {"detail": "焦距计算失败"}
+    if has_plumb:
+        # 铅垂线模式：直线交点的灭点直接标定天顶
+        try:
+            top_point = intersection(np.array(lines))
+        except Exception:
+            return {"detail": "灭点计算失败"}
+        try:
+            z = calc_z(points, hour_decs, top_point, is_fix_refraction)
+        except Exception:
+            return {"detail": "焦距计算失败"}
+    else:
+        # 地平线模式：先由星点求焦距，再由地平线和焦距求灭点
+        z_input_parameters = {
+            "points": points,
+            "thetas": angles_on_sphere(hour_decs),
+            "ra_decs": hour_decs,
+        }
+        try:
+            z = trisect.get_z(z_input_parameters)
+        except Exception:
+            return {"detail": "焦距计算失败"}
+        try:
+            top_point = top_point_from_horizon(horizon_pts, z)
+        except Exception:
+            return {"detail": "灭点计算失败"}
+        if is_fix_refraction:
+            try:
+                z = fix_refraction.get_z(z_input_parameters, z, top_point)
+            except Exception:
+                return {"detail": "焦距计算失败"}
 
     # 计算地理位置
     points_3d = np.concatenate([points, np.ones((num_points, 1)) * z], axis=1)

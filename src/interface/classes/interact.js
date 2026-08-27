@@ -1,6 +1,7 @@
 import { DefaultbuttonFunctioner } from '../functions/Default.js';
 import { CeleArray } from '../elements/CelestialBody.js';
 import { PLArray } from '../elements/PlumbLine.js';
+import { HLArray } from '../elements/HorizonLine.js';
 
 // 照片与其可交互信息的类
 class InteractPhoto {
@@ -24,6 +25,7 @@ class InteractPhoto {
         // 画布对象池
         this.CeleArray = new CeleArray(this); // 星星对象数组
         this.PLArray = new PLArray(this); // 铅垂线对象数组
+        this.HLArray = new HLArray(this); // 地平线对象数组
 
         // 鼠标事件变量
         this.lmbDown = false; // 鼠标左键是否按下
@@ -60,6 +62,10 @@ class InteractPhoto {
         return this.PLArray.array.filter((pl) => pl.points.length === 2).length;
     }
 
+    getCompleteHLCount() {
+        return this.HLArray.array.filter((hl) => hl.points.length === 2).length;
+    }
+
     // 刷新天体标记数量提示和天体识别按钮状态
     updateCeleStatus() {
         if (!this.celeStatus) return;
@@ -87,7 +93,10 @@ class InteractPhoto {
         const calculButton = document.getElementById('actionCalcul');
         if (!calculButton) return;
 
-        const isDisabled = !this.movable || this.CeleArray.num() < 3 || this.getCompletePLCount() < 2;
+        const isDisabled =
+            !this.movable ||
+            this.CeleArray.num() < 3 ||
+            (this.getCompletePLCount() < 2 && this.getCompleteHLCount() < 1);
         calculButton.classList.toggle('is-disabled', isDisabled);
         calculButton.setAttribute('aria-disabled', isDisabled ? 'true' : 'false');
     }

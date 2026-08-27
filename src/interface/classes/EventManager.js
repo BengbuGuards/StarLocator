@@ -2,6 +2,7 @@ import { initializeElements, initializeCanvas, initializeEvents } from '../init.
 import { TouchEventAdapter } from './TouchEventAdapter.js';
 import { PickCele } from '../functions/PickCele.js';
 import { PickPL } from '../functions/PickPL.js';
+import { PickHorizon } from '../functions/PickHorizon.js';
 import { ImageChange } from '../functions/ImageChange.js';
 import { Calc } from '../functions/Calc.js';
 import { MoonTime } from '../functions/MoonTime.js';
@@ -21,6 +22,7 @@ class EventManager {
         // 按钮事件处理类
         this.pickCele = new PickCele(this.interactPhoto);
         this.pickPL = new PickPL(this.interactPhoto);
+        this.pickHorizon = new PickHorizon(this.interactPhoto);
         this.imageChange = new ImageChange(this.interactPhoto, this.clearAllData.bind(this));
         this.calc = new Calc(this.interactPhoto, this.celeCoord);
         this.moonTime = new MoonTime(this.interactPhoto, this.astroCalculator, this.celeCoord);
@@ -40,6 +42,7 @@ class EventManager {
         this.interactPhoto.buttonFunctioner = this.interactPhoto.defaultbuttonFunctioner;
         this.pickCele.clearData();
         this.pickPL.clearData();
+        this.pickHorizon.clearData();
         this.calc.clearData();
         this.interactPhoto.CeleArray.clear(); // 清空表格数据
     }

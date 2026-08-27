@@ -76,6 +76,9 @@ function initializeEvents(eventManager) {
         .addEventListener('click', eventManager.pickCele.onClick.bind(eventManager.pickCele));
     document.getElementById('vaniZen').addEventListener('click', eventManager.pickPL.onClick.bind(eventManager.pickPL));
     document
+        .getElementById('horiZen')
+        .addEventListener('click', eventManager.pickHorizon.onClick.bind(eventManager.pickHorizon));
+    document
         .getElementById('srcFile')
         .addEventListener('change', (e) => eventManager.imageChange.onClick.call(eventManager.imageChange, e));
     interactPhoto.container.addEventListener('dragover', (e) => {

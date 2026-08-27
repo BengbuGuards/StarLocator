@@ -19,5 +19,12 @@ class PointLines(BaseModel):
         ..., title="List of stars", min_length=3, max_length=MAX_NUM_OF_STARS
     )
     lines: list[Line] = Field(
-        ..., title="List of lines", min_length=2, max_length=MAX_NUM_OF_LINES
+        default_factory=list,
+        title="List of plumb lines",
+        max_length=MAX_NUM_OF_LINES,
+    )
+    horizon: list[Line] = Field(
+        default_factory=list,
+        title="List of horizon line segments",
+        max_length=MAX_NUM_OF_LINES,
     )

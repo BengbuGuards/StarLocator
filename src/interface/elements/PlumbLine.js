@@ -55,8 +55,10 @@ class PLLine {
 }
 
 class PLArray extends markerArray {
-    constructor(interactPhoto) {
+    constructor(interactPhoto, pointClass = PLpoint, color = '#35dc96') {
         super(interactPhoto);
+        this.pointClass = pointClass;
+        this.color = color;
     }
 
     add(coordinate) {
@@ -70,13 +72,19 @@ class PLArray extends markerArray {
 
         let newPointID = this.num() * 2 - 2 + lastPLLine.points.length;
         // 添加点
-        let newpPoint = new PLpoint(coordinate, this.interactPhoto, this.interactPhoto.canvas, newPointID, '#35dc96');
+        let newpPoint = new this.pointClass(
+            coordinate,
+            this.interactPhoto,
+            this.interactPhoto.canvas,
+            newPointID,
+            this.color
+        );
         lastPLLine.points.push(newpPoint);
 
         // 如果有了两个端点，就添加线段
         if (lastPLLine.points.length == 2) {
             let lineCoord = [lastPLLine.points[0].coordinate, lastPLLine.points[1].coordinate].flat();
-            lastPLLine.lineObject = new LineObject(lineCoord, this.interactPhoto.canvas, '#35dc96');
+            lastPLLine.lineObject = new LineObject(lineCoord, this.interactPhoto.canvas, this.color);
             lastPLLine.addMoveLineEvent();
             this.interactPhoto.updateCalculButton();
         } else if (lastPLLine.points.length > 2) {

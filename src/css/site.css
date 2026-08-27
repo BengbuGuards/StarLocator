@@ -1,4 +1,4 @@
-﻿body {
+body {
 	background-color: #1c355d;
 	color: #dfdfdf;
 }
@@ -471,6 +471,24 @@ a:visited {
 
 .zenith {
 	color: #e44f0d;
+}
+/* 天顶坐标框只读展示：用户不可修改 */
+input.zenith[readonly] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+	background-color: transparent;
+	color: #e44f0d;
+	cursor: default;
+}
+
+input.zenith[readonly]::-webkit-inner-spin-button,
+input.zenith[readonly]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input.zenith[readonly]:hover {
+	background-color: transparent;
 }
 
 .result {
